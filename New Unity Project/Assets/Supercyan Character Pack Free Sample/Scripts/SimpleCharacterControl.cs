@@ -4,7 +4,6 @@ using System.Collections.Generic;
 
 public class SimpleCharacterControl : NetworkBehaviour
 {
-
 	private enum ControlMode
 	{
 		Tank,
@@ -35,6 +34,21 @@ public class SimpleCharacterControl : NetworkBehaviour
 
 	private bool m_isGrounded;
 	private List<Collider> m_collisions = new List<Collider>();
+
+
+	private void Start()
+	{
+		//Debug.Log(NetworkManager.singleton.networkAddress);
+		//Debug.Log(Network.player.ipAddress);
+		string address;
+		int port;
+		UnityEngine.Networking.Types.NetworkID id;
+		UnityEngine.Networking.Types.NodeID nodeId;
+		byte error;
+		NetworkTransport.GetConnectionInfo(0, 0, out address, out port, out id, out nodeId, out error);
+		//Debug.Log(address + " " + port);
+		Debug.Log(MasterServer.ipAddress);
+	}
 
 	private void OnCollisionEnter(Collision collision)
 	{
