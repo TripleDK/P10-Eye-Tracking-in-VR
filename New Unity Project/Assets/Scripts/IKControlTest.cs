@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class IKControlTest : NetworkBehaviour
+public class IKControlTest : MonoBehaviour
 {
+	[HideInInspector] 
+	public bool isLocalPlayer = false;
 	public Transform lookAtPos;
 	public Transform rightHandPos;
 	public Transform leftHandPos;
@@ -17,10 +19,12 @@ public class IKControlTest : NetworkBehaviour
 	void Awake()
 	{
 		anim = GetComponent<Animator>();
-		if (!isLocalPlayer)
+
+		if (isLocalPlayer)
 		{
 			return;
 		}
+		Debug.Log("Setting IK stuff");
 		rightHandPos = GameObject.Find("Sphere").transform;
 		leftHandPos = GameObject.Find("Sphere (1)").transform;
 		lookAtPos = GameObject.Find("Sphere (2)").transform;

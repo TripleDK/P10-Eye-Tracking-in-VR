@@ -46,6 +46,10 @@ public class SimpleCharacterControl : NetworkBehaviour
 		UnityEngine.Networking.Types.NodeID nodeId;
 		byte error;
 		NetworkTransport.GetConnectionInfo(0, 0, out address, out port, out id, out nodeId, out error);
+		if (isLocalPlayer)
+		{
+			transform.GetChild(0).GetComponent<IKControlTest>().isLocalPlayer = true;
+		}
 		//Debug.Log(address + " " + port);
 		//Debug.Log(MasterServer.ipAddress);
 	}
