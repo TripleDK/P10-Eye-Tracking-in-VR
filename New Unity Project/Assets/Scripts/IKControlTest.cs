@@ -10,6 +10,7 @@ public class IKControlTest : MonoBehaviour
 	public Transform lookAtPos;
 	public Transform rightHandPos;
 	public Transform leftHandPos;
+	Transform lookAtTarget, rightHandTarget, leftHandTarget;
 	[SerializeField, Range(0, 1)] float eyeWeight;
 	[SerializeField, Range(0, 1)] float headWeight;
 	[SerializeField, Range(0, 1)] float bodyWeight;
@@ -25,15 +26,24 @@ public class IKControlTest : MonoBehaviour
 			return;
 		}
 		Debug.Log("Setting IK stuff");
-		rightHandPos = GameObject.Find("Sphere").transform;
-		leftHandPos = GameObject.Find("Sphere (1)").transform;
-		lookAtPos = GameObject.Find("Sphere (2)").transform;
+		rightHandTarget = GameObject.Find("Sphere").transform;
+		leftHandTarget = GameObject.Find("Sphere (1)").transform;
+		lookAtTarget = GameObject.Find("Sphere (2)").transform;
 	}
 
 	void OnAnimatorIK()
 	{
-		if (isLocalPlayer && anim)
+		if (anim)
 		{
+			if (isLocalPlayer)
+			{
+				rightHandPos.position = rightHandTarget.position;
+				rightHandPos.rotation = rightHandTarget.rotation;
+				leftHandPos.position = leftHandTarget.position;
+				leftHandPos.rotation = leftHandTarget.rotation;
+				lookAtPos.position = lookAtTarget.position;
+			}
+
 			anim.SetIKPositionWeight(AvatarIKGoal.RightHand, 1);
 			anim.SetIKRotationWeight(AvatarIKGoal.RightHand, 1);
 			anim.SetIKPositionWeight(AvatarIKGoal.LeftHand, 1);	
