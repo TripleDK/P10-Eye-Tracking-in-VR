@@ -39,7 +39,7 @@ public class SimpleCharacterControl : NetworkBehaviour
 	private void Start()
 	{
 		//Debug.Log(NetworkManager.singleton.networkAddress);
-		//Debug.Log(Network.player.ipAddress);
+		Debug.Log(Network.player.ipAddress);
 		string address;
 		int port;
 		UnityEngine.Networking.Types.NetworkID id;
@@ -47,7 +47,7 @@ public class SimpleCharacterControl : NetworkBehaviour
 		byte error;
 		NetworkTransport.GetConnectionInfo(0, 0, out address, out port, out id, out nodeId, out error);
 		//Debug.Log(address + " " + port);
-		Debug.Log(MasterServer.ipAddress);
+		//Debug.Log(MasterServer.ipAddress);
 	}
 
 	private void OnCollisionEnter(Collision collision)
@@ -118,7 +118,7 @@ public class SimpleCharacterControl : NetworkBehaviour
 		{
 			return;
 		}
-		m_animator.SetBool("Grounded", m_isGrounded);
+		//m_animator.SetBool("Grounded", m_isGrounded);
 
 		switch (m_controlMode)
 		{
@@ -167,7 +167,7 @@ public class SimpleCharacterControl : NetworkBehaviour
 		transform.position += transform.forward * m_currentV * m_moveSpeed * Time.deltaTime;
 		transform.Rotate(0, m_currentH * m_turnSpeed * Time.deltaTime, 0);
 
-		m_animator.SetFloat("MoveSpeed", m_currentV);
+		//	m_animator.SetFloat("MoveSpeed", m_currentV);
 
 		JumpingAndLanding();
 	}
@@ -201,7 +201,7 @@ public class SimpleCharacterControl : NetworkBehaviour
 			transform.rotation = Quaternion.LookRotation(m_currentDirection);
 			transform.position += m_currentDirection * m_moveSpeed * Time.deltaTime;
 
-			m_animator.SetFloat("MoveSpeed", direction.magnitude);
+			//	m_animator.SetFloat("MoveSpeed", direction.magnitude);
 		}
 
 		JumpingAndLanding();
@@ -219,12 +219,12 @@ public class SimpleCharacterControl : NetworkBehaviour
 
 		if (!m_wasGrounded && m_isGrounded)
 		{
-			m_animator.SetTrigger("Land");
+			//		m_animator.SetTrigger("Land");
 		}
 
 		if (!m_isGrounded && m_wasGrounded)
 		{
-			m_animator.SetTrigger("Jump");
+			//		m_animator.SetTrigger("Jump");
 		}
 	}
 }
