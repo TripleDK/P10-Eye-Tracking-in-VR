@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class IKControlTest : MonoBehaviour
+public class IKControlTest : NetworkBehaviour
 {
 	public Transform lookAtPos;
 	public Transform rightHandPos;
@@ -16,6 +17,10 @@ public class IKControlTest : MonoBehaviour
 	void Awake()
 	{
 		anim = GetComponent<Animator>();
+		if (!isLocalPlayer)
+		{
+			return;
+		}
 		rightHandPos = GameObject.Find("Sphere").transform;
 		leftHandPos = GameObject.Find("Sphere (1)").transform;
 		lookAtPos = GameObject.Find("Sphere (2)").transform;
@@ -23,7 +28,7 @@ public class IKControlTest : MonoBehaviour
 
 	void OnAnimatorIK()
 	{
-		if (anim)
+		if (isLocalPlayer && anim)
 		{
 			anim.SetIKPositionWeight(AvatarIKGoal.RightHand, 1);
 			anim.SetIKRotationWeight(AvatarIKGoal.RightHand, 1);
