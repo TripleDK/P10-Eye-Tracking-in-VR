@@ -5,64 +5,85 @@ using UnityEngine.Networking;
 
 public class IKControlTest : MonoBehaviour
 {
-	[HideInInspector] 
-	public bool isLocalPlayer = false;
-	public Transform lookAtPos;
-	public Transform headPos;
-	public Transform rightHandPos;
-	public Transform leftHandPos;
-	public Transform head;
-	Transform lookAtTarget, headTarget, rightHandTarget, leftHandTarget;
-	[SerializeField, Range(0, 1)] float eyeWeight;
-	[SerializeField, Range(0, 1)] float headWeight;
-	[SerializeField, Range(0, 1)] float bodyWeight;
-	Animator anim;
+    [HideInInspector]
+    public bool isLocalPlayer = false;
+    public Transform lookAtPos;
+    public Transform headPos;
+    public Transform rightHandPos;
+    public Transform leftHandPos;
+    public Transform head, hip;
+    public float height, width;
+    Transform lookAtTarget, headTarget, rightHandTarget, leftHandTarget;
+    [SerializeField] Transform leftEye;
+    [SerializeField] Transform rightEye;
+    [SerializeField, Range(0, 1)] float eyeWeight;
+    [SerializeField, Range(0, 1)] float headWeight;
+    [SerializeField, Range(0, 1)] float bodyWeight;
+    [SerializeField] float bodyRotateSpeed = 5f;
+    Animator anim;
+    Vector3 eyeOffset, eyeOffsetLocal;
 
-	// Use this for initialization
-	void Awake()
-	{
-		anim = GetComponent<Animator>();
+    // Use this for initialization
+    void Awake()
+    {
+        anim = GetComponent<Animator>();
 
-		if (isLocalPlayer)
-		{
-			return;
-		}
-		Debug.Log("Setting IK stuff");
-		rightHandTarget = GameObject.Find("Controller (right)").transform;
-		leftHandTarget = GameObject.Find("Controller (left)").transform;
-		headTarget = GameObject.Find("Camera (eye)").transform;
-		lookAtTarget = GameObject.Find("Sphere (2)").transform;
-	}
+        if (isLocalPlayer)
+        {
+            return;
+        }
 
-	void OnAnimatorIK()
-	{
-		if (anim)
-		{
-			if (isLocalPlayer)
-			{
-				rightHandPos.position = rightHandTarget.position;
-				rightHandPos.rotation = rightHandTarget.rotation;
-				leftHandPos.position = leftHandTarget.position;
-				leftHandPos.rotation = leftHandTarget.rotation;
-				headPos.position = headTarget.position;
-				headPos.rotation = headTarget.rotation;
-				lookAtPos.position = lookAtTarget.position;
-			}
+        Debug.Log("Setting IK stuff");
 
-			anim.SetIKPositionWeight(AvatarIKGoal.RightHand, 1);
-			anim.SetIKRotationWeight(AvatarIKGoal.RightHand, 1);
-			anim.SetIKPositionWeight(AvatarIKGoal.LeftHand, 1);	
-			anim.SetIKRotationWeight(AvatarIKGoal.LeftHand, 1);
-			anim.SetLookAtWeight(1, bodyWeight, 0, eyeWeight, 0.5f);
 
-			anim.SetLookAtPosition(lookAtPos.position);
-			anim.SetIKPosition(AvatarIKGoal.RightHand, rightHandPos.position);
-			anim.SetIKRotation(AvatarIKGoal.RightHand, rightHandPos.rotation);
-			anim.SetIKPosition(AvatarIKGoal.LeftHand, leftHandPos.position);
-			anim.SetIKRotation(AvatarIKGoal.LeftHand, leftHandPos.rotation);
-			anim.SetBoneLocalRotation(HumanBodyBones.Head, headTarget.rotation*Quaternion.Inverse(anim.rootRotation));
-			//head.position = headPos.position;
-			//head.rotation = headPos.rotation;
-		}
-	}
+        rightHandTarget = GameObject.Find("Controller (right)").transform;
+        leftHandTarget = GameObject.Find("Controller (left)").transform;
+        headTarget = GameObject.Find("Camera (eye)").transform;
+        lookAtTarget = GameObject.Find("Sphere (2)").transform;
+    }
+
+    void Start()
+    {
+        Debug.Break();
+        eyeOffset = ((leftEye.position - hip.position) + (rightEye.position - hip.position)) / 2;
+        eyeOffsetLocal = transform.InverseTransformVector(eyeOffset);
+        Debug.DrawLine(new Vector3(hip.position.x, leftEye.position.y, hip.position.z),
+        new Vector3(hip.position.x + eyeOffset.x, leftEye.position.y, hip.position.z + eyeOffset.z), Color.green);
+    }
+
+    void OnAnimatorIK()
+    {
+        if (anim)
+        {
+            if (isLocalPlayer)
+            {
+                rightHandPos.position = rightHandTarget.position;
+                rightHandPos.rotation = rightHandTarget.rotation;
+                leftHandPos.position = leftHandTarget.position;
+                leftHandPos.rotation = leftHandTarget.rotation;
+                headPos.position = headTarget.position;
+                headPos.rotation = headTarget.rotation;
+                lookAtPos.position = lookAtTarget.position;
+            }
+            eyeOffset = transform.TransformVector(eyeOffsetLocal);
+            anim.bodyPosition = new Vector3(headTarget.position.x - eyeOffset.x, anim.bodyPosition.y, headTarget.position.z - eyeOffset.z);
+            anim.bodyRotation = Quaternion.RotateTowards(anim.bodyRotation, headTarget.rotation, bodyRotateSpeed);
+
+            anim.SetIKPositionWeight(AvatarIKGoal.RightHand, 1);
+            anim.SetIKRotationWeight(AvatarIKGoal.RightHand, 1);
+            anim.SetIKPositionWeight(AvatarIKGoal.LeftHand, 1);
+            anim.SetIKRotationWeight(AvatarIKGoal.LeftHand, 1);
+            anim.SetLookAtWeight(1, bodyWeight, 0, eyeWeight, 0.5f);
+
+            anim.SetLookAtPosition(lookAtPos.position);
+            anim.SetIKPosition(AvatarIKGoal.RightHand, rightHandPos.position);
+            anim.SetIKRotation(AvatarIKGoal.RightHand, rightHandPos.rotation);
+            anim.SetIKPosition(AvatarIKGoal.LeftHand, leftHandPos.position);
+            anim.SetIKRotation(AvatarIKGoal.LeftHand, leftHandPos.rotation);
+            anim.SetBoneLocalRotation(HumanBodyBones.Head, Quaternion.Inverse(anim.bodyRotation) * headTarget.rotation);
+
+            //head.position = headPos.position;
+            //head.rotation = headPos.rotation;
+        }
+    }
 }
