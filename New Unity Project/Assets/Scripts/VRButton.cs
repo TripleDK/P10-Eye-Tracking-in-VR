@@ -4,16 +4,17 @@ using UnityEngine;
 [RequireComponent(typeof(Collider))]
 public class VRButton : MonoBehaviour
 {
-    Material material;
-    bool leftController, rightController = false;
+    public bool leftController, rightController = false;
+    public Rigidbody prevConnected;
+    public Material material;
 
-    void Awake()
+    public virtual void Awake()
     {
         material = GetComponent<MeshRenderer>().material;
     }
     void OnTriggerEnter(Collider collision)
     {
-        material.SetColor("g_vOutlineColor", Color.green);
+        FeedbackColor(Color.green);
         if (collision.gameObject.name == "Controller (left)")
         {
             leftController = true;
@@ -21,6 +22,10 @@ public class VRButton : MonoBehaviour
         else if (collision.gameObject.name == "Controller (right)")
         {
             rightController = true;
+        }
+        if (collision.gameObject.GetComponent<Rigidbody>())
+        {
+            prevConnected = collision.gameObject.GetComponent<Rigidbody>();
         }
         StartCoroutine("WaitingForInput");
     }
@@ -37,7 +42,7 @@ public class VRButton : MonoBehaviour
         }
         if (!leftController && !rightController)
         {
-            material.SetColor("g_vOutlineColor", Color.yellow);
+            FeedbackColor(Color.yellow);
         }
         StopCoroutine("WaitingForInput");
     }
@@ -57,6 +62,11 @@ public class VRButton : MonoBehaviour
             yield return null;
 
         }
+    }
+
+    public virtual void FeedbackColor(Color color)
+    {
+        material.SetColor("g_vOutlineColor", color);
     }
 
     public virtual void Action() { }

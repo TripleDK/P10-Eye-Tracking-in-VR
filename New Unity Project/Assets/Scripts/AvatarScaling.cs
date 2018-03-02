@@ -11,7 +11,10 @@ public class AvatarScaling : NetworkBehaviour
     private Transform leftController, rightController;
     [SerializeField] IKControlTest ikControls;
     [SerializeField] private SkinnedMeshRenderer maleMesh;
+    [SerializeField] private GameObject maleHair;
     [SerializeField] private SkinnedMeshRenderer femaleMesh;
+    [SerializeField] private GameObject femaleHair;
+    [SerializeField] private Material seeThroughMaterial;
     private SkinnedMeshRenderer playerMesh;
 
     private void Awake()
@@ -24,15 +27,20 @@ public class AvatarScaling : NetworkBehaviour
         if (gender == 0)
         {
             playerMesh = maleMesh;
+            maleHair.SetActive(false);
         }
         if (gender == 1)
         {
+            femaleHair.SetActive(false);
             playerMesh = femaleMesh;
         }
+
+        Debug.Log("Change material!");
+        playerMesh.materials = new Material[3] { seeThroughMaterial, playerMesh.materials[1], seeThroughMaterial };
         leftController = GameObject.Find("Controller (left)").transform;
         rightController = GameObject.Find("Controller (right)").transform;
         float headHeight = mainCamera.transform.localPosition.y;
-        float yScale = headHeight / playerMesh.bounds.size.y;
+        float yScale = headHeight / ikControls.leftEye.position.y;
         float armLength = Vector2.Distance(new Vector2(leftController.position.x, leftController.position.z), new Vector2(rightController.position.x, rightController.position.z));
         float xScale = armLength / playerMesh.bounds.size.x;
         Vector3 tempScale = transform.localScale;
@@ -44,12 +52,13 @@ public class AvatarScaling : NetworkBehaviour
         ikControls.width = armLength;
     }
 
+
     void Start()
     {
         if (isLocalPlayer)
         {
             Resize();
-            transform.GetChild(0).GetComponent<IKControlTest>().isLocalPlayer = true;
+            ikControls.LocalIKSetup();
         }
     }
 }

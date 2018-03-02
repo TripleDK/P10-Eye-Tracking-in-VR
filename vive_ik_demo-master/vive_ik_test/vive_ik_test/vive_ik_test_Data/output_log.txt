@@ -1,0 +1,45 @@
+Initialize engine version: 5.4.2f2 (b7e030c65c9b)
+GfxDevice: creating device client; threaded=1
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.0]
+    Renderer: NVIDIA GeForce GTX 980 (ID=0x13c0)
+    Vendor:   NVIDIA
+    VRAM:     3072 MB
+Begin MonoManager ReloadAssembly
+Platform assembly: H:\MTA181031\vive_ik_demo-master\vive_ik_test\vive_ik_test\vive_ik_test_Data\Managed\UnityEngine.dll (this message is harmless)
+Loading H:\MTA181031\vive_ik_demo-master\vive_ik_test\vive_ik_test\vive_ik_test_Data\Managed\UnityEngine.dll into Unity Child Domain
+Platform assembly: H:\MTA181031\vive_ik_demo-master\vive_ik_test\vive_ik_test\vive_ik_test_Data\Managed\Assembly-CSharp.dll (this message is harmless)
+Loading H:\MTA181031\vive_ik_demo-master\vive_ik_test\vive_ik_test\vive_ik_test_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
+Platform assembly: H:\MTA181031\vive_ik_demo-master\vive_ik_test\vive_ik_test\vive_ik_test_Data\Managed\UnityEngine.UI.dll (this message is harmless)
+Loading H:\MTA181031\vive_ik_demo-master\vive_ik_test\vive_ik_test\vive_ik_test_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
+Platform assembly: H:\MTA181031\vive_ik_demo-master\vive_ik_test\vive_ik_test\vive_ik_test_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
+Loading H:\MTA181031\vive_ik_demo-master\vive_ik_test\vive_ik_test\vive_ik_test_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
+Platform assembly: H:\MTA181031\vive_ik_demo-master\vive_ik_test\vive_ik_test\vive_ik_test_Data\Managed\ICSharpCode.SharpZipLib.dll (this message is harmless)
+Loading H:\MTA181031\vive_ik_demo-master\vive_ik_test\vive_ik_test\vive_ik_test_Data\Managed\ICSharpCode.SharpZipLib.dll into Unity Child Domain
+Platform assembly: H:\MTA181031\vive_ik_demo-master\vive_ik_test\vive_ik_test\vive_ik_test_Data\Managed\M3D_DLL.dll (this message is harmless)
+Loading H:\MTA181031\vive_ik_demo-master\vive_ik_test\vive_ik_test\vive_ik_test_Data\Managed\M3D_DLL.dll into Unity Child Domain
+Platform assembly: H:\MTA181031\vive_ik_demo-master\vive_ik_test\vive_ik_test\vive_ik_test_Data\Managed\MCS_Utilities.dll (this message is harmless)
+Loading H:\MTA181031\vive_ik_demo-master\vive_ik_test\vive_ik_test\vive_ik_test_Data\Managed\MCS_Utilities.dll into Unity Child Domain
+- Completed reload, in  0.055 seconds
+Platform assembly: H:\MTA181031\vive_ik_demo-master\vive_ik_test\vive_ik_test\vive_ik_test_Data\Managed\System.Core.dll (this message is harmless)
+Platform assembly: H:\MTA181031\vive_ik_demo-master\vive_ik_test\vive_ik_test\vive_ik_test_Data\Managed\System.dll (this message is harmless)
+<RI> Initializing input.
+<RI> Input initialized.
+desktop: 2560x1440 59Hz; virtual: 4480x1440 at -1920,0
+<RI> Initialized touch support.
+OpenVR initialized!
+ 
+(Filename:  Line: 353)
+
+UnloadTime: 0.774020 ms
+Connected to lighthouse:LHR-075622FD
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+
+Setting up 2 worker threads for Enlighten.
+  Thread -> id: 37e8 -> priority: 1 
+  Thread -> id: 2310 -> priority: 1 
+OpenVR Shutdown
+ 
+(Filename:  Line: 707)
+

@@ -14,7 +14,7 @@ public class IKControlTest : MonoBehaviour
     public Transform head, hip;
     public float height, width;
     Transform lookAtTarget, headTarget, rightHandTarget, leftHandTarget;
-    [SerializeField] Transform leftEye;
+    public Transform leftEye;
     [SerializeField] Transform rightEye;
     [SerializeField, Range(0, 1)] float eyeWeight;
     [SerializeField, Range(0, 1)] float headWeight;
@@ -27,24 +27,20 @@ public class IKControlTest : MonoBehaviour
     void Awake()
     {
         anim = GetComponent<Animator>();
+    }
 
-        if (isLocalPlayer)
-        {
-            return;
-        }
-
+    public void LocalIKSetup()
+    {
         Debug.Log("Setting IK stuff");
 
+        isLocalPlayer = true; ;
 
         rightHandTarget = GameObject.Find("Controller (right)").transform;
         leftHandTarget = GameObject.Find("Controller (left)").transform;
         headTarget = GameObject.Find("Camera (eye)").transform;
         lookAtTarget = GameObject.Find("Sphere (2)").transform;
-    }
 
-    void Start()
-    {
-        Debug.Break();
+        //Debug.Break();
         eyeOffset = ((leftEye.position - hip.position) + (rightEye.position - hip.position)) / 2;
         eyeOffsetLocal = transform.InverseTransformVector(eyeOffset);
         Debug.DrawLine(new Vector3(hip.position.x, leftEye.position.y, hip.position.z),
@@ -64,10 +60,12 @@ public class IKControlTest : MonoBehaviour
                 headPos.position = headTarget.position;
                 headPos.rotation = headTarget.rotation;
                 lookAtPos.position = lookAtTarget.position;
+                anim.bodyPosition = new Vector3(headTarget.position.x - eyeOffset.x, anim.bodyPosition.y, headTarget.position.z - eyeOffset.z);
+                eyeOffset = transform.TransformVector(eyeOffsetLocal);
+                anim.SetBoneLocalRotation(HumanBodyBones.Head, Quaternion.Inverse(anim.bodyRotation) * headTarget.rotation);
+
+                anim.SetBoneLocalRotation(HumanBodyBones.Hips, Quaternion.Euler(hip.rotation.eulerAngles.x, headTarget.rotation.eulerAngles.y, hip.rotation.eulerAngles.z));
             }
-            eyeOffset = transform.TransformVector(eyeOffsetLocal);
-            anim.bodyPosition = new Vector3(headTarget.position.x - eyeOffset.x, anim.bodyPosition.y, headTarget.position.z - eyeOffset.z);
-            anim.bodyRotation = Quaternion.RotateTowards(anim.bodyRotation, headTarget.rotation, bodyRotateSpeed);
 
             anim.SetIKPositionWeight(AvatarIKGoal.RightHand, 1);
             anim.SetIKRotationWeight(AvatarIKGoal.RightHand, 1);
@@ -80,7 +78,7 @@ public class IKControlTest : MonoBehaviour
             anim.SetIKRotation(AvatarIKGoal.RightHand, rightHandPos.rotation);
             anim.SetIKPosition(AvatarIKGoal.LeftHand, leftHandPos.position);
             anim.SetIKRotation(AvatarIKGoal.LeftHand, leftHandPos.rotation);
-            anim.SetBoneLocalRotation(HumanBodyBones.Head, Quaternion.Inverse(anim.bodyRotation) * headTarget.rotation);
+
 
             //head.position = headPos.position;
             //head.rotation = headPos.rotation;
