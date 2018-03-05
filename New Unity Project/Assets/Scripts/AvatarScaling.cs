@@ -7,14 +7,14 @@ public class AvatarScaling : NetworkBehaviour
 {
 
     public static int gender = 0; //0 = Male, 1 = Female
-    private Camera mainCamera;
-    private Transform leftController, rightController;
     [SerializeField] IKControlTest ikControls;
     [SerializeField] private SkinnedMeshRenderer maleMesh;
     [SerializeField] private GameObject maleHair;
     [SerializeField] private SkinnedMeshRenderer femaleMesh;
     [SerializeField] private GameObject femaleHair;
     [SerializeField] private Material seeThroughMaterial;
+    private Camera mainCamera;
+    private Transform leftController, rightController;
     private SkinnedMeshRenderer playerMesh;
 
     private void Awake()
@@ -55,7 +55,7 @@ public class AvatarScaling : NetworkBehaviour
 
     void Start()
     {
-        if (isLocalPlayer)
+        if (isLocalPlayer && CalibrationContext.singleton.style == 0)
         {
             Resize();
             ikControls.LocalIKSetup();

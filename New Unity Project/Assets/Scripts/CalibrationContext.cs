@@ -8,11 +8,14 @@ public class CalibrationContext : MonoBehaviour
     static public CalibrationContext singleton;
     public IKControlTest localPlayerIKControls;
     public int networkFunction = 0; //0 = Host, 1 = Client, 2 = Server
+    public int gender = 0; //0 = Male, 1 = Female
+    public int style = 0; //0 = Realistic, 1 = Disembodied cartoon
     int calibrationProgress = 0;
 
     [SerializeField] NetworkManager networkManager;
     [SerializeField] GameObject genderSelect;
     [SerializeField] GameObject networkButtons;
+    [SerializeField] GameObject styleButtons;
 
 
     Transform leftHand, rightHand, head;
@@ -33,6 +36,7 @@ public class CalibrationContext : MonoBehaviour
     {
         networkButtons.SetActive(false);
         genderSelect.SetActive(false);
+        styleButtons.SetActive(false);
         for (int i = 0; i < transform.childCount; i++)
         {
             transform.GetChild(i).gameObject.SetActive(false);
@@ -58,8 +62,16 @@ public class CalibrationContext : MonoBehaviour
     public void ChooseGender(int gender)
     {
         AvatarScaling.gender = gender;
-        networkButtons.SetActive(true);
+        this.gender = gender;
+        styleButtons.SetActive(true);
         genderSelect.SetActive(false);
+    }
+
+    public void ChooseStyle(int style)
+    {
+        this.style = style;
+        styleButtons.SetActive(false);
+        networkButtons.SetActive(true);
     }
 
     public void ChooseNetwork(int networkType)
@@ -114,7 +126,6 @@ public class CalibrationContext : MonoBehaviour
         leftHand.GetChild(0).gameObject.SetActive(false);
         rightHand.GetChild(0).gameObject.SetActive(false);
 
-        //Hide local head
-        //Transparent head mat + transparent eyelash mat + disable hair
+
     }
 }

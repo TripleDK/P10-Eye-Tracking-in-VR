@@ -20,30 +20,18 @@ public class ObjectInteractions : VRButton
         rigid = GetComponent<Rigidbody>();
     }
 
-    public override void Action()
+    public override void Action(Controller side, GameObject controller)
     {
         if (!attached)
         {
             attached = true;
-
-            if (rightController)
-            {
-            }
-            else if (leftController)
-            {
-            }
-            else
-            {
-                Debug.Log("Wat");
-            }
-            transform.position = prevConnected.position;
+            transform.position = controller.transform.position;
             tempJoint = gameObject.AddComponent<FixedJoint>();
-            tempJoint.connectedBody = prevConnected;
+            tempJoint.connectedBody = controller.GetComponent<Rigidbody>();
         }
-
     }
 
-    public override void ActionUp()
+    public override void ActionUp(Controller side)
     {
         if (attached)
         {

@@ -1,0 +1,52 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class DisembodiedAvatarControls : MonoBehaviour
+{
+
+    public bool isLocalPlayer = false;
+    public Transform headPos, leftHandPos, rightHandPos;
+    public Transform head, leftHand, rightHand, torso;
+    public Transform leftEye;
+    [SerializeField] float neckHeight = 0.3f;
+    [SerializeField] float torsoMoveSpeed = 1.0f;
+    [SerializeField] float torsoRotateSpeed = 1.0f;
+    Transform leftHandTarget, rightHandTarget, headTarget;
+
+
+    public void LocalIKSetup()
+    {
+        isLocalPlayer = true;
+        rightHandTarget = GameObject.Find("Controller (right)").transform;
+        leftHandTarget = GameObject.Find("Controller (left)").transform;
+        headTarget = GameObject.Find("Camera (eye)").transform;
+        GameObject.Find("Controller (left)").GetComponent<VRGrab>().handAnim = leftHand.GetComponent<Animator>();
+        GameObject.Find("Controller (right)").GetComponent<VRGrab>().handAnim = rightHand.GetComponent<Animator>();
+    }
+
+    void Update()
+    {
+        if (isLocalPlayer)
+        {
+            headPos.position = headTarget.position;
+            headPos.rotation = headTarget.rotation;
+            leftHandPos.position = leftHandTarget.position;
+            leftHandPos.rotation = leftHandTarget.rotation;
+            rightHandPos.position = rightHandTarget.position;
+            rightHandPos.rotation = rightHandTarget.rotation;
+        }
+        head.position = headPos.position;
+        head.rotation = headPos.rotation;
+        leftHand.position = leftHandPos.position;
+        leftHand.rotation = leftHandPos.rotation;
+        rightHand.position = rightHandPos.position;
+        rightHand.rotation = rightHandPos.rotation;
+
+        //Torso Movement
+        //      torso.position = Vector3.MoveTowards(torso.position, head.position - head.up * neckHeight, torsoMoveSpeed * Time.deltaTime);
+        torso.rotation = Quaternion.RotateTowards(torso.rotation, Quaternion.LookRotation(head.position - torso.position, -head.up), torsoRotateSpeed);
+        //Vector3.RotateTowards(torso.eulerAngles, Quaternion.LookRotation(head.position).eulerAngles, torsoRotateSpeed).Quaternion;
+    }
+
+}

@@ -6,7 +6,7 @@ using UnityEngine.Networking;
 public class FemaleButton : VRButton
 {
 
-    public override void Action()
+    public override void Action(Controller side)
     {
         CalibrationContext.singleton.ChooseGender(1);
     }

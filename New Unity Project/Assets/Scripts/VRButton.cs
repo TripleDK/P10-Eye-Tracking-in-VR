@@ -8,6 +8,12 @@ public class VRButton : MonoBehaviour
     public Rigidbody prevConnected;
     public Material material;
 
+    public enum Controller
+    {
+        left, right
+    };
+
+
     public virtual void Awake()
     {
         material = GetComponent<MeshRenderer>().material;
@@ -27,7 +33,6 @@ public class VRButton : MonoBehaviour
         {
             prevConnected = collision.gameObject.GetComponent<Rigidbody>();
         }
-        StartCoroutine("WaitingForInput");
     }
     void OnTriggerExit(Collider collision)
     {
@@ -44,32 +49,6 @@ public class VRButton : MonoBehaviour
         {
             FeedbackColor(Color.yellow);
         }
-        StopCoroutine("WaitingForInput");
-    }
-
-    IEnumerator WaitingForInput()
-    {
-        while (true)
-        {
-            if (leftController && Input.GetKeyDown("joystick button 14"))
-            {
-                Action();
-            }
-            if (rightController && Input.GetKeyDown("joystick button 15"))
-            {
-                Action();
-            }
-            if (leftController && Input.GetKeyUp("joystick button 14"))
-            {
-                ActionUp();
-            }
-            if (rightController && Input.GetKeyUp("joystick button 15"))
-            {
-                ActionUp();
-            }
-            yield return null;
-
-        }
     }
 
     public virtual void FeedbackColor(Color color)
@@ -77,7 +56,12 @@ public class VRButton : MonoBehaviour
         material.SetColor("g_vOutlineColor", color);
     }
 
-    public virtual void Action() { }
+    public virtual void Action(Controller side) { }
 
-    public virtual void ActionUp() { }
+    public virtual void ActionUp(Controller side) { }
+
+    public virtual void Action(Controller side, GameObject controller) { }
+
+    public virtual void ActionUp(Controller side, GameObject controller) { }
+
 }
