@@ -59,6 +59,14 @@ public class VRButton : MonoBehaviour
             {
                 Action();
             }
+            if (leftController && Input.GetKeyUp("joystick button 14"))
+            {
+                ActionUp();
+            }
+            if (rightController && Input.GetKeyUp("joystick button 15"))
+            {
+                ActionUp();
+            }
             yield return null;
 
         }
@@ -70,4 +78,6 @@ public class VRButton : MonoBehaviour
     }
 
     public virtual void Action() { }
+
+    public virtual void ActionUp() { }
 }

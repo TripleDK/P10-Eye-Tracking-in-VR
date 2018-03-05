@@ -22,9 +22,9 @@ public class ObjectInteractions : VRButton
 
     public override void Action()
     {
-        attached = !attached;
-        if (attached)
+        if (!attached)
         {
+            attached = true;
 
             if (rightController)
             {
@@ -36,15 +36,36 @@ public class ObjectInteractions : VRButton
             {
                 Debug.Log("Wat");
             }
+            transform.position = prevConnected.position;
             tempJoint = gameObject.AddComponent<FixedJoint>();
             tempJoint.connectedBody = prevConnected;
-            StartCoroutine("TrackVelocity");
         }
-        else
-        {
-        }
+
     }
 
+    public override void ActionUp()
+    {
+        if (attached)
+        {
+            attached = false;
+            SteamVR_TrackedObject trackedObj = tempJoint.connectedBody.GetComponent<SteamVR_TrackedObject>();
+            var device = SteamVR_Controller.Input((int)trackedObj.index);
+            Destroy(tempJoint);
+            var origin = trackedObj.origin ? trackedObj.origin : trackedObj.transform.parent;
+            if (origin != null)
+            {
+                rigid.velocity = origin.TransformVector(device.velocity);
+                rigid.angularVelocity = origin.TransformVector(device.angularVelocity);
+            }
+            else
+            {
+                rigid.velocity = device.velocity;
+                rigid.angularVelocity = device.angularVelocity;
+            }
+
+            rigid.maxAngularVelocity = rigid.angularVelocity.magnitude;
+        }
+    }
     public override void FeedbackColor(Color color)
     {
         material.color = color;
