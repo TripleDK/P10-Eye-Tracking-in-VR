@@ -13,11 +13,13 @@ public class ObjectInteractions : VRButton
     Vector3 prevPosition;
     Quaternion prevAng;
     Rigidbody rigid;
+    Vector3 startPos;
 
     public override void Awake()
     {
         base.Awake();
         rigid = GetComponent<Rigidbody>();
+        startPos = transform.position;
     }
 
     public override void Action(Controller side, VRGrab controller)
@@ -60,5 +62,14 @@ public class ObjectInteractions : VRButton
         material.color = color;
     }
 
-
+    public void ResetPosition(int delay)
+    {
+        StartCoroutine(ResetPositionCo(delay));
+    }
+    IEnumerator ResetPositionCo(int delay)
+    {
+        yield return new WaitForSeconds(delay);
+        transform.position = startPos;
+        rigid.velocity = Vector3.zero;
+    }
 }

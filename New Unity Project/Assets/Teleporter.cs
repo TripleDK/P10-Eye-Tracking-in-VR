@@ -7,6 +7,7 @@ public class Teleporter : MonoBehaviour
 
     [SerializeField] Transform teleportTarget;
     [SerializeField] float repulsionForce = 2f;
+
     private ObjectInteractions objectToTeleport = null;
 
     private void OnTriggerEnter(Collider other)
@@ -18,6 +19,7 @@ public class Teleporter : MonoBehaviour
                 if (objectToTeleport != null)
                 {
                     other.gameObject.GetComponent<Rigidbody>().AddForce(Vector3.up * repulsionForce, ForceMode.Impulse);
+                    other.gameObject.GetComponent<ObjectInteractions>().ResetPosition(5);
                     return;
 
                 }
@@ -37,9 +39,18 @@ public class Teleporter : MonoBehaviour
     {
         if (objectToTeleport != null)
         {
-            objectToTeleport.gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
-            objectToTeleport.transform.position = teleportTarget.position;
-            objectToTeleport = null;
+            if (objectToTeleport.gameObject.name == TaskContext.singleton.previewObject.name)
+            {
+                objectToTeleport.gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
+                objectToTeleport.transform.position = teleportTarget.position;
+                objectToTeleport = null;
+                TaskContext.singleton.NextObject();
+            }
+            else
+            {
+                objectToTeleport.gameObject.GetComponent<Rigidbody>().AddForce(Vector3.up * repulsionForce, ForceMode.Impulse);
+                objectToTeleport.ResetPosition(5);
+            }
         }
     }
 
