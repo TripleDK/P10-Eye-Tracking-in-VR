@@ -8,6 +8,7 @@ public class VRButton : MonoBehaviour
     public Rigidbody prevConnected;
     public Material material;
 
+    public VRGrab controllerGrab = null;
     public enum Controller
     {
         left, right
@@ -60,8 +61,16 @@ public class VRButton : MonoBehaviour
 
     public virtual void ActionUp(Controller side) { }
 
-    public virtual void Action(Controller side, GameObject controller) { }
+    public virtual void Action(Controller side, VRGrab controller) { controllerGrab = controller; }
 
-    public virtual void ActionUp(Controller side, GameObject controller) { }
+    public virtual void ActionUp(Controller side, VRGrab controller) { controllerGrab = null; }
+
+    public void OnDisable()
+    {
+        if (controllerGrab != null)
+        {
+            controllerGrab.grabbedObject.Remove(this);
+        }
+    }
 
 }

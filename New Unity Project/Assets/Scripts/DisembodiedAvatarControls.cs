@@ -12,6 +12,7 @@ public class DisembodiedAvatarControls : MonoBehaviour
     [SerializeField] float neckHeight = 0.3f;
     [SerializeField] float torsoMoveSpeed = 1.0f;
     [SerializeField] float torsoRotateSpeed = 1.0f;
+    [SerializeField] AnimationCurve torsoRotateSpeedOverDistance;
     Transform leftHandTarget, rightHandTarget, headTarget;
 
 
@@ -44,8 +45,17 @@ public class DisembodiedAvatarControls : MonoBehaviour
         rightHand.rotation = rightHandPos.rotation;
 
         //Torso Movement
-        //      torso.position = Vector3.MoveTowards(torso.position, head.position - head.up * neckHeight, torsoMoveSpeed * Time.deltaTime);
-        torso.rotation = Quaternion.RotateTowards(torso.rotation, Quaternion.LookRotation(head.position - torso.position, -head.up), torsoRotateSpeed);
+        torso.position = Vector3.MoveTowards(torso.position, head.position - Vector3.up * neckHeight, torsoMoveSpeed * Time.deltaTime);
+        torso.rotation = Quaternion.RotateTowards(torso.rotation, head.rotation,
+      torsoRotateSpeed * torsoRotateSpeedOverDistance.Evaluate((Mathf.Abs(torso.rotation.eulerAngles.y - head.rotation.eulerAngles.y) / 180)));
+        torso.eulerAngles = new Vector3(0, torso.rotation.eulerAngles.y, 0);
+        //   torsoRotateSpeed * torsoRotateSpeedOverDistance.Evaluate((Mathf.Abs(torso.rotation.eulerAngles.y - head.rotation.eulerAngles.y) / 180))
+        //   * Time.deltaTime * Mathf.Sign(torso.rotation.eulerAngles.y - head.rotation.eulerAngles.y));
+        Debug.Log(Mathf.Abs(torso.rotation.eulerAngles.y - head.rotation.eulerAngles.y) / 180);
+        // torso.RotateAround(torso.position, torso.forward,
+        // torsoRotateSpeed * torsoRotateSpeedOverDistance.Evaluate((Mathf.Abs(torso.rotation.eulerAngles.y - head.rotation.eulerAngles.y) / 180)) * Time.deltaTime * Mathf.Sign(torso.rotation.eulerAngles.y - head.rotation.eulerAngles.y));
+        //      torso.rotation.eulerAngles = new Vector3(0, Mathf.Lerp(torso.rotation.eulerAngles.y, head.rotation.eulerAngles.y, 0.1f), 0);
+        // Quaternion.RotateTowards(torso.rotation, Quaternion.LookRotation(head.position - torso.position, -head.up), torsoRotateSpeed);
         //Vector3.RotateTowards(torso.eulerAngles, Quaternion.LookRotation(head.position).eulerAngles, torsoRotateSpeed).Quaternion;
     }
 

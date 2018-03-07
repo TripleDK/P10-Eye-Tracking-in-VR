@@ -42,7 +42,7 @@ public class DisembodiedAvatarScaling : NetworkBehaviour
         lHandContainer.localPosition = new Vector3(lHandContainer.localPosition.x * xScale, lHandContainer.localPosition.y, lHandContainer.localPosition.z);
         rHandContainer.localScale = tempScale;
         rHandContainer.localPosition = new Vector3(rHandContainer.localPosition.x * xScale, rHandContainer.localPosition.y, rHandContainer.localPosition.z);
-
+        headContainer.gameObject.SetActive(false);
     }
 
 

@@ -6,7 +6,7 @@ using UnityEngine;
 public class ObjectInteractions : VRButton
 {
 
-    bool attached = false;
+    public bool attached = false;
     FixedJoint tempJoint = null;
     Vector3 velocity;
     Quaternion angVelocity;
@@ -20,7 +20,7 @@ public class ObjectInteractions : VRButton
         rigid = GetComponent<Rigidbody>();
     }
 
-    public override void Action(Controller side, GameObject controller)
+    public override void Action(Controller side, VRGrab controller)
     {
         if (!attached)
         {
@@ -28,6 +28,7 @@ public class ObjectInteractions : VRButton
             transform.position = controller.transform.position;
             tempJoint = gameObject.AddComponent<FixedJoint>();
             tempJoint.connectedBody = controller.GetComponent<Rigidbody>();
+            rigid.velocity = Vector3.zero;
         }
     }
 
