@@ -22,9 +22,12 @@ public class DisembodiedAvatarScaling : NetworkBehaviour
 
     void Resize()
     {
-        transform.position = new Vector3(mainCamera.transform.position.x, 0, mainCamera.transform.position.z);
-        transform.eulerAngles = new Vector3(0, mainCamera.transform.rotation.y, 0);
-
+        if (isLocalPlayer)
+        {
+            Transform cameraRig = GameObject.Find("[CameraRig]").transform;
+            cameraRig.position = new Vector3(transform.position.x, 0, transform.position.z);
+            cameraRig.eulerAngles = new Vector3(0, transform.rotation.y, 0);
+        }
         leftController = GameObject.Find("Controller (left)").transform;
         rightController = GameObject.Find("Controller (right)").transform;
         float headHeight = mainCamera.transform.position.y;

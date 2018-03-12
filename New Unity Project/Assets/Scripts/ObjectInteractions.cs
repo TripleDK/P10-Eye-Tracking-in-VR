@@ -27,7 +27,7 @@ public class ObjectInteractions : VRButton
         if (!attached)
         {
             attached = true;
-            transform.position = controller.transform.position;
+            //  transform.position = controller.transform.position;
             tempJoint = gameObject.AddComponent<FixedJoint>();
             tempJoint.connectedBody = controller.GetComponent<Rigidbody>();
             rigid.velocity = Vector3.zero;
@@ -73,7 +73,7 @@ public class ObjectInteractions : VRButton
         {
             yield return null;
         }
-        if (transform.position.y != startPos.y)
+        if (Mathf.Abs(transform.position.y - startPos.y) > 0.5)
         {
             ResetPosition(0);
         }

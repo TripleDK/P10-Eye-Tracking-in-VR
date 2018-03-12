@@ -61,6 +61,13 @@ public class VRGrab : MonoBehaviour
     {
         if (collider.gameObject.GetComponent<VRButton>())
         {
+            if (grabbedObject.Count == 0)
+            {
+                VRButton.Controller tempContr = VRButton.Controller.left;
+                if (side == Controller.left) tempContr = VRButton.Controller.left;
+                if (side == Controller.right) tempContr = VRButton.Controller.right;
+                grabbedObject[0].ActionUp(tempContr);
+            }
             grabbedObject.Remove(collider.gameObject.GetComponent<VRButton>());
         }
     }

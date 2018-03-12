@@ -15,6 +15,11 @@ public class BlendShapeAnimator : MonoBehaviour
     {
         meshRenderer = GetComponent<SkinnedMeshRenderer>();
         numOfBlendShapes = meshRenderer.sharedMesh.blendShapeCount;
+        if (numOfBlendShapes == 0)
+        {
+            Destroy(this);
+            return;
+        }
         meshRenderer.SetBlendShapeWeight(0, 100);
     }
 
@@ -34,7 +39,7 @@ public class BlendShapeAnimator : MonoBehaviour
                 meshRenderer.SetBlendShapeWeight(blendShapeIndex + 1, 100);
             }
             blendShapeIndex++;
-            if (blendShapeIndex == numOfBlendShapes)
+            if (blendShapeIndex >= numOfBlendShapes)
                 blendShapeIndex = 0;
         }
         else

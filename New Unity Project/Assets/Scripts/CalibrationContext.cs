@@ -10,13 +10,15 @@ public class CalibrationContext : MonoBehaviour
     public int networkFunction = 0; //0 = Host, 1 = Client, 2 = Server
     public int gender = 0; //0 = Male, 1 = Female
     public int style = 0; //0 = Realistic, 1 = Disembodied cartoon
+    public int role = 0; //0 = Fetcher, 1 = Fixer
     int calibrationProgress = 0;
 
     [SerializeField] NetworkManager networkManager;
     [SerializeField] GameObject genderSelect;
     [SerializeField] GameObject networkButtons;
     [SerializeField] GameObject styleButtons;
-
+    [SerializeField] GameObject roleSelect;
+    Transform fixerPos, fetcherPos;
 
     Transform leftHand, rightHand, head;
 
@@ -79,6 +81,11 @@ public class CalibrationContext : MonoBehaviour
         networkFunction = networkType;
         networkButtons.SetActive(false);
         StartCoroutine(WaitForCalibrate());
+    }
+
+    public void ChooseRole(int role)
+    {
+        this.role = role;
     }
 
     IEnumerator WaitForCalibrate()
