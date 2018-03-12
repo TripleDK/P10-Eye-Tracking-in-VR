@@ -8,7 +8,10 @@ ModelImporter:
     100000: //RootNode
     400000: //RootNode
     2100000: lambert1
+    2300000: //RootNode
+    3300000: //RootNode
     4300000: pSuperShape2
+    4300002: Scene_Durkenger:pSuperShape2
     9500000: //RootNode
     13700000: //RootNode
   externalObjects: {}
