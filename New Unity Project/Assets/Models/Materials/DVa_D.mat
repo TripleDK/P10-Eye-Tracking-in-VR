@@ -19,7 +19,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _DissolveTex:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: c835bd24d9d3a5c4d9bd38d258400ef9, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
@@ -28,16 +28,16 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - _ColorFiltering: 0
-    - _DiffuseThreshold: 0.1
-    - _DissolveEdge: 0
+    - _DiffuseThreshold: 0.107
+    - _DissolveEdge: 0.077
     - _DissolveSize: 0
     - _LitOutlineThickness: 0.1
-    - _Shininess: 66.57
-    - _UnlitOutlineThickness: 0.4
+    - _Shininess: 300
+    - _UnlitOutlineThickness: 0.506
     m_Colors:
-    - _Color: {r: 0.44117647, g: 0.7918865, b: 1, a: 1}
-    - _DissolveColor: {r: 1, g: 1, b: 1, a: 1}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _DissolveColor: {r: 0, g: 1, b: 1, a: 1}
     - _MainTex: {r: 1, g: 1, b: 1, a: 1}
     - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 1, g: 1, b: 1, a: 1}
-    - _UnlitColor: {r: 0, g: 0.19132867, b: 0.5661765, a: 1}
+    - _UnlitColor: {r: 0.77205884, g: 0.77205884, b: 0.77205884, a: 1}

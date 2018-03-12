@@ -80,6 +80,17 @@ Shader "Custom/MartinToonShader" {
 			//return floor(numToRound / (1 / multiple)) * (1 / multiple);
 		}	
 
+        float3 Posterize(float3 c) {
+             float gamma = 0.8;
+            float numOfColors = 128.0;
+            c = float3(pow(c.r, gamma), pow(c.g, gamma), pow(c.b, gamma));
+            c = c * numOfColors;
+            c = floor(c);
+            c = c / numOfColors;
+            c = float3(pow(c.r, 1.0/gamma), pow(c.g, 1.0/gamma), pow(c.b, 1.0/gamma));
+            return c;
+        }
+
          vertexOutput vert(vertexInput input) 
          {
             vertexOutput output;
@@ -123,10 +134,10 @@ Shader "Custom/MartinToonShader" {
             }
  			 //Main Texture color
   			float3 mainColor = tex2D(_MainTex, input.tex.xy).rgb;
- 			mainColor.r = RoundUp(mainColor.r*255, _ColorFiltering)/255.0;
-  			mainColor.g = RoundUp(mainColor.g*255, _ColorFiltering)/255.0;
-			mainColor.b = RoundUp(mainColor.b*255, _ColorFiltering)/255.0;
-  
+ 		//	mainColor.r = RoundUp(mainColor.r*255, _ColorFiltering)/255.0;
+  		//	mainColor.g = RoundUp(mainColor.g*255, _ColorFiltering)/255.0;
+		//	mainColor.b = RoundUp(mainColor.b*255, _ColorFiltering)/255.0;
+            mainColor = Posterize(mainColor);
 
             // default: unlit 
             float3 fragmentColor = _UnlitColor.rgb * mainColor/2; 

@@ -47,7 +47,7 @@ public class DisembodiedAvatarControls : MonoBehaviour
         //Torso Movement
         torso.position = Vector3.MoveTowards(torso.position, head.position - Vector3.up * neckHeight, torsoMoveSpeed * Time.deltaTime);
         torso.rotation = Quaternion.RotateTowards(torso.rotation, head.rotation,
-      torsoRotateSpeed * torsoRotateSpeedOverDistance.Evaluate((Mathf.Abs(torso.rotation.eulerAngles.y - head.rotation.eulerAngles.y) / 180)));
+        torsoRotateSpeed * torsoRotateSpeedOverDistance.Evaluate((Mathf.Abs(torso.rotation.eulerAngles.y - head.rotation.eulerAngles.y) / 180)));
         torso.eulerAngles = new Vector3(0, torso.rotation.eulerAngles.y, 0);
         //   torsoRotateSpeed * torsoRotateSpeedOverDistance.Evaluate((Mathf.Abs(torso.rotation.eulerAngles.y - head.rotation.eulerAngles.y) / 180))
         //   * Time.deltaTime * Mathf.Sign(torso.rotation.eulerAngles.y - head.rotation.eulerAngles.y));

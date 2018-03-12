@@ -62,6 +62,23 @@ public class ObjectInteractions : VRButton
         material.color = color;
     }
 
+    void OnCollisionEnter(Collision collision)
+    {
+        StartCoroutine(CheckForFall());
+    }
+
+    IEnumerator CheckForFall()
+    {
+        while (rigid.velocity != Vector3.zero)
+        {
+            yield return null;
+        }
+        if (transform.position.y != startPos.y)
+        {
+            ResetPosition(0);
+        }
+    }
+
     public void ResetPosition(int delay)
     {
         StartCoroutine(ResetPositionCo(delay));
