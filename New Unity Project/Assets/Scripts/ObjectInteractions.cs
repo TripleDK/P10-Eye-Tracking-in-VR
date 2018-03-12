@@ -13,7 +13,7 @@ public class ObjectInteractions : VRButton
     Vector3 prevPosition;
     Quaternion prevAng;
     Rigidbody rigid;
-    Vector3 startPos;
+    public Vector3 startPos;
 
     public override void Awake()
     {
@@ -73,7 +73,7 @@ public class ObjectInteractions : VRButton
         {
             yield return null;
         }
-        if (Mathf.Abs(transform.position.y - startPos.y) > 0.5)
+        if ((transform.position.y - startPos.y) < -0.5)
         {
             ResetPosition(0);
         }

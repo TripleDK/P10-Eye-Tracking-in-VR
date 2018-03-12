@@ -7,17 +7,25 @@ public class Teleporter : MonoBehaviour
 
     [SerializeField] Transform teleportTarget;
     [SerializeField] float repulsionForce = 2f;
+    [SerializeField] AudioClip beep;
+    [SerializeField] AudioClip errorBeep;
 
     private ObjectInteractions objectToTeleport = null;
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.GetComponent<ObjectInteractions>())
+            Debug.Log("Trigger hit by " + other.gameObject.name);
         {
             if (other.gameObject.GetComponent<ObjectInteractions>().attached == false)
             {
                 if (objectToTeleport != null)
                 {
+                    if (other.gameObject == objectToTeleport.gameObject)
+                    {
+                        Debug.Log("Wat");
+                    }
+                    Debug.Log("Already have " + objectToTeleport.gameObject.name + ", so repulsing " + other.gameObject.name);
                     other.gameObject.GetComponent<Rigidbody>().AddForce(Vector3.up * repulsionForce, ForceMode.Impulse);
                     other.gameObject.GetComponent<ObjectInteractions>().ResetPosition(5);
                     return;
@@ -29,6 +37,7 @@ public class Teleporter : MonoBehaviour
     }
     private void OnTriggerExit(Collider other)
     {
+        Debug.Log("Trigger exit by " + other.gameObject.name);
         if (other.gameObject.GetComponent<ObjectInteractions>() == objectToTeleport)
         {
             objectToTeleport = null;
@@ -41,15 +50,17 @@ public class Teleporter : MonoBehaviour
         {
             if (objectToTeleport.gameObject.name == TaskContext.singleton.previewObject.name)
             {
+                AudioSource.PlayClipAtPoint(beep, transform.position);
                 objectToTeleport.gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
                 objectToTeleport.transform.position = teleportTarget.position;
+                //  objectToTeleport.startPos = teleportTarget.position;
                 objectToTeleport = null;
                 TaskContext.singleton.NextObject();
             }
             else
             {
+                AudioSource.PlayClipAtPoint(errorBeep, transform.position);
                 objectToTeleport.gameObject.GetComponent<Rigidbody>().AddForce(Vector3.up * repulsionForce, ForceMode.Impulse);
-                objectToTeleport.ResetPosition(5);
             }
         }
     }

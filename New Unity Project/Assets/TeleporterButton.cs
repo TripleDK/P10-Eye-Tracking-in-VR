@@ -8,12 +8,17 @@ public class TeleporterButton : MonoBehaviour
     [SerializeField] Teleporter teleporter;
     [SerializeField] float coolDownTime = 1f;
     [SerializeField] float pushOffset = 0.5f;
+
+    Material material;
+    Color startCol;
     float startZ;
     bool coolingDown = false;
     void Awake()
     {
         startZ = transform.position.z;
         Physics.IgnoreLayerCollision(8, 8, true);
+        material = GetComponent<MeshRenderer>().material;
+        startCol = material.color;
     }
 
     private void OnTriggerStay(Collider other)
@@ -24,6 +29,7 @@ public class TeleporterButton : MonoBehaviour
             if (transform.position.z >= maxPushPos + startZ)
             {
                 teleporter.Activate();
+
                 StartCoroutine(ButtonCooldown());
             }
         }
@@ -38,6 +44,7 @@ public class TeleporterButton : MonoBehaviour
         float startTime = Time.time;
         while (Time.time - startTime < coolDownTime)
         {
+            material.color = startCol * (Time.time - startTime) / coolDownTime;
             transform.position = new Vector3(transform.position.x, transform.position.y, Mathf.Lerp(startZ + maxPushPos, startZ, (Time.time - startTime) / coolDownTime));
             yield return null;
         }

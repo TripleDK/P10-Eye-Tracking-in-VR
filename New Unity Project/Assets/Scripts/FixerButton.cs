@@ -8,5 +8,6 @@ public class FixerButton : VRButton
     public override void Action(Controller side)
     {
         CalibrationContext.singleton.ChooseRole(1);
+        Network.Destroy(gameObject);
     }
 }

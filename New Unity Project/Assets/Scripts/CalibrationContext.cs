@@ -21,6 +21,7 @@ public class CalibrationContext : MonoBehaviour
     Transform fixerPos, fetcherPos;
 
     Transform leftHand, rightHand, head;
+    Transform[] startPos = new Transform[2];
 
     void Awake()
     {
@@ -32,6 +33,8 @@ public class CalibrationContext : MonoBehaviour
         {
             Debug.LogError("Two calibrationcontexts in scene!", this);
         }
+        startPos[0] = GameObject.Find("Player1StartPos").transform;
+        startPos[1] = GameObject.Find("Player2StartPos").transform;
     }
 
     void Start()
@@ -83,10 +86,7 @@ public class CalibrationContext : MonoBehaviour
         StartCoroutine(WaitForCalibrate());
     }
 
-    public void ChooseRole(int role)
-    {
-        this.role = role;
-    }
+
 
     IEnumerator WaitForCalibrate()
     {
@@ -133,6 +133,16 @@ public class CalibrationContext : MonoBehaviour
         leftHand.GetChild(0).gameObject.SetActive(false);
         rightHand.GetChild(0).gameObject.SetActive(false);
 
+        roleSelect.SetActive(true);
 
+    }
+
+    public void ChooseRole(int role)
+    {
+        this.role = role;
+        Transform cameraRig = GameObject.Find("[CameraRig]").transform;
+
+        cameraRig.position = startPos[this.role].position;
+        cameraRig.rotation = startPos[this.role].rotation;
     }
 }
