@@ -12,8 +12,7 @@ public class TaskContext : NetworkBehaviour
     [SerializeField] TextMeshPro nameField;
     [SyncVar]
     SyncListInt SyncListShuffledObjects = new SyncListInt();
-    [SyncVar]
-    SyncListFloat someSyncTest = new SyncListFloat();
+
 
     void Awake()
     {
@@ -43,6 +42,7 @@ public class TaskContext : NetworkBehaviour
     void CmdSetup()
     {
         Debug.Log("Commanding!");
+        SyncListShuffledObjects.Clear();
         int objectCount = objects.Count;
         for (int i = 0; i < objectCount; i++)
         {
