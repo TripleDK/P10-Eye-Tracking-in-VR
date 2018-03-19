@@ -8,7 +8,7 @@ public class TeleporterButton : NetworkBehaviour
     [SerializeField] float maxPushPos = 1f;
     [SerializeField] Teleporter teleporter;
     [SerializeField] float coolDownTime = 1f;
-    [SerializeField, SyncVar] float pushOffset = 0.5f;
+    [SerializeField] float pushOffset = 0.5f;
 
     Material material;
     Color startCol;
