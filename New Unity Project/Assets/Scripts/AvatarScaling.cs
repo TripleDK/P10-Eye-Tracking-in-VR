@@ -55,6 +55,11 @@ public class AvatarScaling : NetworkBehaviour
 
     void Start()
     {
+        if (CalibrationContext.singleton.calibrationProgress == 0)
+        {
+            gameObject.SetActive(false);
+            return;
+        }
         if (isLocalPlayer && CalibrationContext.singleton.style == 0)
         {
             Resize();

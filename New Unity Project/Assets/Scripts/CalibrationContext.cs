@@ -12,7 +12,7 @@ public class CalibrationContext : MonoBehaviour
     public int gender = 0; //0 = Male, 1 = Female
     public int style = 0; //0 = Realistic, 1 = Disembodied cartoon
     public int role = 0; //0 = Fetcher, 1 = Fixer
-    int calibrationProgress = 0;
+    public int calibrationProgress = 0;
 
     [SerializeField] NetworkManager networkManager;
     [SerializeField] GameObject genderSelect;
@@ -63,6 +63,7 @@ public class CalibrationContext : MonoBehaviour
             yield return null;
         }
         genderSelect.SetActive(true);
+        calibrationProgress = 1;
     }
 
     public void ChooseGender(int gender)

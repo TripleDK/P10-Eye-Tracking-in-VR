@@ -1,8 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
+
 [RequireComponent(typeof(Collider))]
-public class VRButton : MonoBehaviour
+public class VRButton : NetworkBehaviour
 {
     public bool leftController, rightController = false;
     public Rigidbody prevConnected;

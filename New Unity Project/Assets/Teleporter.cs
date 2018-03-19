@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class Teleporter : MonoBehaviour
+public class Teleporter : NetworkBehaviour
 {
 
     [SerializeField] Transform teleportTarget;
@@ -44,8 +44,8 @@ public class Teleporter : MonoBehaviour
             objectToTeleport = null;
         }
     }
-
-    public void Activate()
+    [Command]
+    public void CmdActivate()
     {
         if (objectToTeleport != null)
         {
@@ -53,8 +53,8 @@ public class Teleporter : MonoBehaviour
             {
                 Rigidbody teleportRigid = objectToTeleport.gameObject.GetComponent<Rigidbody>();
                 AudioSource.PlayClipAtPoint(beep, transform.position);
-               teleportRigid .velocity = Vector3.zero;
-               teleportRigid.MovePosition(teleportTarget.position);
+                teleportRigid.velocity = Vector3.zero;
+                teleportRigid.MovePosition(teleportTarget.position);
                 //  objectToTeleport.startPos = teleportTarget.position;
                 objectToTeleport = null;
                 TaskContext.singleton.NextObject();

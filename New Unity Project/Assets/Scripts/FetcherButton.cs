@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 public class FetcherButton : VRButton
 {
@@ -8,6 +9,12 @@ public class FetcherButton : VRButton
     public override void Action(Controller side)
     {
         CalibrationContext.singleton.ChooseRole(0);
-        Network.Destroy(gameObject);
+        CmdDestroyButton();
+    }
+
+    [Command]
+    public void CmdDestroyButton()
+    {
+        Destroy(gameObject);
     }
 }

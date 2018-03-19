@@ -28,7 +28,7 @@ public class TeleporterButton : MonoBehaviour
             transform.position = new Vector3(transform.position.x, transform.position.y, Mathf.Max(startZ, other.transform.position.z + pushOffset));
             if (transform.position.z >= maxPushPos + startZ)
             {
-                teleporter.Activate();
+                teleporter.CmdActivate();
 
                 StartCoroutine(ButtonCooldown());
             }

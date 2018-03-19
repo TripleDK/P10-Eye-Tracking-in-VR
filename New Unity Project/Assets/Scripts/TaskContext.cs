@@ -10,7 +10,10 @@ public class TaskContext : NetworkBehaviour
     public List<GameObject> objects = new List<GameObject>();
     [SerializeField] float previewRotationSpeed = 180f;
     [SerializeField] TextMeshPro nameField;
-    SyncListInt shuffledObjects;
+    [SyncVar]
+    SyncListInt SyncListShuffledObjects = new SyncListInt();
+    [SyncVar]
+    SyncListFloat someSyncTest = new SyncListFloat();
 
     void Awake()
     {
@@ -22,32 +25,52 @@ public class TaskContext : NetworkBehaviour
         {
             Debug.LogWarning("Two TaskContexts in scene!");
         }
-        Setup();
+
     }
 
-    void Setup()
+    public override void OnStartClient()
     {
+        if (NetworkServer.active) StartCoroutine(WaitABit());
+    }
+
+    IEnumerator WaitABit()
+    {
+        yield return new WaitForSeconds(1);
+        CmdSetup();
+    }
+
+    [Command]
+    void CmdSetup()
+    {
+        Debug.Log("Commanding!");
         int objectCount = objects.Count;
         for (int i = 0; i < objectCount; i++)
         {
             int y = Random.Range(0, objects.Count);
-            shuffledObjects.Add(y);
+            while (SyncListShuffledObjects.Contains(y))
+            {
+                y++;
+                if (y > objectCount) y = 0;
+            }
+            SyncListShuffledObjects.Add(y);
+            Debug.Log(SyncListShuffledObjects[i]);
         }
+
         NextObject();
     }
 
     public void NextObject()
     {
-        if (shuffledObjects.Count == 0)
+        if (SyncListShuffledObjects.Count == 0)
         {
             Win();
             return;
         }
         GameObject tempObject = previewObject;
-        previewObject = Instantiate(objects[shuffledObjects[0]], previewObject.transform.position, Quaternion.identity);
+        previewObject = Instantiate(objects[SyncListShuffledObjects[0]], previewObject.transform.position, Quaternion.identity);
         previewObject.GetComponent<Rigidbody>().useGravity = false;
         Destroy(tempObject);
-        shuffledObjects.Remove(shuffledObjects[0]);
+        SyncListShuffledObjects.Remove(SyncListShuffledObjects[0]);
         previewObject.name = previewObject.name.Replace("(Clone)", string.Empty);
         nameField.text = previewObject.name;
     }
