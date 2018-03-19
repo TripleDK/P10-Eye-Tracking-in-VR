@@ -1,13 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class TeleporterButton : MonoBehaviour
+public class TeleporterButton : NetworkBehaviour
 {
     [SerializeField] float maxPushPos = 1f;
     [SerializeField] Teleporter teleporter;
     [SerializeField] float coolDownTime = 1f;
-    [SerializeField] float pushOffset = 0.5f;
+    [SerializeField, SyncVar] float pushOffset = 0.5f;
 
     Material material;
     Color startCol;
@@ -20,6 +21,7 @@ public class TeleporterButton : MonoBehaviour
         material = GetComponent<MeshRenderer>().material;
         startCol = material.color;
     }
+
 
     private void OnTriggerStay(Collider other)
     {
