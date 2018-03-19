@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 public class Teleporter : MonoBehaviour
 {
@@ -50,9 +51,10 @@ public class Teleporter : MonoBehaviour
         {
             if (objectToTeleport.gameObject.name == TaskContext.singleton.previewObject.name)
             {
+                Rigidbody teleportRigid = objectToTeleport.gameObject.GetComponent<Rigidbody>();
                 AudioSource.PlayClipAtPoint(beep, transform.position);
-                objectToTeleport.gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
-                objectToTeleport.transform.position = teleportTarget.position;
+               teleportRigid .velocity = Vector3.zero;
+               teleportRigid.MovePosition(teleportTarget.position);
                 //  objectToTeleport.startPos = teleportTarget.position;
                 objectToTeleport = null;
                 TaskContext.singleton.NextObject();

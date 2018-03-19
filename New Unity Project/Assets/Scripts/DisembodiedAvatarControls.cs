@@ -28,6 +28,13 @@ public class DisembodiedAvatarControls : MonoBehaviour
         GameObject.Find("Controller (right)").GetComponent<VRGrab>().handAnim = rightHand.GetComponent<Animator>();
     }
 
+
+    public void ResetTorsoPosition()
+    {
+        torso.position = head.position - Vector3.up * neckHeight - head.forward * headLength;
+    }
+
+
     void Update()
     {
         if (isLocalPlayer)

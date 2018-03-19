@@ -27,6 +27,7 @@ public class DisembodiedAvatarScaling : NetworkBehaviour
             Transform cameraRig = GameObject.Find("[CameraRig]").transform;
             cameraRig.position = new Vector3(transform.position.x, 0, transform.position.z);
             cameraRig.eulerAngles = new Vector3(0, transform.rotation.y, 0);
+            CalibrationContext.singleton.playerTransform = transform;
         }
         leftController = GameObject.Find("Controller (left)").transform;
         rightController = GameObject.Find("Controller (right)").transform;
@@ -47,6 +48,7 @@ public class DisembodiedAvatarScaling : NetworkBehaviour
         rHandContainer.localPosition = new Vector3(rHandContainer.localPosition.x * xScale, rHandContainer.localPosition.y, rHandContainer.localPosition.z);
         headContainer.gameObject.SetActive(false);
     }
+
 
 
     // Use this for initialization

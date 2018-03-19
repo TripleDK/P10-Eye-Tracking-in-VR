@@ -7,6 +7,7 @@ public class CalibrationContext : MonoBehaviour
 {
     static public CalibrationContext singleton;
     public IKControlTest localPlayerIKControls;
+    public Transform playerTransform;
     public int networkFunction = 0; //0 = Host, 1 = Client, 2 = Server
     public int gender = 0; //0 = Male, 1 = Female
     public int style = 0; //0 = Realistic, 1 = Disembodied cartoon
@@ -86,8 +87,6 @@ public class CalibrationContext : MonoBehaviour
         StartCoroutine(WaitForCalibrate());
     }
 
-
-
     IEnumerator WaitForCalibrate()
     {
         yield return null; //To not call on same fram when choosing network!
@@ -141,8 +140,8 @@ public class CalibrationContext : MonoBehaviour
     {
         this.role = role;
         Transform cameraRig = GameObject.Find("[CameraRig]").transform;
-
-        cameraRig.position = startPos[this.role].position;
         cameraRig.rotation = startPos[this.role].rotation;
+        cameraRig.position = startPos[this.role].position;
+        playerTransform.position = cameraRig.position;
     }
 }

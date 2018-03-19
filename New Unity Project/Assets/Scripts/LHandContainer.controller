@@ -82,7 +82,7 @@ AnimatorState:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: Grab
-  m_Speed: 2
+  m_Speed: 6
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 1101339917519572268}

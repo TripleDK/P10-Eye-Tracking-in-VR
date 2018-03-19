@@ -1,15 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 using TMPro;
-public class TaskContext : MonoBehaviour
+public class TaskContext : NetworkBehaviour
 {
     public static TaskContext singleton;
     public GameObject previewObject;
     public List<GameObject> objects = new List<GameObject>();
     [SerializeField] float previewRotationSpeed = 180f;
     [SerializeField] TextMeshPro nameField;
-    List<GameObject> shuffledObjects = new List<GameObject>();
+    SyncListInt shuffledObjects;
 
     void Awake()
     {
@@ -30,8 +31,7 @@ public class TaskContext : MonoBehaviour
         for (int i = 0; i < objectCount; i++)
         {
             int y = Random.Range(0, objects.Count);
-            shuffledObjects.Add(objects[y]);
-            objects.RemoveAt(y);
+            shuffledObjects.Add(y);
         }
         NextObject();
     }
@@ -44,7 +44,7 @@ public class TaskContext : MonoBehaviour
             return;
         }
         GameObject tempObject = previewObject;
-        previewObject = Instantiate(shuffledObjects[0], previewObject.transform.position, Quaternion.identity);
+        previewObject = Instantiate(objects[shuffledObjects[0]], previewObject.transform.position, Quaternion.identity);
         previewObject.GetComponent<Rigidbody>().useGravity = false;
         Destroy(tempObject);
         shuffledObjects.Remove(shuffledObjects[0]);
