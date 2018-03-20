@@ -10,7 +10,8 @@ public class TaskContext : NetworkBehaviour
     public List<GameObject> objects = new List<GameObject>();
     [SerializeField] float previewRotationSpeed = 180f;
     [SerializeField] TextMeshPro nameField;
-    [SyncVar]
+    [SerializeField] TextMeshPro debugNameField;
+
     SyncListInt SyncListShuffledObjects = new SyncListInt();
 
 
@@ -44,13 +45,13 @@ public class TaskContext : NetworkBehaviour
         Debug.Log("Commanding!");
         SyncListShuffledObjects.Clear();
         int objectCount = objects.Count;
-        for (int i = 0; i < objectCount; i++)
+        for (int i = 0; i < objectCount - 1; i++)
         {
             int y = Random.Range(0, objects.Count);
             while (SyncListShuffledObjects.Contains(y))
             {
                 y++;
-                if (y > objectCount) y = 0;
+                if (y > objectCount - 1) y = 0;
             }
             SyncListShuffledObjects.Add(y);
             Debug.Log(SyncListShuffledObjects[i]);
@@ -73,6 +74,7 @@ public class TaskContext : NetworkBehaviour
         SyncListShuffledObjects.Remove(SyncListShuffledObjects[0]);
         previewObject.name = previewObject.name.Replace("(Clone)", string.Empty);
         nameField.text = previewObject.name;
+        debugNameField.text = previewObject.name;
     }
 
     void Update()

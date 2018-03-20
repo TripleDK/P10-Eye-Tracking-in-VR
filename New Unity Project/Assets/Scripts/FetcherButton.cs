@@ -15,6 +15,6 @@ public class FetcherButton : VRButton
     [Command]
     public void CmdDestroyButton()
     {
-        Destroy(gameObject);
+        Network.Destroy(gameObject);
     }
 }

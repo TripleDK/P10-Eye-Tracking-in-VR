@@ -22,15 +22,14 @@ public class DisembodiedAvatarScaling : NetworkBehaviour
 
     void Resize()
     {
-        if (isLocalPlayer)
-        {
-            Transform cameraRig = GameObject.Find("[CameraRig]").transform;
-            cameraRig.position = new Vector3(transform.position.x, 0, transform.position.z);
-            cameraRig.eulerAngles = new Vector3(0, transform.rotation.y, 0);
-            CalibrationContext.singleton.playerTransform = transform;
-        }
+
+        Transform cameraRig = GameObject.Find("[CameraRig]").transform;
+        cameraRig.position = new Vector3(transform.position.x, 0, transform.position.z);
+        cameraRig.eulerAngles = new Vector3(0, transform.rotation.y, 0);
+        CalibrationContext.singleton.playerTransform = transform;
         leftController = GameObject.Find("Controller (left)").transform;
         rightController = GameObject.Find("Controller (right)").transform;
+
         float headHeight = mainCamera.transform.position.y;
         float yScale = headHeight / disembodiedControls.leftEye.position.y;
         Debug.Log("yScale: " + yScale);
@@ -38,15 +37,16 @@ public class DisembodiedAvatarScaling : NetworkBehaviour
         float xScale = armLength / Vector2.Distance(new Vector2(disembodiedControls.leftHand.position.x, disembodiedControls.leftHand.position.z), new Vector2(disembodiedControls.rightHand.position.x, disembodiedControls.rightHand.position.z)); ;
         Vector3 tempScale = Vector3.one;
         tempScale = new Vector3(tempScale.x * xScale, tempScale.y * yScale, tempScale.z);
-        headContainer.localScale = tempScale;
+        headContainer.localScale = new Vector3(tempScale.x, tempScale.y, tempScale.x);
         headContainer.localPosition = new Vector3(0, headContainer.localPosition.y * yScale, 0);
-        torsoContainer.localScale = new Vector3(tempScale.z, tempScale.y, tempScale.x);
+        torsoContainer.localScale = new Vector3(tempScale.x, tempScale.y, tempScale.x);
         torsoContainer.localPosition = new Vector3(0, torsoContainer.localPosition.y * yScale, 0);
-        lHandContainer.localScale = tempScale;
+        lHandContainer.localScale = new Vector3(tempScale.x, tempScale.y, tempScale.x);
         lHandContainer.localPosition = new Vector3(lHandContainer.localPosition.x * xScale, lHandContainer.localPosition.y, lHandContainer.localPosition.z);
-        rHandContainer.localScale = tempScale;
+        rHandContainer.localScale = new Vector3(tempScale.x, tempScale.y, tempScale.x);
         rHandContainer.localPosition = new Vector3(rHandContainer.localPosition.x * xScale, rHandContainer.localPosition.y, rHandContainer.localPosition.z);
         headContainer.gameObject.SetActive(false);
+        torsoContainer.gameObject.SetActive(false);
     }
 
 
@@ -54,9 +54,8 @@ public class DisembodiedAvatarScaling : NetworkBehaviour
     // Use this for initialization
     void Start()
     {
-        if (isLocalPlayer)
+        if (isLocalPlayer && CalibrationContext.singleton.calibrationProgress > 0)
         {
-
             disembodiedControls.LocalIKSetup();
             Resize();
         }

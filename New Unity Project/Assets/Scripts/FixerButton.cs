@@ -15,6 +15,6 @@ public class FixerButton : VRButton
     [Command]
     public void CmdDestroyButton()
     {
-        Destroy(gameObject);
+        Network.Destroy(gameObject);
     }
 }

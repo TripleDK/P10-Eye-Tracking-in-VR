@@ -16,24 +16,21 @@ public class Teleporter : NetworkBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.GetComponent<ObjectInteractions>())
-            Debug.Log("Trigger hit by " + other.gameObject.name);
         {
-            if (other.gameObject.GetComponent<ObjectInteractions>().attached == false)
+            Debug.Log("Trigger hit by " + other.gameObject.name);
+            if (objectToTeleport != null)
             {
-                if (objectToTeleport != null)
+                if (other.gameObject == objectToTeleport.gameObject)
                 {
-                    if (other.gameObject == objectToTeleport.gameObject)
-                    {
-                        Debug.Log("Wat");
-                    }
-                    Debug.Log("Already have " + objectToTeleport.gameObject.name + ", so repulsing " + other.gameObject.name);
-                    other.gameObject.GetComponent<Rigidbody>().AddForce(Vector3.up * repulsionForce, ForceMode.Impulse);
-                    other.gameObject.GetComponent<ObjectInteractions>().ResetPosition(5);
-                    return;
-
+                    Debug.Log("Wat");
                 }
-                objectToTeleport = other.gameObject.GetComponent<ObjectInteractions>();
+                Debug.Log("Already have " + objectToTeleport.gameObject.name + ", so repulsing " + other.gameObject.name);
+                other.gameObject.GetComponent<Rigidbody>().AddForce(Vector3.up * repulsionForce, ForceMode.Impulse);
+                other.gameObject.GetComponent<ObjectInteractions>().ResetPosition(5);
+                return;
+
             }
+            objectToTeleport = other.gameObject.GetComponent<ObjectInteractions>();
         }
     }
     private void OnTriggerExit(Collider other)
