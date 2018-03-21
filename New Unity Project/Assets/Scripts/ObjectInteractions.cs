@@ -9,6 +9,7 @@ public class ObjectInteractions : VRButton
 
     public bool attached = false;
     public Vector3 startPos;
+    [SerializeField] float minHeight = 0.3f;
     FixedJoint tempJoint = null;
     Vector3 velocity;
     Quaternion angVelocity;
@@ -36,7 +37,7 @@ public class ObjectInteractions : VRButton
             rigid.velocity = Vector3.zero;
             networkIdentity.localPlayerAuthority = true;
             NetworkIdentity playerId = GameObject.FindGameObjectWithTag("LocalPlayer").GetComponent<NetworkIdentity>();
-            networkIdentity.AssignClientAuthority(playerId.connectionToClient);
+            playerId.GetComponent<Player>().CmdSetAuth(netId, playerId);
             CmdAttach(playerId);
         }
     }
@@ -76,7 +77,7 @@ public class ObjectInteractions : VRButton
     [Command]
     void CmdDetach()
     {
-        networkIdentity.localPlayerAuthority = false;
+        // networkIdentity.localPlayerAuthority = false;
 
     }
 
@@ -96,7 +97,7 @@ public class ObjectInteractions : VRButton
         {
             yield return null;
         }
-        if ((transform.position.y - startPos.y) < -0.5)
+        if (transform.position.y < minHeight)
         {
             ResetPosition(0);
         }
@@ -109,6 +110,18 @@ public class ObjectInteractions : VRButton
     IEnumerator ResetPositionCo(int delay)
     {
         yield return new WaitForSeconds(delay);
+        CmdResetPosition();
+    }
+
+    [Command]
+    public void CmdResetPosition()
+    {
+        RpcResetPosition();
+    }
+
+    [ClientRpc]
+    public void RpcResetPosition()
+    {
         transform.position = startPos;
         rigid.velocity = Vector3.zero;
     }

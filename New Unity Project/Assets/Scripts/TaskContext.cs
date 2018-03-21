@@ -13,8 +13,8 @@ public class TaskContext : NetworkBehaviour
     [SerializeField] TextMeshPro nameField;
     [SerializeField] TextMeshPro debugNameField;
 
-    SyncListInt SyncListShuffledObjects = new SyncListInt();
-
+    [SerializeField] SyncListInt SyncListShuffledObjects = new SyncListInt();
+    [SyncVar] public string previewObjectName = "Namerino";
 
     void Awake()
     {
@@ -75,7 +75,6 @@ public class TaskContext : NetworkBehaviour
         NextObject();
     }
 
-    [Server]
     public void NextObject()
     {
         if (SyncListShuffledObjects.Count == 0)
@@ -86,6 +85,8 @@ public class TaskContext : NetworkBehaviour
         GameObject tempObject = previewObject;
         previewObject = Instantiate(objects[SyncListShuffledObjects[0]], previewObject.transform.position, Quaternion.identity);
         previewObject.GetComponent<Rigidbody>().useGravity = false;
+        previewObjectName = previewObject.name;
+        NetworkServer.Spawn(tempObject);
         Destroy(tempObject);
         SyncListShuffledObjects.Remove(SyncListShuffledObjects[0]);
         previewObject.name = previewObject.name.Replace("(Clone)", string.Empty);

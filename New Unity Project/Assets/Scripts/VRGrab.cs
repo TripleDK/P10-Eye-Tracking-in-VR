@@ -5,7 +5,7 @@ using UnityEngine;
 public class VRGrab : MonoBehaviour
 {
     enum Controller { left, right };
-    public Animator handAnim;
+    public HandSyncher handAnim;
     Controller side;
     public List<VRButton> grabbedObject = new List<VRButton>();
     public float leftTrigger, rightTrigger;
@@ -23,14 +23,12 @@ public class VRGrab : MonoBehaviour
             if (handAnim) handAnim.SetFloat("GrabValue", Input.GetAxis("LeftTrigger"));
             if (Input.GetKeyDown("joystick button 14"))
             {
-                if (handAnim) handAnim.SetBool("Grabbing", true);
                 if (grabbedObject.Count > 0) grabbedObject[0].Action(VRButton.Controller.left, this);
                 if (grabbedObject.Count > 0) grabbedObject[0].Action(VRButton.Controller.left);
 
             }
             if (Input.GetKeyUp("joystick button 14"))
             {
-                if (handAnim) handAnim.SetBool("Grabbing", false);
                 if (grabbedObject.Count > 0)
                 {
                     grabbedObject[0].ActionUp(VRButton.Controller.left);
@@ -42,7 +40,6 @@ public class VRGrab : MonoBehaviour
             if (handAnim) handAnim.SetFloat("GrabValue", Input.GetAxis("RightTrigger"));
             if (Input.GetKeyDown("joystick button 15"))
             {
-                if (handAnim) handAnim.SetBool("Grabbing", true);
                 if (grabbedObject.Count > 0) grabbedObject[0].Action(VRButton.Controller.right, this);
                 if (grabbedObject.Count > 0) grabbedObject[0].Action(VRButton.Controller.right);
 
@@ -50,7 +47,6 @@ public class VRGrab : MonoBehaviour
 
             if (Input.GetKeyUp("joystick button 15"))
             {
-                if (handAnim) handAnim.SetBool("Grabbing", false);
                 if (grabbedObject.Count > 0)
                 {
                     grabbedObject[0].ActionUp(VRButton.Controller.right);
