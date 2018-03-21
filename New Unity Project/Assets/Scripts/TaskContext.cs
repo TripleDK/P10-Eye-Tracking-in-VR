@@ -1,15 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 using TMPro;
-public class TaskContext : MonoBehaviour
+public class TaskContext : NetworkBehaviour
 {
     public static TaskContext singleton;
     public GameObject previewObject;
     public List<GameObject> objects = new List<GameObject>();
     [SerializeField] float previewRotationSpeed = 180f;
     [SerializeField] TextMeshPro nameField;
-    List<GameObject> shuffledObjects = new List<GameObject>();
+    [SerializeField] TextMeshPro debugNameField;
+
+    SyncListInt SyncListShuffledObjects = new SyncListInt();
+
 
     void Awake()
     {
@@ -21,35 +25,56 @@ public class TaskContext : MonoBehaviour
         {
             Debug.LogWarning("Two TaskContexts in scene!");
         }
-        Setup();
+
     }
 
-    void Setup()
+    public override void OnStartClient()
     {
+        if (NetworkServer.active) StartCoroutine(WaitABit());
+    }
+
+    IEnumerator WaitABit()
+    {
+        yield return new WaitForSeconds(1);
+        CmdSetup();
+    }
+
+    [Command]
+    void CmdSetup()
+    {
+        Debug.Log("Commanding!");
+        SyncListShuffledObjects.Clear();
         int objectCount = objects.Count;
-        for (int i = 0; i < objectCount; i++)
+        for (int i = 0; i < objectCount - 1; i++)
         {
             int y = Random.Range(0, objects.Count);
-            shuffledObjects.Add(objects[y]);
-            objects.RemoveAt(y);
+            while (SyncListShuffledObjects.Contains(y))
+            {
+                y++;
+                if (y > objectCount - 1) y = 0;
+            }
+            SyncListShuffledObjects.Add(y);
+            Debug.Log(SyncListShuffledObjects[i]);
         }
+
         NextObject();
     }
 
     public void NextObject()
     {
-        if (shuffledObjects.Count == 0)
+        if (SyncListShuffledObjects.Count == 0)
         {
             Win();
             return;
         }
         GameObject tempObject = previewObject;
-        previewObject = Instantiate(shuffledObjects[0], previewObject.transform.position, Quaternion.identity);
+        previewObject = Instantiate(objects[SyncListShuffledObjects[0]], previewObject.transform.position, Quaternion.identity);
         previewObject.GetComponent<Rigidbody>().useGravity = false;
         Destroy(tempObject);
-        shuffledObjects.Remove(shuffledObjects[0]);
+        SyncListShuffledObjects.Remove(SyncListShuffledObjects[0]);
         previewObject.name = previewObject.name.Replace("(Clone)", string.Empty);
         nameField.text = previewObject.name;
+        debugNameField.text = previewObject.name;
     }
 
     void Update()

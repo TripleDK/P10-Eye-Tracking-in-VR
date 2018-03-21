@@ -7,18 +7,22 @@ public class CalibrationContext : MonoBehaviour
 {
     static public CalibrationContext singleton;
     public IKControlTest localPlayerIKControls;
+    public Transform playerTransform;
     public int networkFunction = 0; //0 = Host, 1 = Client, 2 = Server
     public int gender = 0; //0 = Male, 1 = Female
     public int style = 0; //0 = Realistic, 1 = Disembodied cartoon
-    int calibrationProgress = 0;
+    public int role = 0; //0 = Fetcher, 1 = Fixer
+    public int calibrationProgress = 0;
 
     [SerializeField] NetworkManager networkManager;
     [SerializeField] GameObject genderSelect;
     [SerializeField] GameObject networkButtons;
     [SerializeField] GameObject styleButtons;
-
+    [SerializeField] GameObject roleSelect;
+    Transform fixerPos, fetcherPos;
 
     Transform leftHand, rightHand, head;
+    Transform[] startPos = new Transform[2];
 
     void Awake()
     {
@@ -30,6 +34,8 @@ public class CalibrationContext : MonoBehaviour
         {
             Debug.LogError("Two calibrationcontexts in scene!", this);
         }
+        startPos[0] = GameObject.Find("Player1StartPos").transform;
+        startPos[1] = GameObject.Find("Player2StartPos").transform;
     }
 
     void Start()
@@ -57,6 +63,7 @@ public class CalibrationContext : MonoBehaviour
             yield return null;
         }
         genderSelect.SetActive(true);
+        calibrationProgress = 1;
     }
 
     public void ChooseGender(int gender)
@@ -126,6 +133,16 @@ public class CalibrationContext : MonoBehaviour
         leftHand.GetChild(0).gameObject.SetActive(false);
         rightHand.GetChild(0).gameObject.SetActive(false);
 
+        roleSelect.SetActive(true);
 
+    }
+
+    public void ChooseRole(int role)
+    {
+        this.role = role;
+        Transform cameraRig = GameObject.Find("[CameraRig]").transform;
+        cameraRig.rotation = startPos[this.role].rotation;
+        cameraRig.position = startPos[this.role].position;
+        playerTransform.position = cameraRig.position;
     }
 }

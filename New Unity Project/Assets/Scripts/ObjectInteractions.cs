@@ -13,7 +13,7 @@ public class ObjectInteractions : VRButton
     Vector3 prevPosition;
     Quaternion prevAng;
     Rigidbody rigid;
-    Vector3 startPos;
+    public Vector3 startPos;
 
     public override void Awake()
     {
@@ -27,7 +27,7 @@ public class ObjectInteractions : VRButton
         if (!attached)
         {
             attached = true;
-            transform.position = controller.transform.position;
+            //  transform.position = controller.transform.position;
             tempJoint = gameObject.AddComponent<FixedJoint>();
             tempJoint.connectedBody = controller.GetComponent<Rigidbody>();
             rigid.velocity = Vector3.zero;
@@ -60,6 +60,23 @@ public class ObjectInteractions : VRButton
     public override void FeedbackColor(Color color)
     {
         material.color = color;
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        StartCoroutine(CheckForFall());
+    }
+
+    IEnumerator CheckForFall()
+    {
+        while (rigid.velocity != Vector3.zero)
+        {
+            yield return null;
+        }
+        if ((transform.position.y - startPos.y) < -0.5)
+        {
+            ResetPosition(0);
+        }
     }
 
     public void ResetPosition(int delay)
