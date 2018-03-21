@@ -18,10 +18,9 @@ public class VRGrab : MonoBehaviour
 
     void Update()
     {
-        Debug.Log("Left: " + Input.GetAxis("LeftTrigger").ToString("00.00") + ", Right: " + (float)Input.GetAxis("RightTrigger"));
         if (side == Controller.left)
         {
-            if (handAnim) handAnim.SetFloat("GrabValue", Input.GetAxis("Mouse ScrollWheel"));
+            if (handAnim) handAnim.SetFloat("GrabValue", Input.GetAxis("LeftTrigger"));
             if (Input.GetKeyDown("joystick button 14"))
             {
                 if (handAnim) handAnim.SetBool("Grabbing", true);
@@ -40,7 +39,7 @@ public class VRGrab : MonoBehaviour
         }
         if (side == Controller.right)
         {
-            if (handAnim) handAnim.SetFloat("GrabValue", Input.GetAxis("Horizontal"));
+            if (handAnim) handAnim.SetFloat("GrabValue", Input.GetAxis("RightTrigger"));
             if (Input.GetKeyDown("joystick button 15"))
             {
                 if (handAnim) handAnim.SetBool("Grabbing", true);

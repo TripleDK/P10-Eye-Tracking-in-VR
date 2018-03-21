@@ -8,6 +8,7 @@ public class TaskContext : NetworkBehaviour
     public static TaskContext singleton;
     public GameObject previewObject;
     public List<GameObject> objects = new List<GameObject>();
+    [SerializeField] List<Transform> spawnPos = new List<Transform>();
     [SerializeField] float previewRotationSpeed = 180f;
     [SerializeField] TextMeshPro nameField;
     [SerializeField] TextMeshPro debugNameField;
@@ -39,14 +40,15 @@ public class TaskContext : NetworkBehaviour
         CmdSetup();
     }
 
-    [Command]
+    [Server]
     void CmdSetup()
     {
         Debug.Log("Commanding!");
         SyncListShuffledObjects.Clear();
         int objectCount = objects.Count;
-        for (int i = 0; i < objectCount - 1; i++)
+        for (int i = 0; i < objectCount; i++)
         {
+            //Task order list
             int y = Random.Range(0, objects.Count);
             while (SyncListShuffledObjects.Contains(y))
             {
@@ -55,11 +57,25 @@ public class TaskContext : NetworkBehaviour
             }
             SyncListShuffledObjects.Add(y);
             Debug.Log(SyncListShuffledObjects[i]);
+
+            //Spawn Objects
+            List<int> usedPos = new List<int>();
+            int posIndex = Random.Range(0, objects.Count);
+            while (usedPos.Contains(posIndex))
+            {
+                posIndex--;
+                if (posIndex < 0) posIndex = objects.Count - 1;
+            }
+            usedPos.Add(posIndex);
+            var go = (GameObject)Instantiate(objects[y], spawnPos[posIndex].position, Quaternion.identity);
+            NetworkServer.SpawnWithClientAuthority(go, GameObject.FindGameObjectWithTag("LocalPlayer").GetComponent<NetworkIdentity>().connectionToClient);
+
         }
 
         NextObject();
     }
 
+    [Server]
     public void NextObject()
     {
         if (SyncListShuffledObjects.Count == 0)
