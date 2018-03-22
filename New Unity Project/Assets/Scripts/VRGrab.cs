@@ -8,7 +8,6 @@ public class VRGrab : MonoBehaviour
     public HandSyncher handAnim;
     Controller side;
     public List<VRButton> grabbedObject = new List<VRButton>();
-    public float leftTrigger, rightTrigger;
 
     void Awake()
     {
@@ -20,7 +19,7 @@ public class VRGrab : MonoBehaviour
     {
         if (side == Controller.left)
         {
-			if (handAnim) handAnim.grabValue = Input.GetAxis("LeftTrigger");
+            if (handAnim) handAnim.ChangeGrabL(Input.GetAxis("LeftTrigger"));
             if (Input.GetKeyDown("joystick button 14"))
             {
                 if (grabbedObject.Count > 0) grabbedObject[0].Action(VRButton.Controller.left, this);
@@ -37,7 +36,7 @@ public class VRGrab : MonoBehaviour
         }
         if (side == Controller.right)
         {
-            if (handAnim) handAnim.grabValue = Input.GetAxis("RightTrigger");
+            if (handAnim) handAnim.ChangeGrabR(Input.GetAxis("RightTrigger"));
             if (Input.GetKeyDown("joystick button 15"))
             {
                 if (grabbedObject.Count > 0) grabbedObject[0].Action(VRButton.Controller.right, this);
