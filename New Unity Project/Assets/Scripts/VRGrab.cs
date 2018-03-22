@@ -20,7 +20,7 @@ public class VRGrab : MonoBehaviour
     {
         if (side == Controller.left)
         {
-            if (handAnim) handAnim.grabValue = Input.GetAxis("LeftTrigger");
+			if (handAnim) handAnim.grabValue = Input.GetAxis("LeftTrigger");
             if (Input.GetKeyDown("joystick button 14"))
             {
                 if (grabbedObject.Count > 0) grabbedObject[0].Action(VRButton.Controller.left, this);
