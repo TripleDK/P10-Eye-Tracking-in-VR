@@ -20,7 +20,7 @@ public class VRGrab : MonoBehaviour
     {
         if (side == Controller.left)
         {
-            if (handAnim) handAnim.SetFloat("GrabValue", Input.GetAxis("LeftTrigger"));
+			if (handAnim) handAnim.grabValue = Input.GetAxis("LeftTrigger");
             if (Input.GetKeyDown("joystick button 14"))
             {
                 if (grabbedObject.Count > 0) grabbedObject[0].Action(VRButton.Controller.left, this);
@@ -37,7 +37,7 @@ public class VRGrab : MonoBehaviour
         }
         if (side == Controller.right)
         {
-            if (handAnim) handAnim.SetFloat("GrabValue", Input.GetAxis("RightTrigger"));
+            if (handAnim) handAnim.grabValue = Input.GetAxis("RightTrigger");
             if (Input.GetKeyDown("joystick button 15"))
             {
                 if (grabbedObject.Count > 0) grabbedObject[0].Action(VRButton.Controller.right, this);
