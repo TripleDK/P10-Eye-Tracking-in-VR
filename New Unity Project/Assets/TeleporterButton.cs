@@ -30,7 +30,9 @@ public class TeleporterButton : NetworkBehaviour
             transform.position = new Vector3(transform.position.x, transform.position.y, Mathf.Max(startZ, other.transform.position.z + pushOffset));
             if (transform.position.z >= maxPushPos + startZ)
             {
-                teleporter.CmdActivate();
+                NetworkIdentity playerId = GameObject.FindGameObjectWithTag("LocalPlayer").GetComponent<NetworkIdentity>();
+                playerId.GetComponent<Player>().CmdSetAuth(teleporter.netId, playerId);
+                teleporter.Activate();
 
                 StartCoroutine(ButtonCooldown());
             }

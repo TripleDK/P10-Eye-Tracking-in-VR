@@ -24,8 +24,18 @@ public class DisembodiedAvatarControls : MonoBehaviour
         rightHandTarget = GameObject.Find("Controller (right)").transform;
         leftHandTarget = GameObject.Find("Controller (left)").transform;
         headTarget = GameObject.Find("Camera (eye)").transform;
-        GameObject.Find("Controller (left)").GetComponent<VRGrab>().handAnim = leftHand.GetComponent<Animator>();
-        GameObject.Find("Controller (right)").GetComponent<VRGrab>().handAnim = rightHand.GetComponent<Animator>();
+        HandSyncher[] hSynchers = GetComponents<HandSyncher>();
+        foreach (HandSyncher h in hSynchers)
+        {
+            if (h.handIndex == 0)
+            {
+                GameObject.Find("Controller (left)").GetComponent<VRGrab>().handAnim = h;
+            }
+            if (h.handIndex == 1)
+            {
+                GameObject.Find("Controller (right)").GetComponent<VRGrab>().handAnim = h;
+            }
+        }
     }
 
 

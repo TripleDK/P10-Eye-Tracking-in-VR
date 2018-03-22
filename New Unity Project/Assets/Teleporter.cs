@@ -17,7 +17,7 @@ public class Teleporter : NetworkBehaviour
     {
         if (other.gameObject.GetComponent<ObjectInteractions>())
         {
-            Debug.Log("Trigger hit by " + other.gameObject.name);
+            //     Debug.Log("Trigger hit by " + other.gameObject.name);
             if (objectToTeleport != null)
             {
                 if (other.gameObject == objectToTeleport.gameObject)
@@ -35,34 +35,61 @@ public class Teleporter : NetworkBehaviour
     }
     private void OnTriggerExit(Collider other)
     {
-        Debug.Log("Trigger exit by " + other.gameObject.name);
+        //        Debug.Log("Trigger exit by " + other.gameObject.name);
         if (other.gameObject.GetComponent<ObjectInteractions>() == objectToTeleport)
         {
             objectToTeleport = null;
         }
     }
-    [Command]
-    public void CmdActivate()
+    public void Activate()
     {
+        Debug.Log("Trying to activate teleporter!");
         if (objectToTeleport != null)
         {
-            if (objectToTeleport.gameObject.name == TaskContext.singleton.previewObject.name)
+            if (objectToTeleport.gameObject.name == TaskContext.singleton.previewObjectName)
             {
-                Rigidbody teleportRigid = objectToTeleport.gameObject.GetComponent<Rigidbody>();
-                AudioSource.PlayClipAtPoint(beep, transform.position);
-                teleportRigid.velocity = Vector3.zero;
-                teleportRigid.MovePosition(teleportTarget.position);
+
+                CmdActivate(objectToTeleport.gameObject);
                 //  objectToTeleport.startPos = teleportTarget.position;
                 objectToTeleport = null;
-                TaskContext.singleton.NextObject();
+
             }
             else
             {
-                AudioSource.PlayClipAtPoint(errorBeep, transform.position);
+                CmdErrorBeep();
                 objectToTeleport.gameObject.GetComponent<Rigidbody>().AddForce(Vector3.up * repulsionForce, ForceMode.Impulse);
             }
         }
     }
 
+    [Command]
+    public void CmdActivate(GameObject gameObject)
+    {
+        RpcActivate(gameObject);
+        TaskContext.singleton.NextObject();
+    }
+
+    [ClientRpc]
+    public void RpcActivate(GameObject go)
+    {
+        Debug.Log("RPC ACTIVAtea!");
+        Rigidbody teleportRigid = go.gameObject.GetComponent<Rigidbody>();
+        AudioSource.PlayClipAtPoint(beep, transform.position);
+        teleportRigid.velocity = Vector3.zero;
+        teleportRigid.MovePosition(teleportTarget.position);
+        go.GetComponent<ObjectInteractions>().startPos = teleportTarget.position;
+    }
+
+    [Command]
+    public void CmdErrorBeep()
+    {
+        RpcErrorBeep();
+    }
+
+    [ClientRpc]
+    public void RpcErrorBeep()
+    {
+        AudioSource.PlayClipAtPoint(errorBeep, transform.position);
+    }
 
 }

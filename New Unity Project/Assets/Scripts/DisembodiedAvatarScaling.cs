@@ -58,6 +58,7 @@ public class DisembodiedAvatarScaling : NetworkBehaviour
         {
             disembodiedControls.LocalIKSetup();
             Resize();
+            gameObject.tag = "LocalPlayer";
         }
     }
 
