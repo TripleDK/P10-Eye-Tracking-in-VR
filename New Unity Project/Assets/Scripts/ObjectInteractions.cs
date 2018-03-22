@@ -16,14 +16,12 @@ public class ObjectInteractions : VRButton
     Vector3 prevPosition;
     Quaternion prevAng;
     Rigidbody rigid;
-    NetworkIdentity networkIdentity;
 
     public override void Awake()
     {
         base.Awake();
         rigid = GetComponent<Rigidbody>();
         startPos = transform.position;
-        networkIdentity = GetComponent<NetworkIdentity>();
     }
 
     public override void Action(Controller side, VRGrab controller)

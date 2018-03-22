@@ -29,6 +29,18 @@ public class DisembodiedAvatarScaling : NetworkBehaviour
         CalibrationContext.singleton.playerTransform = transform;
         leftController = GameObject.Find("Controller (left)").transform;
         rightController = GameObject.Find("Controller (right)").transform;
+        HandSyncher[] hSynchers = GetComponents<HandSyncher>();
+        foreach (HandSyncher h in hSynchers)
+        {
+            if (h.handIndex == 0)
+            {
+                leftController.GetComponent<VRGrab>().handAnim = h;
+            }
+            if (h.handIndex == 1)
+            {
+                rightController.GetComponent<VRGrab>().handAnim = h;
+            }
+        }
 
         float headHeight = mainCamera.transform.position.y;
         float yScale = headHeight / disembodiedControls.leftEye.position.y;
