@@ -6,9 +6,9 @@ public class DisembodiedAvatarControls : MonoBehaviour
 {
 
     public bool isLocalPlayer = false;
-    public Transform headPos, leftHandPos, rightHandPos;
+    public Transform headPos, leftHandPos, rightHandPos, lookAtPos;
     public Transform head, leftHand, rightHand, torso;
-    public Transform leftEye;
+    public Transform leftEye, rightEye;
     [SerializeField] float neckHeight = 0.3f;
     [SerializeField] float torsoMoveSpeed = 1.0f;
     [SerializeField] float torsoRotateSpeed = 1.0f;
@@ -24,8 +24,7 @@ public class DisembodiedAvatarControls : MonoBehaviour
         rightHandTarget = GameObject.Find("Controller (right)").transform;
         leftHandTarget = GameObject.Find("Controller (left)").transform;
         headTarget = GameObject.Find("Camera (eye)").transform;
-        GameObject.Find("Controller (left)").GetComponent<VRGrab>().handAnim = leftHand.GetComponent<Animator>();
-        GameObject.Find("Controller (right)").GetComponent<VRGrab>().handAnim = rightHand.GetComponent<Animator>();
+
     }
 
 
@@ -45,6 +44,7 @@ public class DisembodiedAvatarControls : MonoBehaviour
             leftHandPos.rotation = leftHandTarget.rotation;
             rightHandPos.position = rightHandTarget.position;
             rightHandPos.rotation = rightHandTarget.rotation;
+            //lookAtPos.position = PupilLabs.3D_Gaze;
         }
         head.position = headPos.position;
         head.rotation = headPos.rotation;
@@ -52,6 +52,8 @@ public class DisembodiedAvatarControls : MonoBehaviour
         leftHand.rotation = leftHandPos.rotation;
         rightHand.position = rightHandPos.position;
         rightHand.rotation = rightHandPos.rotation;
+        leftEye.LookAt(lookAtPos);
+        rightEye.LookAt(lookAtPos);
 
         //Torso Movement
         int upSideDown = 1;

@@ -1,19 +1,21 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 [RequireComponent(typeof(Rigidbody))]
 public class ObjectInteractions : VRButton
 {
 
     public bool attached = false;
+    public Vector3 startPos;
+    [SerializeField] float minHeight = 0.3f;
     FixedJoint tempJoint = null;
     Vector3 velocity;
     Quaternion angVelocity;
     Vector3 prevPosition;
     Quaternion prevAng;
     Rigidbody rigid;
-    public Vector3 startPos;
 
     public override void Awake()
     {
@@ -31,7 +33,18 @@ public class ObjectInteractions : VRButton
             tempJoint = gameObject.AddComponent<FixedJoint>();
             tempJoint.connectedBody = controller.GetComponent<Rigidbody>();
             rigid.velocity = Vector3.zero;
+            networkIdentity.localPlayerAuthority = true;
+            NetworkIdentity playerId = GameObject.FindGameObjectWithTag("LocalPlayer").GetComponent<NetworkIdentity>();
+            playerId.GetComponent<Player>().CmdSetAuth(netId, playerId);
+            CmdAttach(playerId);
         }
+    }
+
+    [Command]
+    void CmdAttach(NetworkIdentity playerId)
+    {
+
+
     }
 
     public override void ActionUp(Controller side)
@@ -56,7 +69,16 @@ public class ObjectInteractions : VRButton
 
             rigid.maxAngularVelocity = rigid.angularVelocity.magnitude;
         }
+        CmdDetach();
     }
+
+    [Command]
+    void CmdDetach()
+    {
+        // networkIdentity.localPlayerAuthority = false;
+
+    }
+
     public override void FeedbackColor(Color color)
     {
         material.color = color;
@@ -73,7 +95,7 @@ public class ObjectInteractions : VRButton
         {
             yield return null;
         }
-        if ((transform.position.y - startPos.y) < -0.5)
+        if (transform.position.y < minHeight)
         {
             ResetPosition(0);
         }
@@ -86,6 +108,18 @@ public class ObjectInteractions : VRButton
     IEnumerator ResetPositionCo(int delay)
     {
         yield return new WaitForSeconds(delay);
+        CmdResetPosition();
+    }
+
+    [Command]
+    public void CmdResetPosition()
+    {
+        RpcResetPosition();
+    }
+
+    [ClientRpc]
+    public void RpcResetPosition()
+    {
         transform.position = startPos;
         rigid.velocity = Vector3.zero;
     }

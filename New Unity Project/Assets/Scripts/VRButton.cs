@@ -15,11 +15,12 @@ public class VRButton : NetworkBehaviour
     {
         left, right
     };
-
+    public NetworkIdentity networkIdentity;
 
     public virtual void Awake()
     {
         material = GetComponent<MeshRenderer>().material;
+        networkIdentity = GetComponent<NetworkIdentity>();
     }
     void OnTriggerEnter(Collider collision)
     {

@@ -9,12 +9,14 @@ public class FetcherButton : VRButton
     public override void Action(Controller side)
     {
         CalibrationContext.singleton.ChooseRole(0);
+        NetworkIdentity playerId = GameObject.FindGameObjectWithTag("LocalPlayer").GetComponent<NetworkIdentity>();
+        playerId.GetComponent<Player>().CmdSetAuth(netId, playerId);
         CmdDestroyButton();
     }
 
     [Command]
     public void CmdDestroyButton()
     {
-        Network.Destroy(gameObject);
+        NetworkServer.Destroy(gameObject);
     }
 }

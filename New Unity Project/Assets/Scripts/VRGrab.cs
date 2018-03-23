@@ -5,10 +5,9 @@ using UnityEngine;
 public class VRGrab : MonoBehaviour
 {
     enum Controller { left, right };
-    public Animator handAnim;
+    public HandSyncher handAnim;
     Controller side;
     public List<VRButton> grabbedObject = new List<VRButton>();
-    public float leftTrigger, rightTrigger;
 
     void Awake()
     {
@@ -18,20 +17,17 @@ public class VRGrab : MonoBehaviour
 
     void Update()
     {
-        Debug.Log("Left: " + Input.GetAxis("LeftTrigger").ToString("00.00") + ", Right: " + (float)Input.GetAxis("RightTrigger"));
         if (side == Controller.left)
         {
-            if (handAnim) handAnim.SetFloat("GrabValue", Input.GetAxis("Mouse ScrollWheel"));
+            if (handAnim) handAnim.ChangeGrabL(Input.GetAxis("LeftTrigger"));
             if (Input.GetKeyDown("joystick button 14"))
             {
-                if (handAnim) handAnim.SetBool("Grabbing", true);
                 if (grabbedObject.Count > 0) grabbedObject[0].Action(VRButton.Controller.left, this);
                 if (grabbedObject.Count > 0) grabbedObject[0].Action(VRButton.Controller.left);
 
             }
             if (Input.GetKeyUp("joystick button 14"))
             {
-                if (handAnim) handAnim.SetBool("Grabbing", false);
                 if (grabbedObject.Count > 0)
                 {
                     grabbedObject[0].ActionUp(VRButton.Controller.left);
@@ -40,10 +36,9 @@ public class VRGrab : MonoBehaviour
         }
         if (side == Controller.right)
         {
-            if (handAnim) handAnim.SetFloat("GrabValue", Input.GetAxis("Horizontal"));
+            if (handAnim) handAnim.ChangeGrabR(Input.GetAxis("RightTrigger"));
             if (Input.GetKeyDown("joystick button 15"))
             {
-                if (handAnim) handAnim.SetBool("Grabbing", true);
                 if (grabbedObject.Count > 0) grabbedObject[0].Action(VRButton.Controller.right, this);
                 if (grabbedObject.Count > 0) grabbedObject[0].Action(VRButton.Controller.right);
 
@@ -51,7 +46,6 @@ public class VRGrab : MonoBehaviour
 
             if (Input.GetKeyUp("joystick button 15"))
             {
-                if (handAnim) handAnim.SetBool("Grabbing", false);
                 if (grabbedObject.Count > 0)
                 {
                     grabbedObject[0].ActionUp(VRButton.Controller.right);

@@ -57,11 +57,13 @@ public class AvatarScaling : NetworkBehaviour
     {
         if (CalibrationContext.singleton.calibrationProgress == 0)
         {
-            gameObject.SetActive(false);
+            if (isLocalPlayer) gameObject.tag = "LocalPlayer";
+            //  gameObject.SetActive(false);
             return;
         }
         if (isLocalPlayer && CalibrationContext.singleton.style == 0)
         {
+            gameObject.tag = "LocalPlayer";
             Resize();
             ikControls.LocalIKSetup();
         }
