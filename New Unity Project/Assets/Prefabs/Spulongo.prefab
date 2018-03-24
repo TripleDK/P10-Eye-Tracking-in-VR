@@ -92,7 +92,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 921837a5408991d429e86efc66f8be6b, type: 2}
+  - {fileID: 2100000, guid: ef9b9d97f3b8f4f4a986a7ff0beb92f7, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -178,9 +178,12 @@ MonoBehaviour:
   rightController: 0
   prevConnected: {fileID: 0}
   material: {fileID: 0}
+  color: {r: 0, g: 0, b: 0, a: 0}
   controllerGrab: {fileID: 0}
+  networkIdentity: {fileID: 0}
   attached: 0
   startPos: {x: 0, y: 0, z: 0}
+  minHeight: 0.3
 --- !u!114 &114247984271778368
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -260,7 +263,7 @@ SkinnedMeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 89c46be222380e742807f029a1a2ff90, type: 2}
+  - {fileID: 2100000, guid: ef9b9d97f3b8f4f4a986a7ff0beb92f7, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

@@ -65,9 +65,21 @@ public class Teleporter : NetworkBehaviour
     [Command]
     public void CmdActivate(GameObject gameObject)
     {
+        NetworkIdentity playerId = GameObject.FindGameObjectWithTag("LocalPlayer").GetComponent<NetworkIdentity>();
+        playerId.GetComponent<Player>().CmdSetAuth(TaskContext.singleton.netId, playerId);
         RpcActivate(gameObject);
-        TaskContext.singleton.NextObject();
+        StartCoroutine(WaitForAuthor());
     }
+
+    IEnumerator WaitForAuthor()
+    {
+        while (!TaskContext.singleton.hasAuthority)
+        {
+            yield return null;
+        }
+        TaskContext.singleton.CmdNextObject();
+    }
+
 
     [ClientRpc]
     public void RpcActivate(GameObject go)
@@ -91,5 +103,6 @@ public class Teleporter : NetworkBehaviour
     {
         AudioSource.PlayClipAtPoint(errorBeep, transform.position);
     }
+
 
 }

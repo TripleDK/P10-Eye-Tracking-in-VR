@@ -52,6 +52,7 @@
 				o.uv = TRANSFORM_TEX(v.uv, _MainTex);
 				o.worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
 				o.color = _Color;
+				
 				return o;
 			}
 			

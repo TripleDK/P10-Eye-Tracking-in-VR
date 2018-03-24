@@ -12,14 +12,12 @@ public class HandSyncher : NetworkBehaviour
 
     void OnChangeGrabValueL(float _grabValue)
     {
-        Debug.Log("Grab value was changed by syncvar! " + _grabValue + ", isLocalPlayer: " + isLocalPlayer, animatorL.gameObject);
         grabValueL = _grabValue;
         if (!isLocalPlayer) animatorL.SetFloat("GrabValue", _grabValue);
     }
 
     void OnChangeGrabValueR(float _grabValue)
     {
-        Debug.Log("Grab value was changed by syncvar! " + _grabValue + ", isLocalPlayer: " + isLocalPlayer, animatorR.gameObject);
         grabValueR = _grabValue;
         if (!isLocalPlayer) animatorR.SetFloat("GrabValue", _grabValue);
     }
@@ -35,7 +33,6 @@ public class HandSyncher : NetworkBehaviour
 
     public void ChangeGrabL(float value)
     {
-        Debug.Log("Change value locally for: " + animatorL.gameObject.name + ", " + value);
         animatorL.SetFloat("GrabValue", value);
         CmdChangeGrabL(value);
     }
@@ -48,7 +45,6 @@ public class HandSyncher : NetworkBehaviour
 
     public void ChangeGrabR(float value)
     {
-        Debug.Log("Change value locally for: " + animatorR.gameObject.name + ", " + value);
         animatorR.SetFloat("GrabValue", value);
         CmdChangeGrabR(value);
     }
