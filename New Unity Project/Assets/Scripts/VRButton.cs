@@ -9,6 +9,7 @@ public class VRButton : NetworkBehaviour
     public bool leftController, rightController = false;
     public Rigidbody prevConnected;
     public Material material;
+    public Color color;
 
     public VRGrab controllerGrab = null;
     public enum Controller
@@ -24,6 +25,7 @@ public class VRButton : NetworkBehaviour
     }
     void OnTriggerEnter(Collider collision)
     {
+        color = material.color;
         FeedbackColor(Color.green);
         if (collision.gameObject.name == "Controller (left)")
         {
@@ -51,7 +53,7 @@ public class VRButton : NetworkBehaviour
         }
         if (!leftController && !rightController)
         {
-            FeedbackColor(Color.yellow);
+            FeedbackColor(color);
         }
     }
 
