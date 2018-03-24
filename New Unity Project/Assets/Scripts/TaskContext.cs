@@ -13,6 +13,7 @@ public class TaskContext : NetworkBehaviour
     [SerializeField] TextMeshPro nameField;
     [SerializeField] TextMeshPro debugNameField;
 
+
     [SerializeField] SyncListInt SyncListShuffledObjects = new SyncListInt();
     [SyncVar] public string previewObjectName = "Namerino";
 
@@ -31,7 +32,13 @@ public class TaskContext : NetworkBehaviour
 
     public override void OnStartClient()
     {
-        if (NetworkServer.active) StartCoroutine(WaitABit());
+        string tempName = previewObjectName.Replace("(Clone)", string.Empty);
+        nameField.text = tempName;
+        debugNameField.text = tempName;
+        if (NetworkServer.active)
+        {
+            StartCoroutine(WaitABit());
+        }
     }
 
     IEnumerator WaitABit()
@@ -46,6 +53,7 @@ public class TaskContext : NetworkBehaviour
         Debug.Log("Commanding!");
         SyncListShuffledObjects.Clear();
         int objectCount = objects.Count;
+        NetworkIdentity playerId = GameObject.FindGameObjectWithTag("LocalPlayer").GetComponent<NetworkIdentity>();
         for (int i = 0; i < objectCount; i++)
         {
             //Task order list
@@ -68,14 +76,15 @@ public class TaskContext : NetworkBehaviour
             }
             usedPos.Add(posIndex);
             var go = (GameObject)Instantiate(objects[y], spawnPos[posIndex].position, Quaternion.identity);
-            NetworkServer.SpawnWithClientAuthority(go, GameObject.FindGameObjectWithTag("LocalPlayer").GetComponent<NetworkIdentity>().connectionToClient);
+            NetworkServer.SpawnWithClientAuthority(go, playerId.connectionToClient);
 
         }
 
-        NextObject();
+        CmdNextObject();
     }
 
-    public void NextObject()
+    [Command]
+    public void CmdNextObject()
     {
         if (SyncListShuffledObjects.Count == 0)
         {
@@ -86,12 +95,20 @@ public class TaskContext : NetworkBehaviour
         previewObject = Instantiate(objects[SyncListShuffledObjects[0]], previewObject.transform.position, Quaternion.identity);
         previewObject.GetComponent<Rigidbody>().useGravity = false;
         previewObjectName = previewObject.name;
-        NetworkServer.Spawn(tempObject);
-        Destroy(tempObject);
+        NetworkServer.Spawn(previewObject);
+        NetworkServer.Destroy(tempObject);
         SyncListShuffledObjects.Remove(SyncListShuffledObjects[0]);
         previewObject.name = previewObject.name.Replace("(Clone)", string.Empty);
-        nameField.text = previewObject.name;
-        debugNameField.text = previewObject.name;
+        RpcNameChange(previewObject.name);
+    }
+
+
+    [ClientRpc]
+    void RpcNameChange(string name)
+    {
+        Debug.Log("Changing name!");
+        nameField.text = name;
+        debugNameField.text = name;
     }
 
     void Update()

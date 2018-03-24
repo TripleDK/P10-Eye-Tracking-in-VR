@@ -7,12 +7,12 @@ Material:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: lambert2
-  m_Shader: {fileID: 4800000, guid: df02733b560393d4eb99c405182740ff, type: 3}
+  m_Shader: {fileID: 4800000, guid: ac81d58b6baa3e34796a6a00615fe279, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 3000
+  m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
   m_SavedProperties:
@@ -65,7 +65,7 @@ Material:
     - _DetailNormalMapScale: 1
     - _DiffuseThreshold: 0.1
     - _DissolveAmount: 0
-    - _DissolveEdge: 0.068
+    - _DissolveEdge: 0.147
     - _DissolveSize: 0
     - _DstBlend: 0
     - _GlossMapScale: 1
@@ -75,7 +75,7 @@ Material:
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
-    - _OutlineSize: 0.318
+    - _OutlineSize: 0.062
     - _OutlineWidth: 1.123
     - _Parallax: 0.02
     - _Shininess: 600
@@ -89,6 +89,6 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _DissolveColor: {r: 0, g: 0.7931032, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 0}
-    - _OutlineColor: {r: 1, g: 0, b: 0.7241378, a: 1}
+    - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.7794118, g: 0, b: 0, a: 1}
     - _UnlitColor: {r: 0.35294116, g: 0, b: 0, a: 1}
