@@ -13,6 +13,7 @@ Shader "Custom/ObjectShader" {
 		_DissolveEdge("Dissolve Edge Size", Range(0,1)) = 0.0
 		_OutlineSize("Outline Thickness", Range(0,1)) = 0.0
 	}
+	
 	SubShader {
 		Tags { "RenderType"="Opaque" }
 		LOD 200
@@ -33,8 +34,6 @@ Shader "Custom/ObjectShader" {
 		};
 		sampler2D _MainTex;
 		sampler2D _DissolveTex;
-
-	//	fixed4 _OutlineColor;
 		
 		float _DissolveEdge;
 		float _DissolveSize;
@@ -62,7 +61,7 @@ Shader "Custom/ObjectShader" {
 			// Albedo comes from a texture tinted by color
 			fixed4 c = tex2D (_MainTex, IN.uv_MainTex) ;//* _Color;
 			o.Albedo = c.rgb;
-		//	o.Albedo *= IN.customData;
+			//	o.Albedo *= IN.customData;
 			float intensity = abs(dot(normalize(IN.customData),normalize(IN.viewDir)));
 			if(intensity < 0) 
 				intensity = 0;
@@ -70,8 +69,6 @@ Shader "Custom/ObjectShader" {
 			if(intensity < _OutlineSize) {
 				o.Albedo = _OutlineColor;
 			}
-
-
 
 			if(test < _DissolveEdge && _DissolveSize > 0 && _DissolveSize < 1 ) {
 				o.Emission = _DissolveColor;
