@@ -71,6 +71,7 @@ ModelImporter:
     100126: transform9
     100128: TV
     100130: //RootNode
+    100132: pCube7
     400000: Dial1
     400002: Dial2
     400004: Dial_3
@@ -137,6 +138,7 @@ ModelImporter:
     400126: transform9
     400128: //RootNode
     400130: TV
+    400132: pCube7
     2100000: lambert5
     2100002: phongE3
     2100004: phongE2
@@ -149,9 +151,14 @@ ModelImporter:
     2100018: blinn1
     2100020: lambert7
     2100022: phongE1
+    2100024: lambert11
+    2100026: lambert9
     2300000: Dial_5
+    2300002: pCube7
     3300000: Dial_5
+    3300002: pCube7
     4300000: Dial_5
+    4300002: pCube7
     9500000: //RootNode
   externalObjects: {}
   materials:
