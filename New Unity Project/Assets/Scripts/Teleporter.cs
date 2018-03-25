@@ -10,8 +10,12 @@ public class Teleporter : NetworkBehaviour
     [SerializeField] float repulsionForce = 2f;
     [SerializeField] AudioClip beep;
     [SerializeField] AudioClip errorBeep;
+    [SerializeField] Transform floatTarget;
+    [SerializeField] float floatForce = 50;
+    [SerializeField] float floatDrag = 10;
 
     private ObjectInteractions objectToTeleport = null;
+    private Rigidbody objectRigidbody = null;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -31,8 +35,23 @@ public class Teleporter : NetworkBehaviour
 
             }
             objectToTeleport = other.gameObject.GetComponent<ObjectInteractions>();
+            objectRigidbody = other.gameObject.GetComponent<Rigidbody>();
         }
     }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (objectToTeleport != null)
+        {
+            if (other.gameObject == objectToTeleport.gameObject)
+            {
+                objectRigidbody.AddForce((floatTarget.position - objectRigidbody.transform.position) * floatForce, ForceMode.Force);
+                objectRigidbody.AddForce(-objectRigidbody.velocity * floatDrag, ForceMode.Force);
+            }
+        }
+    }
+
+
     private void OnTriggerExit(Collider other)
     {
         //        Debug.Log("Trigger exit by " + other.gameObject.name);
