@@ -29,7 +29,7 @@ public class Teleporter : NetworkBehaviour
                     Debug.Log("Wat");
                 }
                 Debug.Log("Already have " + objectToTeleport.gameObject.name + ", so repulsing " + other.gameObject.name);
-                other.gameObject.GetComponent<Rigidbody>().AddForce(Vector3.up * repulsionForce, ForceMode.Impulse);
+                other.gameObject.GetComponent<Rigidbody>().AddForce(new Vector3(Random.Range(-1, 1), 1, Random.Range(-1, 1)) * repulsionForce, ForceMode.Impulse);
                 other.gameObject.GetComponent<ObjectInteractions>().ResetPosition(5);
                 return;
 
@@ -76,7 +76,7 @@ public class Teleporter : NetworkBehaviour
             else
             {
                 CmdErrorBeep();
-                objectToTeleport.gameObject.GetComponent<Rigidbody>().AddForce(Vector3.up * repulsionForce, ForceMode.Impulse);
+                objectToTeleport.gameObject.GetComponent<Rigidbody>().AddForce(new Vector3(Random.Range(-1, 1), 1, Random.Range(-1, 1)) * repulsionForce, ForceMode.Impulse);
             }
         }
     }

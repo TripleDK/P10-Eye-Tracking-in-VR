@@ -57,8 +57,5 @@ public class TeleporterButton : NetworkBehaviour
         coolingDown = false;
     }
 
-    private void TPButtonVibrate()
-    {
 
-    }
 }
