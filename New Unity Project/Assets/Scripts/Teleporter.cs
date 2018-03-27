@@ -10,8 +10,12 @@ public class Teleporter : NetworkBehaviour
     [SerializeField] float repulsionForce = 2f;
     [SerializeField] AudioClip beep;
     [SerializeField] AudioClip errorBeep;
+    [SerializeField] Transform floatTarget;
+    [SerializeField] float floatForce = 50;
+    [SerializeField] float floatDrag = 10;
 
     private ObjectInteractions objectToTeleport = null;
+    private Rigidbody objectRigidbody = null;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -25,14 +29,29 @@ public class Teleporter : NetworkBehaviour
                     Debug.Log("Wat");
                 }
                 Debug.Log("Already have " + objectToTeleport.gameObject.name + ", so repulsing " + other.gameObject.name);
-                other.gameObject.GetComponent<Rigidbody>().AddForce(Vector3.up * repulsionForce, ForceMode.Impulse);
+                other.gameObject.GetComponent<Rigidbody>().AddForce(new Vector3(Random.Range(-1, 1), 1, Random.Range(-1, 1)) * repulsionForce, ForceMode.Impulse);
                 other.gameObject.GetComponent<ObjectInteractions>().ResetPosition(5);
                 return;
 
             }
             objectToTeleport = other.gameObject.GetComponent<ObjectInteractions>();
+            objectRigidbody = other.gameObject.GetComponent<Rigidbody>();
         }
     }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (objectToTeleport != null)
+        {
+            if (other.gameObject == objectToTeleport.gameObject)
+            {
+                objectRigidbody.AddForce((floatTarget.position - objectRigidbody.transform.position) * floatForce, ForceMode.Force);
+                objectRigidbody.AddForce(-objectRigidbody.velocity * floatDrag, ForceMode.Force);
+            }
+        }
+    }
+
+
     private void OnTriggerExit(Collider other)
     {
         //        Debug.Log("Trigger exit by " + other.gameObject.name);
@@ -57,7 +76,7 @@ public class Teleporter : NetworkBehaviour
             else
             {
                 CmdErrorBeep();
-                objectToTeleport.gameObject.GetComponent<Rigidbody>().AddForce(Vector3.up * repulsionForce, ForceMode.Impulse);
+                objectToTeleport.gameObject.GetComponent<Rigidbody>().AddForce(new Vector3(Random.Range(-1, 1), 1, Random.Range(-1, 1)) * repulsionForce, ForceMode.Impulse);
             }
         }
     }

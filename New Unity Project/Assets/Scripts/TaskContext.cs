@@ -50,7 +50,6 @@ public class TaskContext : NetworkBehaviour
     [Server]
     void CmdSetup()
     {
-        Debug.Log("Commanding!");
         SyncListShuffledObjects.Clear();
         int objectCount = objects.Count;
         NetworkIdentity playerId = GameObject.FindGameObjectWithTag("LocalPlayer").GetComponent<NetworkIdentity>();
@@ -79,7 +78,6 @@ public class TaskContext : NetworkBehaviour
             NetworkServer.SpawnWithClientAuthority(go, playerId.connectionToClient);
 
         }
-
         CmdNextObject();
     }
 

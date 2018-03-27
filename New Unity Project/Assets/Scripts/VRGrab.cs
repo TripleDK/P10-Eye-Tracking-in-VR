@@ -8,11 +8,17 @@ public class VRGrab : MonoBehaviour
     public HandSyncher handAnim;
     Controller side;
     public List<VRButton> grabbedObject = new List<VRButton>();
+    int controllerIndex;
 
     void Awake()
     {
         if (gameObject.name == "Controller (left)") side = Controller.left;
         if (gameObject.name == "Controller (right)") side = Controller.right;
+    }
+
+    void Start()
+    {
+        controllerIndex = (int)GetComponent<SteamVR_TrackedObject>().index;
     }
 
     void Update()
@@ -75,5 +81,22 @@ public class VRGrab : MonoBehaviour
             }
             grabbedObject.Remove(collider.gameObject.GetComponent<VRButton>());
         }
+    }
+
+    public void Vibrate(float duration, ushort intensity)
+    {
+        StartCoroutine(CoVibrate(duration, intensity));
+    }
+
+    IEnumerator CoVibrate(float duration, ushort intensity)
+    {
+        float timer = 0.0f;
+        while (timer < duration)
+        {
+            SteamVR_Controller.Input(controllerIndex).TriggerHapticPulse(intensity);
+            yield return null;
+            timer += Time.deltaTime;
+        }
+
     }
 }

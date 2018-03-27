@@ -28,6 +28,8 @@ public class TeleporterButton : NetworkBehaviour
         if (coolingDown == false)
         {
             transform.position = new Vector3(transform.position.x, transform.position.y, Mathf.Max(startZ, other.transform.position.z + pushOffset));
+            other.gameObject.GetComponent<VRGrab>().Vibrate(Time.deltaTime, (ushort)1000);
+
             if (transform.position.z >= maxPushPos + startZ)
             {
                 NetworkIdentity playerId = GameObject.FindGameObjectWithTag("LocalPlayer").GetComponent<NetworkIdentity>();
@@ -54,5 +56,6 @@ public class TeleporterButton : NetworkBehaviour
         }
         coolingDown = false;
     }
+
 
 }
