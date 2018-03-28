@@ -10,8 +10,8 @@ public class VRButton : NetworkBehaviour
     public Rigidbody prevConnected;
     public Material material;
     public Color color;
+    public VRGrab[] controllerGrab;
 
-    public VRGrab controllerGrab = null;
     public enum Controller
     {
         left, right
@@ -22,18 +22,21 @@ public class VRButton : NetworkBehaviour
     {
         material = GetComponent<MeshRenderer>().material;
         networkIdentity = GetComponent<NetworkIdentity>();
+        controllerGrab = new VRGrab[] { null, null };
     }
-    void OnTriggerEnter(Collider collision)
+    public virtual void OnTriggerEnter(Collider collision)
     {
-        color = material.color;
+        VRGrab controller = collision.gameObject.GetComponent<VRGrab>();
         FeedbackColor(Color.green);
         if (collision.gameObject.name == "Controller (left)")
         {
             leftController = true;
+            controllerGrab[0] = controller;
         }
         else if (collision.gameObject.name == "Controller (right)")
         {
             rightController = true;
+            controllerGrab[1] = controller;
         }
         if (collision.gameObject.GetComponent<Rigidbody>())
         {
@@ -46,10 +49,12 @@ public class VRButton : NetworkBehaviour
         if (collision.gameObject.name == "Controller (left)")
         {
             leftController = false;
+            controllerGrab[0].grabbedObject.Remove(this);
         }
         else if (collision.gameObject.name == "Controller (right)")
         {
             rightController = false;
+            controllerGrab[1].grabbedObject.Remove(this);
         }
         if (!leftController && !rightController)
         {
@@ -66,15 +71,22 @@ public class VRButton : NetworkBehaviour
 
     public virtual void ActionUp(Controller side) { }
 
-    public virtual void Action(Controller side, VRGrab controller) { controllerGrab = controller; }
+    public virtual void Action(Controller side, VRGrab controller)
+    {
 
-    public virtual void ActionUp(Controller side, VRGrab controller) { controllerGrab = null; }
+    }
+
+    public virtual void ActionUp(Controller side, VRGrab controller) { controllerGrab = new VRGrab[] { null, null }; }
 
     public void OnDisable()
     {
-        if (controllerGrab != null)
+        if (controllerGrab[0] != null)
         {
-            controllerGrab.grabbedObject.Remove(this);
+            controllerGrab[0].grabbedObject.Remove(this);
+        }
+        if (controllerGrab[1] != null)
+        {
+            controllerGrab[1].grabbedObject.Remove(this);
         }
     }
 
