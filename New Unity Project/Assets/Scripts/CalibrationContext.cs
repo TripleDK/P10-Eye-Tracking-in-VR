@@ -14,6 +14,7 @@ public class CalibrationContext : MonoBehaviour
     public int role = 0; //0 = Fetcher, 1 = Fixer
     public int calibrationProgress = 0;
 
+    [SerializeField] PupilManager pupilManager;
     [SerializeField] NetworkManager networkManager;
     [SerializeField] GameObject genderSelect;
     [SerializeField] GameObject networkButtons;
@@ -144,5 +145,10 @@ public class CalibrationContext : MonoBehaviour
         cameraRig.rotation = startPos[this.role].rotation;
         cameraRig.position = startPos[this.role].position;
         playerTransform.position = cameraRig.position;
+
+        if (role == 1)
+        {
+            pupilManager.gameObject.SetActive(true);
+        }
     }
 }

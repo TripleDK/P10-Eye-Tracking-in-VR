@@ -15,7 +15,7 @@ public class DisembodiedAvatarControls : MonoBehaviour
     [SerializeField] AnimationCurve torsoRotateSpeedOverDistance;
 
     [SerializeField] float headLength = 1.0f;
-    Transform leftHandTarget, rightHandTarget, headTarget;
+    Transform leftHandTarget, rightHandTarget, headTarget, lookAtTarget;
 
 
     public void LocalIKSetup()
@@ -24,6 +24,7 @@ public class DisembodiedAvatarControls : MonoBehaviour
         rightHandTarget = GameObject.Find("Controller (right)").transform;
         leftHandTarget = GameObject.Find("Controller (left)").transform;
         headTarget = GameObject.Find("Camera (eye)").transform;
+        lookAtTarget = headTarget.gameObject.GetComponent<GazeDirection>().calculatedLookAt;
 
     }
 
@@ -44,7 +45,7 @@ public class DisembodiedAvatarControls : MonoBehaviour
             leftHandPos.rotation = leftHandTarget.rotation;
             rightHandPos.position = rightHandTarget.position;
             rightHandPos.rotation = rightHandTarget.rotation;
-            //lookAtPos.position = PupilLabs.3D_Gaze;
+            lookAtPos.position = lookAtTarget.position;
         }
         head.position = headPos.position;
         head.rotation = headPos.rotation;

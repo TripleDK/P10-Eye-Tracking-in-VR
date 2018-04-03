@@ -84,6 +84,12 @@ public class ObjectInteractions : VRButton
         material.color = color;
     }
 
+    public override void OnTriggerEnter(Collider collision)
+    {
+        color = material.color;
+        base.OnTriggerEnter(collision);
+    }
+
     void OnCollisionEnter(Collision collision)
     {
         StartCoroutine(CheckForFall());
