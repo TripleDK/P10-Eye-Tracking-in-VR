@@ -24,7 +24,7 @@ public class DisembodiedAvatarControls : MonoBehaviour
         rightHandTarget = GameObject.Find("Controller (right)").transform;
         leftHandTarget = GameObject.Find("Controller (left)").transform;
         headTarget = GameObject.Find("Camera (eye)").transform;
-        lookAtTarget = headTarget.gameObject.GetComponent<GazeDirection>().calculatedLookAt;
+        lookAtTarget = headTarget.gameObject.transform.Find("GazeDirection").GetComponent<GazeDirection>().calculatedLookAt;
 
     }
 

@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class BlinkDemo : MonoBehaviour
 {
-    public AudioClip blinkSound;
-
     // Use this for initialization
     void Start()
     {
@@ -17,6 +15,7 @@ public class BlinkDemo : MonoBehaviour
 
     void StartBlinkSubscription()
     {
+        UnityEngine.Debug.Log("Started to blink!");
         PupilTools.SubscribeTo("blinks");
 
         PupilTools.Send(new Dictionary<string, object> {
@@ -30,13 +29,6 @@ public class BlinkDemo : MonoBehaviour
                 }
             }
         });
-    }
-
-    void Update()
-    {
-        Debug.Log(PupilData._3D.Circle.Radius(1) * 1000);
-        Debug.Log(PupilData._3D.Circle.Radius(0) * 1000);
-        Debug.Log(PupilData._3D.RightDiameter3D);
     }
 
     void StopBlinkSubscription()
@@ -58,13 +50,12 @@ public class BlinkDemo : MonoBehaviour
             if (dictionary.ContainsKey("timestamp"))
             {
                 Debug.Log("Blink detected: " + dictionary["timestamp"].ToString());
-                AudioSource.PlayClipAtPoint(blinkSound, transform.position);
             }
-            foreach (var blink in dictionary)
-            {
-                Debug.Log("Key: " + blink.Key);
-                Debug.Log("Value: " + blink.Value.ToString());
-            }
+            //			foreach (var blink in dictionary)
+            //			{
+            //				Debug.Log("Key: " + blink.Key);
+            //				Debug.Log("Value: " + blink.Value.ToString());
+            //			}
         }
     }
 

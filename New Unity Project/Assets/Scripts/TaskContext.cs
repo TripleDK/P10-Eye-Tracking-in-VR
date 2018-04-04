@@ -2,10 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.SceneManagement;
 using TMPro;
+using System.IO;
+using System;
+
 public class TaskContext : NetworkBehaviour
 {
     public static TaskContext singleton;
+    [SyncVar]
+    public int errorGrabs = 0;
+    [SyncVar]
+    public float timeGazeAtFace = 0;
     public GameObject previewObject;
     public List<GameObject> objects = new List<GameObject>();
     [SerializeField] List<Transform> spawnPos = new List<Transform>();
@@ -56,7 +64,7 @@ public class TaskContext : NetworkBehaviour
         for (int i = 0; i < objectCount; i++)
         {
             //Task order list
-            int y = Random.Range(0, objects.Count);
+            int y = UnityEngine.Random.Range(0, objects.Count);
             while (SyncListShuffledObjects.Contains(y))
             {
                 y++;
@@ -67,7 +75,7 @@ public class TaskContext : NetworkBehaviour
 
             //Spawn Objects
             List<int> usedPos = new List<int>();
-            int posIndex = Random.Range(0, objects.Count);
+            int posIndex = UnityEngine.Random.Range(0, objects.Count);
             while (usedPos.Contains(posIndex))
             {
                 posIndex--;
@@ -116,5 +124,6 @@ public class TaskContext : NetworkBehaviour
     void Win()
     {
         nameField.text = "You did it! gz maen";
+        File.WriteAllText("Assets/Resources/Logs/" + DateTime.Now.ToString("h-mm-ss tt") + ".txt", "Scene: " + SceneManager.GetActiveScene().name + "\nErrors: " + errorGrabs.ToString("0") + "\nTime stared at a face: " + timeGazeAtFace);
     }
 }

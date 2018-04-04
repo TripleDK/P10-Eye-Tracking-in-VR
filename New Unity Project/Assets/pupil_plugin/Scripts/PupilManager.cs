@@ -1,31 +1,31 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
-
+using UnityEngine.SceneManagement;
 
 public class PupilManager : MonoBehaviour
 {
     public Calibration.Mode calibrationMode = Calibration.Mode._2D;
     public bool displayEyeImages = true;
-
-    public List<GameObject> gameObjectsToEnable;
-
+    public GazeDirectionPupil gazeDir;
     GameObject cameraObject;
     Text calibrationText;
 
     void Start()
     {
         PupilTools.OnConnected += OnConnected;
-        PupilTools.OnDisconnecting += OnDisconnected;
+        PupilTools.OnDisconnecting += OnDisconnecting;
         PupilTools.OnCalibrationStarted += OnCalibtaionStarted;
         PupilTools.OnCalibrationEnded += OnCalibrationEnded;
         PupilTools.OnCalibrationFailed += OnCalibrationFailed;
 
         PupilSettings.Instance.currentCamera = GetComponentInChildren<Camera>();
         cameraObject = PupilSettings.Instance.currentCamera.gameObject;
-
+        foreach (GameObject go in objectsToLoad)
+        {
+            go.SetActive(false);
+        }
         ResetCalibrationText();
     }
 
@@ -34,12 +34,15 @@ public class PupilManager : MonoBehaviour
         if (calibrationText == null)
             calibrationText = cameraObject.GetComponentInChildren<Text>();
 
-        calibrationText.text = "Trying to connect to Pupil.\nPlease start Pupil Service/Capture\n(if you have not done so, already)";
+        calibrationText.text = "Trying to connect to Pupil.\nPlease wait for your eyes to show\n(if you have not done so, already)";
     }
 
-    void OnDisconnected()
+    void OnDisconnecting()
     {
         ResetCalibrationText();
+
+        if (displayEyeImages)
+            GetComponent<FramePublishing>().enabled = false;
     }
 
     void OnConnected()
@@ -80,7 +83,7 @@ public class PupilManager : MonoBehaviour
 
     void ShowCalibrate()
     {
-        calibrationText.text = "Press 'j' to start calibration.";
+        calibrationText.text = "Press 'c' to start calibration.";
     }
 
     void OnCalibtaionStarted()
@@ -89,39 +92,68 @@ public class PupilManager : MonoBehaviour
         PupilSettings.Instance.currentCamera = cameraObject.GetComponent<Camera>();
         calibrationText.text = "";
 
-        foreach (GameObject go in gameObjectsToEnable)
-        {
-            go.SetActive(false);
-        }
-
         if (displayEyeImages)
             GetComponent<FramePublishing>().enabled = false;
+
+        if (loadedSceneIndex != -1)
+            StartCoroutine(UnloadCurrentScene());
     }
 
     void OnCalibrationEnded()
     {
         calibrationText.text = "Calibration ended.";
-        PupilTools.calibrationConfidenceLeftAvg = PupilTools.calibrationConfidenceLeft.Average();
-        PupilTools.calibrationConfidenceRightAvg = PupilTools.calibrationConfidenceRight.Average();
+
         Invoke("StartDemo", 1f);
     }
 
     void OnCalibrationFailed()
     {
-        PupilTools.calibrationConfidenceLeftAvg = PupilTools.calibrationConfidenceLeft.Average();
-        PupilTools.calibrationConfidenceRightAvg = PupilTools.calibrationConfidenceRight.Average();
-        calibrationText.text = "Calibration failed\nLeft average confidence: " + PupilTools.calibrationConfidenceLeftAvg + " Right average confidence: " + PupilTools.calibrationConfidenceRightAvg + "\nPress 'j' to start it again.";
+        calibrationText.text = "Calibration failed\nPress 'c' to start it again.";
 
         if (displayEyeImages)
             GetComponent<FramePublishing>().enabled = true;
     }
 
+    public string[] availableScenes;
+    public GameObject[] objectsToLoad;
+    public int currentSceneIndex;
+    private int loadedSceneIndex = -1;
+    IEnumerator LoadCurrentScene()
+    {
+
+        AsyncOperation asyncScene = SceneManager.LoadSceneAsync(availableScenes[currentSceneIndex], LoadSceneMode.Additive);
+
+        while (!asyncScene.isDone)
+        {
+            yield return null;
+        }
+        loadedSceneIndex = currentSceneIndex;
+    }
+    IEnumerator UnloadCurrentScene()
+    {
+        AsyncOperation asyncLoad = SceneManager.UnloadSceneAsync(availableScenes[loadedSceneIndex]);
+
+        while (!asyncLoad.isDone)
+        {
+            yield return null;
+        }
+        loadedSceneIndex = -1;
+    }
+
     void StartDemo()
     {
-        foreach (GameObject go in gameObjectsToEnable)
+        if (availableScenes.Length == 0)
         {
-            go.SetActive(true);
+            foreach (GameObject go in objectsToLoad)
+            {
+                go.SetActive(true);
+            }
         }
+        else
+        {
+            StartCoroutine(LoadCurrentScene());
+        }
+        //    gazeDir.SubscribeToData();
         cameraObject.SetActive(false);
     }
 
@@ -131,10 +163,10 @@ public class PupilManager : MonoBehaviour
             StartDemo();
     }
 
-    void OnApplicationQuit()
+    void OnDisable()
     {
         PupilTools.OnConnected -= OnConnected;
-        PupilTools.OnDisconnecting -= OnDisconnected;
+        PupilTools.OnDisconnecting -= OnDisconnecting;
         PupilTools.OnCalibrationStarted -= OnCalibtaionStarted;
         PupilTools.OnCalibrationEnded -= OnCalibrationEnded;
         PupilTools.OnCalibrationFailed -= OnCalibrationFailed;

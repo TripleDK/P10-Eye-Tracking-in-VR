@@ -8,7 +8,6 @@ public class Player : NetworkBehaviour
     [Command]
     public void CmdSetAuth(NetworkInstanceId objectId, NetworkIdentity player)
     {
-        Debug.Log("Command authority!");
         var iObject = NetworkServer.FindLocalObject(objectId);
         var networkIdentity = iObject.GetComponent<NetworkIdentity>();
         var otherOwner = networkIdentity.clientAuthorityOwner;

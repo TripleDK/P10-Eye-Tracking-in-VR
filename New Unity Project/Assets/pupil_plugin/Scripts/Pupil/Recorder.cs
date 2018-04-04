@@ -43,7 +43,7 @@ public class Recorder
 		c.allowHDR = false;
 		c.allowMSAA = false;
 		#endif
-//		c.fieldOfView = PupilSettings.Instance.currentCamera.fieldOfView;
+		c.fieldOfView = PupilSettings.Instance.currentCamera.fieldOfView;
 		PupilTools.RepaintGUI ();
 	}
 

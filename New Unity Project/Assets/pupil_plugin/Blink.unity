@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.12731749, g: 0.13414757, b: 0.1210787, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -251,16 +251,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 659b02c9ed1b3df4caa7cc6eb88b4499, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  blinkSound: {fileID: 8300000, guid: 714abe336312f2a40a89ae661fb51700, type: 3}
---- !u!1 &845018464 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 1457256292477380, guid: 1a363ebd9791e7d48a02435c46d956ab,
-    type: 2}
-  m_PrefabInternal: {fileID: 91685827}
---- !u!81 &845018465
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 845018464}
-  m_Enabled: 1
