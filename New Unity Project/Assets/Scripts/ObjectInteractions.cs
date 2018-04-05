@@ -43,7 +43,10 @@ public class ObjectInteractions : VRButton
     [Command]
     void CmdAttach(NetworkIdentity playerId)
     {
-
+        if (gameObject.name != TaskContext.singleton.previewObjectName)
+        {
+            TaskContext.singleton.errorGrabs++;
+        }
 
     }
 

@@ -9,36 +9,47 @@ public class GazeDirectionPupil : MonoBehaviour
     [SerializeField] float markerDistance;
     [SerializeField] Transform marker;
 
-    Vector3 leftEyeDir, rightEyeDir;
-    Camera camera;
+    Vector3 leftEyeDirRaw, rightEyeDirRaw;
+    Vector3 leftEyeDirRotated, rightEyeDirRotated;
+    Camera cam;
 
     // Use this for initialization
     void Start()
     {
         PupilTools.OnConnected += StartPupilSubscription;
+        //   PupilTools.OnCalibrationEnded += CalibrationFinish;
         PupilTools.OnDisconnecting += StopPupilSubscription;
-
         PupilTools.OnReceiveData += CustomReceiveData;
-        camera = GetComponent<Camera>();
+
+        cam = transform.parent.GetComponent<Camera>();
     }
     void StartPupilSubscription()
     {
+        Debug.Log("Starting pupil subscription!!");
         PupilTools.CalibrationMode = Calibration.Mode._3D;
+
 
         PupilTools.SubscribeTo("pupil.");
     }
 
+    public void SubscribeToData()
+    {
+        PupilTools.OnReceiveData += CustomReceiveData;
+    }
+
+    void CalibrationFinish()
+    {
+        Debug.Log("Calibration has finished!");
+        PupilTools.OnReceiveData += CustomReceiveData;
+    }
+
     void StopPupilSubscription()
     {
+        Debug.Log("Stopping Pupil subscription :(");
         PupilTools.UnSubscribeFrom("pupil.");
     }
-    void OnDisable()
-    {
-        PupilTools.OnConnected -= StartPupilSubscription;
-        PupilTools.OnDisconnecting -= StopPupilSubscription;
 
-        PupilTools.OnReceiveData -= CustomReceiveData;
-    }
+
     void CustomReceiveData(string topic, Dictionary<string, object> dictionary, byte[] thirdFrame = null)
     {
         if (topic.StartsWith("pupil"))
@@ -74,15 +85,16 @@ public class GazeDirectionPupil : MonoBehaviour
                                 case "center":
                                 case "normal":
                                     var vector = PupilTools.ObjectToVector(pupilEllipse.Value);
+                                    Debug.Log(vector);
                                     if (idValue == "0")
                                     {
-                                        rightEyeDir = vector;
-
+                                        rightEyeDirRaw = vector;
+                                        rightEyeDirRotated = Quaternion.Euler(cam.transform.eulerAngles) * rightEyeDirRaw;
                                     }
                                     else
                                     {
-                                        leftEyeDir = vector;
-
+                                        leftEyeDirRaw = vector;
+                                        leftEyeDirRotated = Quaternion.Euler(cam.transform.eulerAngles) * leftEyeDirRaw;
                                     }
                                     break;
                                 default:
@@ -100,13 +112,15 @@ public class GazeDirectionPupil : MonoBehaviour
 
     void Update()
     {
-        Debug.DrawLine(transform.position, transform.position + rightEyeDir * markerDistance, Color.blue);
-        rightEyeDir = Quaternion.Euler(transform.eulerAngles) * rightEyeDir;
-        Debug.DrawLine(transform.position, transform.position + leftEyeDir * markerDistance, Color.red);
-        leftEyeDir = Quaternion.Euler(transform.eulerAngles) * leftEyeDir;
-        Vector3 averageDir = ((leftEyeDir + rightEyeDir) / 2).normalized;
-        Debug.DrawLine(transform.position - (transform.right * camera.stereoSeparation / 2), transform.position - (transform.right * camera.stereoSeparation / 2) + leftEyeDir * markerDistance, Color.yellow);
-        Debug.DrawLine(transform.position + (transform.right * camera.stereoSeparation / 2), transform.position + (transform.right * camera.stereoSeparation / 2) + rightEyeDir * markerDistance, Color.green);
+        Debug.DrawLine(transform.position, transform.position + rightEyeDirRaw * markerDistance, Color.blue);
+
+        Debug.DrawLine(transform.position, transform.position + leftEyeDirRaw * markerDistance, Color.magenta);
+
+        Vector3 averageDir = ((leftEyeDirRotated + rightEyeDirRotated) / 2).normalized;
+        Debug.DrawLine(transform.position - (transform.right * cam.stereoSeparation / 2), transform.position - (transform.right * cam.stereoSeparation / 2)
+        + leftEyeDirRotated * markerDistance, Color.yellow);
+        Debug.DrawLine(transform.position + (transform.right * cam.stereoSeparation / 2), transform.position + (transform.right * cam.stereoSeparation / 2)
+        + rightEyeDirRotated * markerDistance, Color.green);
         Debug.DrawLine(transform.position, transform.position + averageDir * markerDistance, Color.red);
         RaycastHit hit;
         Physics.Raycast(transform.position, averageDir, out hit, markerDistance);

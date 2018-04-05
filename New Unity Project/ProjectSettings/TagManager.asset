@@ -8,6 +8,8 @@ TagManager:
   - FxTemporaire
   - Teleporter
   - LocalPlayer
+  - CalibrationCamera
+  - PlayerHead
   layers:
   - Default
   - TransparentFX

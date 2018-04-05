@@ -20,6 +20,7 @@ public class CalibrationContext : MonoBehaviour
     [SerializeField] GameObject networkButtons;
     [SerializeField] GameObject styleButtons;
     [SerializeField] GameObject roleSelect;
+    [SerializeField] Transform pupilLabCalibratePos;
     Transform fixerPos, fetcherPos;
 
     Transform leftHand, rightHand, head;
@@ -144,11 +145,22 @@ public class CalibrationContext : MonoBehaviour
         Transform cameraRig = GameObject.Find("[CameraRig]").transform;
         cameraRig.rotation = startPos[this.role].rotation;
         cameraRig.position = startPos[this.role].position;
-        playerTransform.position = cameraRig.position;
 
         if (role == 1)
         {
             pupilManager.gameObject.SetActive(true);
+            cameraRig.position = pupilLabCalibratePos.position;
+            cameraRig.rotation = pupilLabCalibratePos.rotation;
+            PupilTools.OnCalibrationEnded += PupilCalibrateDone;
         }
+        playerTransform.position = cameraRig.position;
+    }
+
+    void PupilCalibrateDone()
+    {
+        Transform cameraRig = GameObject.Find("[CameraRig]").transform;
+        cameraRig.rotation = startPos[this.role].rotation;
+        cameraRig.position = startPos[this.role].position;
+        playerTransform.position = cameraRig.position;
     }
 }
