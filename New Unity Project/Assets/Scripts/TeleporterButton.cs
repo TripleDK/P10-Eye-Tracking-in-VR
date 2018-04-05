@@ -12,11 +12,11 @@ public class TeleporterButton : NetworkBehaviour
 
     Material material;
     Color startCol;
-    float startZ;
+    float startX;
     bool coolingDown = false;
     void Awake()
     {
-        startZ = transform.position.z;
+        startX = transform.localPosition.x;
         Physics.IgnoreLayerCollision(8, 8, true);
         material = GetComponent<MeshRenderer>().material;
         startCol = material.color;
@@ -27,11 +27,12 @@ public class TeleporterButton : NetworkBehaviour
     {
         if (coolingDown == false)
         {
-            transform.position = new Vector3(transform.position.x, transform.position.y, Mathf.Max(startZ, other.transform.position.z + pushOffset));
+            transform.localPosition = new Vector3(Mathf.Max(startX, transform.InverseTransformPoint(other.transform.position).x + pushOffset), transform.localPosition.y, transform.localPosition.z);
             other.gameObject.GetComponent<VRGrab>().Vibrate(Time.deltaTime, (ushort)1000);
-
-            if (transform.position.z >= maxPushPos + startZ)
+            Debug.Log(other.gameObject.name);
+            if (transform.localPosition.x >= maxPushPos + startX)
             {
+                Debug.Log("Pushed the button!");
                 NetworkIdentity playerId = GameObject.FindGameObjectWithTag("LocalPlayer").GetComponent<NetworkIdentity>();
                 playerId.GetComponent<Player>().CmdSetAuth(teleporter.netId, playerId);
                 teleporter.Activate();
@@ -51,7 +52,7 @@ public class TeleporterButton : NetworkBehaviour
         while (Time.time - startTime < coolDownTime)
         {
             material.color = startCol * (Time.time - startTime) / coolDownTime;
-            transform.position = new Vector3(transform.position.x, transform.position.y, Mathf.Lerp(startZ + maxPushPos, startZ, (Time.time - startTime) / coolDownTime));
+            transform.localPosition = new Vector3(Mathf.Lerp(startX + maxPushPos, startX, (Time.time - startTime) / coolDownTime), transform.localPosition.y, transform.localPosition.z);
             yield return null;
         }
         coolingDown = false;

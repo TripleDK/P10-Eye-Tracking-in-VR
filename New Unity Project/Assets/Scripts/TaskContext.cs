@@ -71,7 +71,6 @@ public class TaskContext : NetworkBehaviour
                 if (y > objectCount - 1) y = 0;
             }
             SyncListShuffledObjects.Add(y);
-            Debug.Log(SyncListShuffledObjects[i]);
 
             //Spawn Objects
             List<int> usedPos = new List<int>();

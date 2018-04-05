@@ -10,6 +10,7 @@ TagManager:
   - LocalPlayer
   - CalibrationCamera
   - PlayerHead
+  - Glass
   layers:
   - Default
   - TransparentFX

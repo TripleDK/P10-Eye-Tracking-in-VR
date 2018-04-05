@@ -20,7 +20,14 @@ public class VRButton : NetworkBehaviour
 
     public virtual void Awake()
     {
-        material = GetComponent<MeshRenderer>().material;
+        if (GetComponent<MeshRenderer>().enabled)
+        {
+            material = GetComponent<MeshRenderer>().material;
+        }
+        else
+        {
+            material = transform.GetChild(0).GetComponent<SkinnedMeshRenderer>().material;
+        }
         networkIdentity = GetComponent<NetworkIdentity>();
         controllerGrab = new VRGrab[] { null, null };
     }
