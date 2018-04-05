@@ -10,6 +10,7 @@ public class ObjectInteractions : VRButton
     public bool attached = false;
     public Vector3 startPos;
     [SerializeField] float minHeight = 0.3f;
+    [SerializeField] GameObject teleportParticles;
     FixedJoint tempJoint = null;
     Vector3 velocity;
     Quaternion angVelocity;
@@ -84,12 +85,12 @@ public class ObjectInteractions : VRButton
 
     public override void FeedbackColor(Color color)
     {
-        material.color = color;
+        material.SetColor("_OutlineColor", color);
     }
 
     public override void OnTriggerEnter(Collider collision)
     {
-        color = material.color;
+        //  color = material.color;
         base.OnTriggerEnter(collision);
     }
 
@@ -129,6 +130,7 @@ public class ObjectInteractions : VRButton
     [ClientRpc]
     public void RpcResetPosition()
     {
+        Destroy(Instantiate(teleportParticles, transform.position, Quaternion.identity), 2);
         transform.position = startPos;
         rigid.velocity = Vector3.zero;
     }

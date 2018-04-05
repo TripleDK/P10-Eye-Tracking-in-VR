@@ -5,8 +5,8 @@
 		_MainTex ("Albedo (RGB)", 2D) = "white" {}
 		_Glossiness ("Smoothness", Range(0,1)) = 0.5
 		_Metallic ("Metallic", Range(0,1)) = 0.0
-		_OutlineColor("outline color", Color) = (0,0,0,1)
-		_OutlineWidth("Width of shader outline", Range(0.0,2.0)) = 1.02
+		_OutlineColor("Outline color", Color) = (0,0,0,1)
+		_OutlineWidth("Width of shader outline", Range(1.0,2.0)) = 1.02
 		_DissolveColor("Dissolve Edge Color", Color) = (1,1,1,1)
 		_DissolveTex("Dissolve Texture", 2D) = "white" {}
 		_DissolveSize ("Dissolve Size", Range(0,1)) = 0.0

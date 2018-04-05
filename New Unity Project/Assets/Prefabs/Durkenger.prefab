@@ -166,12 +166,15 @@ MonoBehaviour:
   rightController: 0
   prevConnected: {fileID: 0}
   material: {fileID: 0}
-  color: {r: 0, g: 0, b: 0, a: 0}
-  controllerGrab: {fileID: 0}
+  color: {r: 1, g: 0.93103456, b: 0, a: 1}
+  controllerGrab:
+  - {fileID: 0}
   networkIdentity: {fileID: 0}
   attached: 0
   startPos: {x: 0, y: 0, z: 0}
   minHeight: 0.3
+  teleportParticles: {fileID: 1256892938605860, guid: 1e9c0860de1d43c4a827535c7efd4ec7,
+    type: 2}
 --- !u!114 &114579733618700626
 MonoBehaviour:
   m_ObjectHideFlags: 1
