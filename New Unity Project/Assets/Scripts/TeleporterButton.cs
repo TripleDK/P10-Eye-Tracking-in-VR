@@ -35,12 +35,22 @@ public class TeleporterButton : NetworkBehaviour
                 Debug.Log("Pushed the button!");
                 NetworkIdentity playerId = GameObject.FindGameObjectWithTag("LocalPlayer").GetComponent<NetworkIdentity>();
                 playerId.GetComponent<Player>().CmdSetAuth(teleporter.netId, playerId);
-                teleporter.Activate();
+                StartCoroutine(WaitForAuth());
 
                 StartCoroutine(ButtonCooldown());
             }
         }
     }
+
+    IEnumerator WaitForAuth()
+    {
+        while (!teleporter.hasAuthority)
+        {
+            yield return null;
+        }
+        teleporter.Activate();
+    }
+
     private void OnTriggerExit(Collider other)
     {
         if (coolingDown == false) StartCoroutine(ButtonCooldown());

@@ -9,6 +9,7 @@ public class ObjectInteractions : VRButton
 
     public bool attached = false;
     public Vector3 startPos;
+    [HideInInspector] public NetworkIdentity playerId = null;
     [SerializeField] float minHeight = 0.3f;
     [SerializeField] GameObject teleportParticles;
     FixedJoint tempJoint = null;
@@ -35,7 +36,7 @@ public class ObjectInteractions : VRButton
             tempJoint.connectedBody = controller.GetComponent<Rigidbody>();
             rigid.velocity = Vector3.zero;
             networkIdentity.localPlayerAuthority = true;
-            NetworkIdentity playerId = GameObject.FindGameObjectWithTag("LocalPlayer").GetComponent<NetworkIdentity>();
+            playerId = GameObject.FindGameObjectWithTag("LocalPlayer").GetComponent<NetworkIdentity>();
             playerId.GetComponent<Player>().CmdSetAuth(netId, playerId);
             CmdAttach(playerId);
         }
@@ -118,19 +119,20 @@ public class ObjectInteractions : VRButton
     IEnumerator ResetPositionCo(int delay)
     {
         yield return new WaitForSeconds(delay);
-        CmdResetPosition();
+        Vector3 ogPos = transform.position;
+        CmdResetPosition(ogPos);
     }
 
     [Command]
-    public void CmdResetPosition()
+    public void CmdResetPosition(Vector3 ogPos)
     {
-        RpcResetPosition();
+        RpcResetPosition(ogPos);
     }
 
     [ClientRpc]
-    public void RpcResetPosition()
+    public void RpcResetPosition(Vector3 ogPos)
     {
-        Destroy(Instantiate(teleportParticles, transform.position, Quaternion.identity), 2);
+        Destroy(Instantiate(teleportParticles, ogPos, Quaternion.identity), 2);
         transform.position = startPos;
         rigid.velocity = Vector3.zero;
     }

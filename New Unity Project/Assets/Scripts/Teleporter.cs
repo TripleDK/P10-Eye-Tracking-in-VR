@@ -16,16 +16,20 @@ public class Teleporter : NetworkBehaviour
     [SerializeField] float teleportTime = 1.0f;
     [SerializeField] AnimationCurve dissolveEffect;
     [SerializeField] AnimationCurve particleMovement;
+    [SerializeField] AnimationCurve outlineMovement;
     [SerializeField] Transform standbyParticles;
     [SerializeField] GameObject teleportParticles;
+    [SerializeField] Transform receiverParticles;
+    [SerializeField] AnimationCurve receiverPMovement;
 
     private ObjectInteractions objectToTeleport = null;
     private Rigidbody objectRigidbody = null;
-    Vector3 particleStartScale;
+    Vector3 particleStartScale, receiverStartScale;
 
     void Awake()
     {
         particleStartScale = standbyParticles.localScale;
+        receiverStartScale = receiverParticles.localScale;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -71,7 +75,7 @@ public class Teleporter : NetworkBehaviour
             objectToTeleport = null;
         }
     }
-    public void Activate()
+    public void Activate() //Button grants authority before calling this
     {
         Debug.Log("Trying to activate teleporter!");
         if (objectToTeleport != null)
@@ -95,19 +99,9 @@ public class Teleporter : NetworkBehaviour
     [Command]
     public void CmdActivate(GameObject gameObject)
     {
-        NetworkIdentity playerId = GameObject.FindGameObjectWithTag("LocalPlayer").GetComponent<NetworkIdentity>();
-        playerId.GetComponent<Player>().CmdSetAuth(TaskContext.singleton.netId, playerId);
+        //    NetworkIdentity playerId = GameObject.FindGameObjectWithTag("LocalPlayer").GetComponent<NetworkIdentity>();
+        //  playerId.GetComponent<Player>().CmdSetAuth(TaskContext.singleton.netId, playerId);
         RpcActivate(gameObject);
-        StartCoroutine(WaitForAuthor());
-    }
-
-    IEnumerator WaitForAuthor()
-    {
-        while (!TaskContext.singleton.hasAuthority)
-        {
-            yield return null;
-        }
-        TaskContext.singleton.CmdNextObject();
     }
 
 
@@ -125,21 +119,34 @@ public class Teleporter : NetworkBehaviour
     {
         Rigidbody teleportRigid = go.gameObject.GetComponent<Rigidbody>();
         Material mat = go.transform.GetChild(0).GetComponent<SkinnedMeshRenderer>().material;
+        float outlineSize = mat.GetFloat("_OutlineWidth");
 
         float startTime = Time.time;
         while (Time.time - startTime < teleportTime)
         {
-            float dissolveValue = dissolveEffect.Evaluate((Time.time - startTime) / teleportTime);
-            float scaleValue = particleMovement.Evaluate((Time.time - startTime) / teleportTime);
+            float animCurveTime = (Time.time - startTime) / teleportTime;
+            float dissolveValue = dissolveEffect.Evaluate(animCurveTime);
+            float scaleValue = particleMovement.Evaluate(animCurveTime);
+            float outlineValue = outlineMovement.Evaluate(animCurveTime) * outlineSize;
             mat.SetFloat("_DissolveSize", dissolveValue);
+            mat.SetFloat("_OutlineWidth", outlineValue);
             standbyParticles.localScale = particleStartScale * scaleValue;
             yield return null;
         }
         mat.SetFloat("_DissolveSize", 0);
+        mat.SetFloat("_OutlineWidth", outlineSize);
         Destroy(Instantiate(teleportParticles, objectToTeleport.transform.position, Quaternion.identity), 2);
         objectToTeleport = null;
         teleportRigid.MovePosition(teleportTarget.position);
         go.GetComponent<ObjectInteractions>().startPos = teleportTarget.position;
+
+        startTime = Time.time;
+        while (Time.time - startTime < teleportTime)
+        {
+            float scaleValue = particleMovement.Evaluate((Time.time - startTime) / teleportTime);
+            receiverParticles.localScale = receiverStartScale * scaleValue;
+            yield return null;
+        }
 
     }
 

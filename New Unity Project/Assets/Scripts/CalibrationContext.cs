@@ -21,6 +21,7 @@ public class CalibrationContext : MonoBehaviour
     [SerializeField] GameObject styleButtons;
     [SerializeField] GameObject roleSelect;
     [SerializeField] Transform pupilLabCalibratePos;
+    [SerializeField] BlackHole blackHole;
     Transform fixerPos, fetcherPos;
 
     Transform leftHand, rightHand, head;
@@ -152,6 +153,8 @@ public class CalibrationContext : MonoBehaviour
             cameraRig.position = pupilLabCalibratePos.position;
             cameraRig.rotation = pupilLabCalibratePos.rotation;
             PupilTools.OnCalibrationEnded += PupilCalibrateDone;
+            //Give blackhole authority
+            blackHole.TakeAuthority();
         }
         playerTransform.position = cameraRig.position;
     }

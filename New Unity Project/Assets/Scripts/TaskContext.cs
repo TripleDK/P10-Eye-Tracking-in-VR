@@ -93,7 +93,7 @@ public class TaskContext : NetworkBehaviour
     {
         if (SyncListShuffledObjects.Count == 0)
         {
-            Win();
+            RpcWin();
             return;
         }
         GameObject tempObject = previewObject;
@@ -120,9 +120,11 @@ public class TaskContext : NetworkBehaviour
     {
         previewObject.transform.RotateAround(previewObject.transform.position, Vector3.up, previewRotationSpeed * Time.deltaTime);
     }
-    void Win()
+    [ClientRpc]
+    void RpcWin()
     {
         nameField.text = "You did it! gz maen";
+        Debug.Log("Chicken dinner!");
         File.WriteAllText("Assets/Resources/Logs/" + DateTime.Now.ToString("h-mm-ss tt") + ".txt", "Scene: " + SceneManager.GetActiveScene().name + "\nErrors: " + errorGrabs.ToString("0") + "\nTime stared at a face: " + timeGazeAtFace);
     }
 }
