@@ -60,6 +60,7 @@ public class TaskContext : NetworkBehaviour
     {
         SyncListShuffledObjects.Clear();
         int objectCount = objects.Count;
+        List<int> usedPos = new List<int>();
         NetworkIdentity playerId = GameObject.FindGameObjectWithTag("LocalPlayer").GetComponent<NetworkIdentity>();
         for (int i = 0; i < objectCount; i++)
         {
@@ -73,7 +74,6 @@ public class TaskContext : NetworkBehaviour
             SyncListShuffledObjects.Add(y);
 
             //Spawn Objects
-            List<int> usedPos = new List<int>();
             int posIndex = UnityEngine.Random.Range(0, objects.Count);
             while (usedPos.Contains(posIndex))
             {

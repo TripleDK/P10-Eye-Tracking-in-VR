@@ -58,9 +58,9 @@ public class GazeDirection : MonoBehaviour
         if (PupilTools.IsConnected && PupilTools.IsGazing)
         {
             marker.localPosition = PupilData._3D.GazePosition;
-      //      Debug.Log(PupilData._3D.Circle.Radius(0));
-        //    Debug.Log("World Space: " + PupilData._3D.GazePosition + ", LeftNorma: " + PupilData._3D.LeftGazeNormal + ", RightNormal: " + PupilData._3D.RightGazeNormal);
-          //  Debug.Log("Left Eye Norm X " + PupilData._3D.LeftGazeNormal.x + "  " + "Left Eye Norm Y " + PupilData._3D.LeftGazeNormal.y
+            //      Debug.Log(PupilData._3D.Circle.Radius(0));
+            //    Debug.Log("World Space: " + PupilData._3D.GazePosition + ", LeftNorma: " + PupilData._3D.LeftGazeNormal + ", RightNormal: " + PupilData._3D.RightGazeNormal);
+            //  Debug.Log("Left Eye Norm X " + PupilData._3D.LeftGazeNormal.x + "  " + "Left Eye Norm Y " + PupilData._3D.LeftGazeNormal.y
             //     + "  " + "Left Eye Norm Z " + PupilData._3D.LeftGazeNormal.z + ", normalized: " + PupilData._3D.GazePosition.normalized);
             Vector3 leftEyeDir, rightEyeDir;
             leftEyeDir = (PupilData._3D.LeftGazeNormal).normalized;
@@ -77,6 +77,7 @@ public class GazeDirection : MonoBehaviour
             if (hit.collider == null) { calculatedLookAt.position = transform.position + averageDir * markerDistance; }
             else if (hit.collider.gameObject.tag == "PlayerHead")
             {
+                Debug.Log("I see you!");
                 TaskContext.singleton.timeGazeAtFace += Time.deltaTime;
             }
             /*   laserEyes.SetPosition(0, transform.position);
