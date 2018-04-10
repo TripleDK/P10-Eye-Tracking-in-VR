@@ -38,8 +38,7 @@ public class FetcherTutorialContext : MonoBehaviour
     {
         teleporter.OnTeleportItem.RemoveListener(CompleteTutorial);
         textField.text = "Good jobbo!";
+        TaskContext.singleton.FetcherTutDone();
     }
-
-    //ENDING: Change TaskContext to not call Setup before both tutorials are finished
 
 }

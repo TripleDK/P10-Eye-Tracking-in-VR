@@ -17,3 +17,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Market Scene Demo/SceneManager Scenes/Market with 3D Calibration.unity
     guid: 26dc0e0d688f7d345b24cd87eaf43b10
+  - enabled: 1
+    path: Assets/Market Scene Demo/SceneManager Scenes/Market with Heatmap.unity
+    guid: 44fa73068eb47f64c89be0d8e49fef53

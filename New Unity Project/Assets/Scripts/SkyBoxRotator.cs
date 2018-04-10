@@ -14,4 +14,9 @@ public class SkyBoxRotator : MonoBehaviour
     {
         skyBoxMat.SetFloat("_Rotation", Time.time * speed);
     }
+
+    void OnDisable()
+    {
+        skyBoxMat.SetFloat("_Rotation", 0);
+    }
 }

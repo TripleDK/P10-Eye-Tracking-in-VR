@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
+using UnityEngine.Events;
 using TMPro;
 using System.IO;
 using System;
@@ -21,9 +22,14 @@ public class TaskContext : NetworkBehaviour
     [SerializeField] TextMeshPro nameField;
     [SerializeField] TextMeshPro debugNameField;
 
+    [SyncVar] bool fetcherTutDone = false;
+    [SyncVar] bool fixerTutDone = false;
 
     [SerializeField] SyncListInt SyncListShuffledObjects = new SyncListInt();
     [SyncVar] public string previewObjectName = "Namerino";
+    float timeStart;
+
+    UnityEvent OnHasAuthority = new UnityEvent();
 
     void Awake()
     {
@@ -43,22 +49,23 @@ public class TaskContext : NetworkBehaviour
         string tempName = previewObjectName.Replace("(Clone)", string.Empty);
         nameField.text = tempName;
         debugNameField.text = tempName;
-        if (NetworkServer.active)
-        {
-            StartCoroutine(WaitABit());
-        }
+        /*   if (NetworkServer.active)
+           {
+               StartCoroutine(WaitABit());
+           }*/
     }
 
-    IEnumerator WaitABit()
-    {
-        yield return new WaitForSeconds(1);
-        //  CmdSetup();
-    }
+    /* IEnumerator WaitABit()
+      {
+          yield return new WaitForSeconds(1);
+          //  CmdSetup();
+      }*/
 
-    [Server]
+    [Command]
     void CmdSetup()
     {
         SyncListShuffledObjects.Clear();
+        timeStart = Time.time;
         int objectCount = objects.Count;
         List<int> usedPos = new List<int>();
         NetworkIdentity playerId = GameObject.FindGameObjectWithTag("LocalPlayer").GetComponent<NetworkIdentity>();
@@ -120,11 +127,59 @@ public class TaskContext : NetworkBehaviour
     {
         previewObject.transform.RotateAround(previewObject.transform.position, Vector3.up, previewRotationSpeed * Time.deltaTime);
     }
+
     [ClientRpc]
     void RpcWin()
     {
         nameField.text = "You did it! gz maen";
         Debug.Log("Chicken dinner!");
-        File.WriteAllText("Assets/Resources/Logs/" + DateTime.Now.ToString("h-mm-ss tt") + ".txt", "Scene: " + SceneManager.GetActiveScene().name + "\nErrors: " + errorGrabs.ToString("0") + "\nTime stared at a face: " + timeGazeAtFace);
+        File.WriteAllText("Assets/Resources/Logs/" + DateTime.Now.ToString("h-mm-ss tt") + ".txt",
+            "Scene: " + SceneManager.GetActiveScene().name + "\nErrors: " + errorGrabs.ToString("0") + "\nTime stared at a face: " + timeGazeAtFace + "\nTime taken: " + (Time.time - timeStart).ToString("0.00"));
+    }
+
+    public void FetcherTutDone()
+    {
+        OnHasAuthority.AddListener(CmdFetcherTutDone);
+        StartCoroutine(WaitForAuthority());
+    }
+
+    [Command]
+    void CmdFetcherTutDone()
+    {
+        fetcherTutDone = true;
+        if (fixerTutDone)
+        {
+            CmdSetup();
+        }
+    }
+
+
+    public void FixerTutDone()
+    {
+        OnHasAuthority.AddListener(CmdFixerTutDone);
+        StartCoroutine(WaitForAuthority());
+    }
+
+    [Command]
+    void CmdFixerTutDone()
+    {
+        fixerTutDone = true;
+        if (fetcherTutDone)
+        {
+            CmdSetup();
+        }
+    }
+
+
+    IEnumerator WaitForAuthority()
+    {
+        NetworkIdentity playerId = GameObject.FindGameObjectWithTag("LocalPlayer").GetComponent<NetworkIdentity>();
+        playerId.GetComponent<Player>().CmdSetAuth(netId, playerId);
+        while (!hasAuthority)
+        {
+            yield return null;
+        }
+        OnHasAuthority.Invoke();
+        OnHasAuthority.RemoveAllListeners();
     }
 }
