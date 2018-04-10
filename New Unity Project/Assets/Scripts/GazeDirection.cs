@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class GazeDirection : MonoBehaviour
 {
@@ -10,6 +11,9 @@ public class GazeDirection : MonoBehaviour
     [SerializeField] Transform marker;
     Camera cam;
     Coroutine connecting;
+    float tvLookTime = 0.0f;
+
+    public UnityEvent OnTVRealized = new UnityEvent();
 
     // Use this for initialization
     void Start()
@@ -79,6 +83,15 @@ public class GazeDirection : MonoBehaviour
             {
                 Debug.Log("I see you!");
                 TaskContext.singleton.timeGazeAtFace += Time.deltaTime;
+            }
+            else if (hit.collider.gameObject.tag == "TV")
+            {
+                tvLookTime += Time.deltaTime;
+                Debug.Log("Too much TV is bad for you!");
+                if (tvLookTime > 5)
+                {
+                    OnTVRealized.Invoke();
+                }
             }
             /*   laserEyes.SetPosition(0, transform.position);
                laserEyes.SetPosition(1, transform.position + (leftEyeDir + rightEyeDir).normalized * markerDistance);*/

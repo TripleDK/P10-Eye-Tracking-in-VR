@@ -22,6 +22,8 @@ public class CalibrationContext : MonoBehaviour
     [SerializeField] GameObject roleSelect;
     [SerializeField] Transform pupilLabCalibratePos;
     [SerializeField] BlackHole blackHole;
+    [SerializeField] FetcherTutorialContext fetcherTutorial;
+    [SerializeField] FixerTutorialContext fixerTutorial;
     Transform fixerPos, fetcherPos;
 
     Transform leftHand, rightHand, head;
@@ -144,9 +146,12 @@ public class CalibrationContext : MonoBehaviour
     {
         this.role = role;
         Transform cameraRig = GameObject.Find("[CameraRig]").transform;
-        cameraRig.rotation = startPos[this.role].rotation;
-        cameraRig.position = startPos[this.role].position;
-
+        if (role == 0)
+        {
+            cameraRig.rotation = startPos[this.role].rotation;
+            cameraRig.position = startPos[this.role].position;
+            fetcherTutorial.StartTutorial();
+        }
         if (role == 1)
         {
             pupilManager.gameObject.SetActive(true);
@@ -165,5 +170,6 @@ public class CalibrationContext : MonoBehaviour
         cameraRig.rotation = startPos[this.role].rotation;
         cameraRig.position = startPos[this.role].position;
         playerTransform.position = cameraRig.position;
+        fixerTutorial.StartTutorial();
     }
 }

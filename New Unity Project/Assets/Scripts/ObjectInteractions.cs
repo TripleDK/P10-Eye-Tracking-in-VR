@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.Events;
 
 [RequireComponent(typeof(Rigidbody))]
 public class ObjectInteractions : VRButton
@@ -19,6 +20,8 @@ public class ObjectInteractions : VRButton
     Quaternion prevAng;
     Rigidbody rigid;
 
+    public UnityEvent OnBallGrabbed = new UnityEvent();
+
     public override void Awake()
     {
         base.Awake();
@@ -30,6 +33,7 @@ public class ObjectInteractions : VRButton
     {
         if (!attached)
         {
+            OnBallGrabbed.Invoke();
             attached = true;
             //  transform.position = controller.transform.position;
             tempJoint = gameObject.AddComponent<FixedJoint>();

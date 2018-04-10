@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.Events;
 
 public class Teleporter : NetworkBehaviour
 {
@@ -26,6 +27,9 @@ public class Teleporter : NetworkBehaviour
     private Rigidbody objectRigidbody = null;
     Vector3 particleStartScale, receiverStartScale;
 
+    public UnityEvent OnAcceptItem = new UnityEvent();
+    public UnityEvent OnTeleportItem = new UnityEvent();
+
     void Awake()
     {
         particleStartScale = standbyParticles.localScale;
@@ -49,6 +53,7 @@ public class Teleporter : NetworkBehaviour
                 return;
 
             }
+            OnAcceptItem.Invoke();
             objectToTeleport = other.gameObject.GetComponent<ObjectInteractions>();
             objectRigidbody = other.gameObject.GetComponent<Rigidbody>();
         }
@@ -82,11 +87,16 @@ public class Teleporter : NetworkBehaviour
         {
             if (objectToTeleport.gameObject.name == TaskContext.singleton.previewObjectName)
             {
-
                 CmdActivate(objectToTeleport.gameObject);
                 //  objectToTeleport.startPos = teleportTarget.position;
-
-
+            }
+            else if (objectToTeleport.gameObject.name == "Sphere(Clone)")
+            {
+                AudioSource.PlayClipAtPoint(beep, transform.position);
+                Rigidbody teleportRigid = objectToTeleport.gameObject.GetComponent<Rigidbody>();
+                teleportRigid.velocity = Vector3.zero;
+                Destroy(objectToTeleport.gameObject, 3);
+                StartCoroutine(TeleportEffect(objectToTeleport.gameObject));
             }
             else
             {
@@ -110,15 +120,23 @@ public class Teleporter : NetworkBehaviour
     {
         Debug.Log("RPC ACTIVAtea!");
         AudioSource.PlayClipAtPoint(beep, transform.position);
-        Rigidbody teleportRigid = go.gameObject.GetComponent<Rigidbody>();
+        Rigidbody teleportRigid = go.GetComponent<Rigidbody>();
         teleportRigid.velocity = Vector3.zero;
         StartCoroutine(TeleportEffect(go));
     }
 
     IEnumerator TeleportEffect(GameObject go)
     {
-        Rigidbody teleportRigid = go.gameObject.GetComponent<Rigidbody>();
-        Material mat = go.transform.GetChild(0).GetComponent<SkinnedMeshRenderer>().material;
+        Rigidbody teleportRigid = go.GetComponent<Rigidbody>();
+        Material mat;
+        if (go.GetComponent<MeshRenderer>().enabled)
+        {
+            mat = go.GetComponent<MeshRenderer>().material;
+        }
+        else
+        {
+            mat = go.transform.GetChild(0).GetComponent<SkinnedMeshRenderer>().material;
+        }
         float outlineSize = mat.GetFloat("_OutlineWidth");
 
         float startTime = Time.time;
@@ -141,6 +159,7 @@ public class Teleporter : NetworkBehaviour
         go.GetComponent<ObjectInteractions>().startPos = teleportTarget.position;
 
         startTime = Time.time;
+        OnTeleportItem.Invoke();
         while (Time.time - startTime < teleportTime)
         {
             float scaleValue = particleMovement.Evaluate((Time.time - startTime) / teleportTime);

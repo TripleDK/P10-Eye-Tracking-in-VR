@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.Events;
 
 public class BlackHole : NetworkBehaviour
 {
+    public UnityEvent OnEatObject = new UnityEvent();
 
     public void TakeAuthority()
     {
@@ -16,6 +18,11 @@ public class BlackHole : NetworkBehaviour
     {
         if (col.gameObject.GetComponent<ObjectInteractions>())
         {
+            OnEatObject.Invoke();
+            if (col.gameObject.name == "Sphere(Clone)")
+            {
+                return;
+            }
             Destroy(col.gameObject);
             NetworkIdentity playerId = col.gameObject.GetComponent<ObjectInteractions>().playerId;
             if (playerId == null)

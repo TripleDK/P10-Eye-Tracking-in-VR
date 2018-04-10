@@ -52,7 +52,7 @@ public class TaskContext : NetworkBehaviour
     IEnumerator WaitABit()
     {
         yield return new WaitForSeconds(1);
-        CmdSetup();
+        //  CmdSetup();
     }
 
     [Server]
