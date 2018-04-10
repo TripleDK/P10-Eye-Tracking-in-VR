@@ -9,6 +9,7 @@ public class BlackHole : NetworkBehaviour
     public UnityEvent OnEatObject = new UnityEvent();
     [SerializeField] float eatTime = 0.8f;
     [SerializeField] AnimationCurve eatMovement;
+    [SerializeField] AudioClip eatSound;
 
     Vector3 startScale;
 
@@ -55,6 +56,7 @@ public class BlackHole : NetworkBehaviour
     IEnumerator Eat()
     {
         float startTime = Time.time;
+        AudioSource.PlayClipAtPoint(eatSound, transform.position);
         while (Time.time - startTime < eatTime)
         {
             float scaleValue = eatMovement.Evaluate((Time.time - startTime) / eatTime);

@@ -21,7 +21,7 @@ public class TaskContext : NetworkBehaviour
     [SerializeField] float previewRotationSpeed = 180f;
     [SerializeField] TextMeshPro nameField;
     [SerializeField] TextMeshPro debugNameField;
-
+    [SerializeField] AudioClip winSound;
     [SyncVar] bool fetcherTutDone = false;
     [SyncVar] bool fixerTutDone = false;
 
@@ -131,8 +131,9 @@ public class TaskContext : NetworkBehaviour
     [ClientRpc]
     void RpcWin()
     {
-        nameField.text = "You did it! gz maen";
+        nameField.text = "You did it! gz mang";
         Debug.Log("Chicken dinner!");
+        AudioSource.PlayClipAtPoint(winSound, transform.position);
         File.WriteAllText("Assets/Resources/Logs/" + DateTime.Now.ToString("h-mm-ss tt") + ".txt",
             "Scene: " + SceneManager.GetActiveScene().name + "\nErrors: " + errorGrabs.ToString("0") + "\nTime stared at a face: " + timeGazeAtFace + "\nTime taken: " + (Time.time - timeStart).ToString("0.00"));
     }

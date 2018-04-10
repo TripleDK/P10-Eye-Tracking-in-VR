@@ -10,6 +10,7 @@ public class TeleporterButton : NetworkBehaviour
     [SerializeField] Teleporter teleporter;
     [SerializeField] float coolDownTime = 1f;
     [SerializeField] float pushOffset = 0.5f;
+    [SerializeField] AudioClip buttonPressSound;
 
     Material material;
     Color startCol;
@@ -59,6 +60,7 @@ public class TeleporterButton : NetworkBehaviour
     }
     IEnumerator ButtonCooldown()
     {
+        AudioSource.PlayClipAtPoint(buttonPressSound, transform.position);
         coolingDown = true;
         float startTime = Time.time;
         while (Time.time - startTime < coolDownTime)

@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class VRGrab : MonoBehaviour
 {
-    enum Controller { left, right };
     public HandSyncher handAnim;
+    [SerializeField] AudioClip grabSound;
+    enum Controller { left, right };
     Controller side;
     public List<VRButton> grabbedObject = new List<VRButton>();
     int controllerIndex;
@@ -28,8 +29,12 @@ public class VRGrab : MonoBehaviour
             if (handAnim) handAnim.ChangeGrabL(Input.GetAxis("LeftTrigger"));
             if (Input.GetKeyDown("joystick button 14"))
             {
-                if (grabbedObject.Count > 0) grabbedObject[0].Action(VRButton.Controller.left, this);
-                if (grabbedObject.Count > 0) grabbedObject[0].Action(VRButton.Controller.left);
+                if (grabbedObject.Count > 0)
+                {
+                    AudioSource.PlayClipAtPoint(grabSound, transform.position);
+                    grabbedObject[0].Action(VRButton.Controller.left, this);
+                    grabbedObject[0].Action(VRButton.Controller.left);
+                }
 
             }
             if (Input.GetKeyUp("joystick button 14"))
@@ -45,8 +50,12 @@ public class VRGrab : MonoBehaviour
             if (handAnim) handAnim.ChangeGrabR(Input.GetAxis("RightTrigger"));
             if (Input.GetKeyDown("joystick button 15"))
             {
-                if (grabbedObject.Count > 0) grabbedObject[0].Action(VRButton.Controller.right, this);
-                if (grabbedObject.Count > 0) grabbedObject[0].Action(VRButton.Controller.right);
+                if (grabbedObject.Count > 0)
+                {
+                    AudioSource.PlayClipAtPoint(grabSound, transform.position);
+                    grabbedObject[0].Action(VRButton.Controller.right, this);
+                    grabbedObject[0].Action(VRButton.Controller.right);
+                }
 
             }
 

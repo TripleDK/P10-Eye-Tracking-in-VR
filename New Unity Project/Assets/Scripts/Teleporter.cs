@@ -22,6 +22,7 @@ public class Teleporter : NetworkBehaviour
     [SerializeField] GameObject teleportParticles;
     [SerializeField] Transform receiverParticles;
     [SerializeField] AnimationCurve receiverPMovement;
+    [SerializeField] AudioClip teleportSound;
 
     private ObjectInteractions objectToTeleport = null;
     private Rigidbody objectRigidbody = null;
@@ -159,6 +160,7 @@ public class Teleporter : NetworkBehaviour
         go.GetComponent<ObjectInteractions>().startPos = teleportTarget.position;
 
         startTime = Time.time;
+        AudioSource.PlayClipAtPoint(teleportSound, transform.position);
         OnTeleportItem.Invoke();
         while (Time.time - startTime < teleportTime)
         {
