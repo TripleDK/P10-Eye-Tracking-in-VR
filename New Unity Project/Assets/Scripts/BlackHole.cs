@@ -7,6 +7,15 @@ using UnityEngine.Events;
 public class BlackHole : NetworkBehaviour
 {
     public UnityEvent OnEatObject = new UnityEvent();
+    [SerializeField] float eatTime = 0.8f;
+    [SerializeField] AnimationCurve eatMovement;
+
+    Vector3 startScale;
+
+    void Awake()
+    {
+        startScale = transform.localScale;
+    }
 
     public void TakeAuthority()
     {
@@ -19,11 +28,12 @@ public class BlackHole : NetworkBehaviour
         if (col.gameObject.GetComponent<ObjectInteractions>())
         {
             OnEatObject.Invoke();
+            Destroy(col.gameObject);
+            StartCoroutine(Eat());
             if (col.gameObject.name == "Sphere(Clone)")
             {
                 return;
             }
-            Destroy(col.gameObject);
             NetworkIdentity playerId = col.gameObject.GetComponent<ObjectInteractions>().playerId;
             if (playerId == null)
                 Debug.Log("That's weird!");
@@ -42,5 +52,16 @@ public class BlackHole : NetworkBehaviour
         TaskContext.singleton.CmdNextObject();
     }
 
+    IEnumerator Eat()
+    {
+        float startTime = Time.time;
+        while (Time.time - startTime < eatTime)
+        {
+            float scaleValue = eatMovement.Evaluate((Time.time - startTime) / eatTime);
+            transform.localScale = startScale * scaleValue;
+            yield return null;
+        }
+        transform.localScale = startScale;
+    }
 
 }

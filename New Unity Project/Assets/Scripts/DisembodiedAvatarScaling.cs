@@ -10,6 +10,7 @@ public class DisembodiedAvatarScaling : NetworkBehaviour
     [SerializeField] Transform lHandContainer;
     [SerializeField] Transform torsoContainer;
     [SerializeField] Transform headContainer;
+    [SerializeField] bool requireCalibration = true;
 
     private Transform leftController, rightController;
     private Camera mainCamera;
@@ -30,12 +31,12 @@ public class DisembodiedAvatarScaling : NetworkBehaviour
         leftController = GameObject.Find("Controller (left)").transform;
         rightController = GameObject.Find("Controller (right)").transform;
         HandSyncher hSyncher = GetComponent<HandSyncher>();
-      
-            
-                leftController.GetComponent<VRGrab>().handAnim = hSyncher;
-         
-                rightController.GetComponent<VRGrab>().handAnim = hSyncher;
-        
+
+
+        leftController.GetComponent<VRGrab>().handAnim = hSyncher;
+
+        rightController.GetComponent<VRGrab>().handAnim = hSyncher;
+
         float headHeight = mainCamera.transform.position.y;
         float yScale = headHeight / disembodiedControls.leftEye.position.y;
         Debug.Log("yScale: " + yScale);
@@ -60,11 +61,18 @@ public class DisembodiedAvatarScaling : NetworkBehaviour
     // Use this for initialization
     void Start()
     {
-        if (isLocalPlayer && CalibrationContext.singleton.calibrationProgress > 0)
+        if (requireCalibration)
         {
-            disembodiedControls.LocalIKSetup();
-            Resize();
-            gameObject.tag = "LocalPlayer";
+            if (isLocalPlayer && CalibrationContext.singleton.calibrationProgress > 0)
+            {
+                disembodiedControls.LocalIKSetup();
+                Resize();
+                gameObject.tag = "LocalPlayer";
+            }
+        }
+        else
+        {
+            PupilTools.OnCalibrationEnded += disembodiedControls.LocalIKSetup;
         }
     }
 

@@ -87,8 +87,8 @@ public class GazeDirection : MonoBehaviour
             else if (hit.collider.gameObject.tag == "TV")
             {
                 tvLookTime += Time.deltaTime;
-                Debug.Log("Too much TV is bad for you!");
-                if (tvLookTime > 5)
+                // Debug.Log("Too much TV is bad for you!");
+                if (tvLookTime > 3)
                 {
                     OnTVRealized.Invoke();
                 }

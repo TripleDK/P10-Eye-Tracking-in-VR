@@ -42,8 +42,17 @@ public class ObjectInteractions : VRButton
             networkIdentity.localPlayerAuthority = true;
             playerId = GameObject.FindGameObjectWithTag("LocalPlayer").GetComponent<NetworkIdentity>();
             playerId.GetComponent<Player>().CmdSetAuth(netId, playerId);
-            CmdAttach(playerId);
+            StartCoroutine(WaitForAuthAttach(playerId));
         }
+    }
+
+    IEnumerator WaitForAuthAttach(NetworkIdentity playerId)
+    {
+        while (!hasAuthority)
+        {
+            yield return null;
+        }
+        CmdAttach(playerId);
     }
 
     [Command]
@@ -106,7 +115,7 @@ public class ObjectInteractions : VRButton
 
     IEnumerator CheckForFall()
     {
-        while (rigid.velocity != Vector3.zero)
+        while (rigid.velocity.magnitude >= 0.1f)
         {
             yield return null;
         }
@@ -124,6 +133,8 @@ public class ObjectInteractions : VRButton
     {
         yield return new WaitForSeconds(delay);
         Vector3 ogPos = transform.position;
+        transform.position = startPos;
+        rigid.velocity = Vector3.zero;
         CmdResetPosition(ogPos);
     }
 

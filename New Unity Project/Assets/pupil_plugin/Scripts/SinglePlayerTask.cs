@@ -62,10 +62,10 @@ public class SinglePlayerTask : MonoBehaviour
         Vector3 trackedLookAtPos = gazeDirection.calculatedLookAt.position - gazeDirection.transform.position;
         float positionAngle = Vector3.Angle(objToHeadPos, trackedLookAtPos);
         angleOffSets.Add(positionAngle);
-        Debug.Log("Count before: " + instantiatedObjects.Count);
+        //        Debug.Log("Count before: " + instantiatedObjects.Count);
         instantiatedObjects.RemoveAt(0);
         yield return null;
-        Debug.Log("Count before: " + instantiatedObjects.Count);
+        //      Debug.Log("Count before: " + instantiatedObjects.Count);
         objectMat.SetColor("_Color", originColor);
         if (instantiatedObjects.Count == 0)
         {
