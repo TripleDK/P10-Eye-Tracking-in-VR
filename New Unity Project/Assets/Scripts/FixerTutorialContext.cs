@@ -38,6 +38,12 @@ public class FixerTutorialContext : MonoBehaviour
         blackHole.OnEatObject.RemoveListener(FinishTutorial);
         textField.text = "Well done! Soon the window will open and you will be able to communicate with your partner. Remember to look at the monitor above you to check what object you need next.";
         TaskContext.singleton.FixerTutDone();
+        StartCoroutine(TutorialFiveSecDelay());
     }
 
+    IEnumerator TutorialFiveSecDelay()
+    {
+        yield return new WaitForSeconds(5);
+        Destroy(textField.gameObject);
+    }
 }

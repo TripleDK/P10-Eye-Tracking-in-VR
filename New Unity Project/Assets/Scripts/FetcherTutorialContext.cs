@@ -39,6 +39,12 @@ public class FetcherTutorialContext : MonoBehaviour
         teleporter.OnTeleportItem.RemoveListener(CompleteTutorial);
         textField.text = "Good jobbo!";
         TaskContext.singleton.FetcherTutDone();
+        StartCoroutine(TutorialFiveSecDelay());
     }
 
+    IEnumerator TutorialFiveSecDelay()
+    {
+        yield return new WaitForSeconds(5);
+        Destroy(textField.gameObject);
+    }
 }

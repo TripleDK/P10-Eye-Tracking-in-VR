@@ -24,6 +24,9 @@ public class TaskContext : NetworkBehaviour
     [SerializeField] AudioClip winSound;
     [SyncVar] bool fetcherTutDone = false;
     [SyncVar] bool fixerTutDone = false;
+    float averageFPS;
+    [SerializeField]
+    bool winCon = false;
 
     [SerializeField] SyncListInt SyncListShuffledObjects = new SyncListInt();
     [SyncVar] public string previewObjectName = "Namerino";
@@ -135,8 +138,9 @@ public class TaskContext : NetworkBehaviour
         nameField.text = "You did it! gz mang";
         Debug.Log("Chicken dinner!");
         AudioSource.PlayClipAtPoint(winSound, transform.position);
-        File.WriteAllText("Assets/Resources/Logs/" + DateTime.Now.ToString("h-mm-ss tt") + ".txt",
-            "Scene: " + SceneManager.GetActiveScene().name + "\nErrors: " + errorGrabs.ToString("0") + "\nTime stared at a face: " + timeGazeAtFace + "\nTime taken: " + (Time.time - timeStart).ToString("0.00"));
+        File.WriteAllText("Assets/Resources/Logs/" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".txt",
+            "Scene: " + SceneManager.GetActiveScene().name + "\nErrors: " + errorGrabs.ToString("0") + "\nTime stared at a face: " + timeGazeAtFace +
+            "\nTime taken: " + (Time.time - timeStart).ToString("0.00") + "\nAverage FPS: " + (Time.time - timeStart) / Time.frameCount);
     }
 
     public void FetcherTutDone()
