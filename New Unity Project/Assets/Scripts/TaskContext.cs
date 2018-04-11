@@ -61,9 +61,10 @@ public class TaskContext : NetworkBehaviour
           //  CmdSetup();
       }*/
 
-    [Command]
+    [Server]
     void CmdSetup()
     {
+        Debug.Log("Starting game!");
         SyncListShuffledObjects.Clear();
         timeStart = Time.time;
         int objectCount = objects.Count;
@@ -140,13 +141,31 @@ public class TaskContext : NetworkBehaviour
 
     public void FetcherTutDone()
     {
-        OnHasAuthority.AddListener(CmdFetcherTutDone);
+        OnHasAuthority.AddListener(FetcherTutDoneCall);
         StartCoroutine(WaitForAuthority());
+    }
+
+    void FetcherTutDoneCall()
+    {
+        CmdFetcherTutDone();
     }
 
     [Command]
     void CmdFetcherTutDone()
     {
+        Debug.Log("Fetcher tut is done!");
+        fetcherTutDone = true;
+        if (fixerTutDone)
+        {
+            CmdSetup();
+        }
+        RpcFetcherTutDone();
+    }
+
+    [ClientRpc]
+    void RpcFetcherTutDone()
+    {
+        Debug.Log("Fetcher tut is done!");
         fetcherTutDone = true;
         if (fixerTutDone)
         {
@@ -164,6 +183,13 @@ public class TaskContext : NetworkBehaviour
     [Command]
     void CmdFixerTutDone()
     {
+        if (isServer) RpcFixerTutDone();
+    }
+
+    [ClientRpc]
+    void RpcFixerTutDone()
+    {
+        Debug.Log("Fixer tut done!");
         fixerTutDone = true;
         if (fetcherTutDone)
         {
@@ -171,15 +197,16 @@ public class TaskContext : NetworkBehaviour
         }
     }
 
-
     IEnumerator WaitForAuthority()
     {
+        Debug.Log("Trying to get auth over taskcontext! " + Time.time);
         NetworkIdentity playerId = GameObject.FindGameObjectWithTag("LocalPlayer").GetComponent<NetworkIdentity>();
         playerId.GetComponent<Player>().CmdSetAuth(netId, playerId);
         while (!hasAuthority)
         {
             yield return null;
         }
+        Debug.Log("Got authority! " + Time.time);
         OnHasAuthority.Invoke();
         OnHasAuthority.RemoveAllListeners();
     }

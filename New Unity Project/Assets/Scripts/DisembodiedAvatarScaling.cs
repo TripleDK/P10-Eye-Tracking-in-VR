@@ -20,7 +20,6 @@ public class DisembodiedAvatarScaling : NetworkBehaviour
         mainCamera = Camera.main;
     }
 
-
     void Resize()
     {
 
@@ -31,7 +30,6 @@ public class DisembodiedAvatarScaling : NetworkBehaviour
         leftController = GameObject.Find("Controller (left)").transform;
         rightController = GameObject.Find("Controller (right)").transform;
         HandSyncher hSyncher = GetComponent<HandSyncher>();
-
 
         leftController.GetComponent<VRGrab>().handAnim = hSyncher;
 

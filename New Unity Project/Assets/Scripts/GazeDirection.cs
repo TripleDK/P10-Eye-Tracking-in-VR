@@ -9,11 +9,15 @@ public class GazeDirection : MonoBehaviour
     [SerializeField] bool searchingForPupil = false;
     [SerializeField] float markerDistance;
     [SerializeField] Transform marker;
+
     Camera cam;
     Coroutine connecting;
     float tvLookTime = 0.0f;
 
+
+
     public UnityEvent OnTVRealized = new UnityEvent();
+
 
     // Use this for initialization
     void Start()
@@ -25,6 +29,7 @@ public class GazeDirection : MonoBehaviour
 
     void OnEnable()
     {
+
         if (PupilTools.IsConnected)
         {
             Debug.Log("Starting gaze in 3d!");
@@ -36,6 +41,7 @@ public class GazeDirection : MonoBehaviour
             Debug.Log("can't find Pupil labs!", this);
             connecting = StartCoroutine(KeepConnected());
         }
+
     }
 
     IEnumerator KeepConnected()
@@ -59,6 +65,7 @@ public class GazeDirection : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         if (PupilTools.IsConnected && PupilTools.IsGazing)
         {
             marker.localPosition = PupilData._3D.GazePosition;
@@ -103,5 +110,7 @@ public class GazeDirection : MonoBehaviour
         {
             if (connecting == null) connecting = StartCoroutine(KeepConnected());
         }
+
     }
 }
+
