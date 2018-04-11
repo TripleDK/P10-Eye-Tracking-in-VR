@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.Events;
 
 public class Teleporter : NetworkBehaviour
 {
@@ -16,16 +17,24 @@ public class Teleporter : NetworkBehaviour
     [SerializeField] float teleportTime = 1.0f;
     [SerializeField] AnimationCurve dissolveEffect;
     [SerializeField] AnimationCurve particleMovement;
+    [SerializeField] AnimationCurve outlineMovement;
     [SerializeField] Transform standbyParticles;
     [SerializeField] GameObject teleportParticles;
+    [SerializeField] Transform receiverParticles;
+    [SerializeField] AnimationCurve receiverPMovement;
+    [SerializeField] AudioClip teleportSound;
 
     private ObjectInteractions objectToTeleport = null;
     private Rigidbody objectRigidbody = null;
-    Vector3 particleStartScale;
+    Vector3 particleStartScale, receiverStartScale;
+
+    public UnityEvent OnAcceptItem = new UnityEvent();
+    public UnityEvent OnTeleportItem = new UnityEvent();
 
     void Awake()
     {
         particleStartScale = standbyParticles.localScale;
+        receiverStartScale = receiverParticles.localScale;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -45,6 +54,7 @@ public class Teleporter : NetworkBehaviour
                 return;
 
             }
+            OnAcceptItem.Invoke();
             objectToTeleport = other.gameObject.GetComponent<ObjectInteractions>();
             objectRigidbody = other.gameObject.GetComponent<Rigidbody>();
         }
@@ -71,18 +81,23 @@ public class Teleporter : NetworkBehaviour
             objectToTeleport = null;
         }
     }
-    public void Activate()
+    public void Activate() //Button grants authority before calling this
     {
         Debug.Log("Trying to activate teleporter!");
         if (objectToTeleport != null)
         {
             if (objectToTeleport.gameObject.name == TaskContext.singleton.previewObjectName)
             {
-
                 CmdActivate(objectToTeleport.gameObject);
                 //  objectToTeleport.startPos = teleportTarget.position;
-
-
+            }
+            else if (objectToTeleport.gameObject.name == "Sphere(Clone)")
+            {
+                AudioSource.PlayClipAtPoint(beep, transform.position);
+                Rigidbody teleportRigid = objectToTeleport.gameObject.GetComponent<Rigidbody>();
+                teleportRigid.velocity = Vector3.zero;
+                Destroy(objectToTeleport.gameObject, 3);
+                StartCoroutine(TeleportEffect(objectToTeleport.gameObject));
             }
             else
             {
@@ -95,19 +110,9 @@ public class Teleporter : NetworkBehaviour
     [Command]
     public void CmdActivate(GameObject gameObject)
     {
-        NetworkIdentity playerId = GameObject.FindGameObjectWithTag("LocalPlayer").GetComponent<NetworkIdentity>();
-        playerId.GetComponent<Player>().CmdSetAuth(TaskContext.singleton.netId, playerId);
+        //    NetworkIdentity playerId = GameObject.FindGameObjectWithTag("LocalPlayer").GetComponent<NetworkIdentity>();
+        //  playerId.GetComponent<Player>().CmdSetAuth(TaskContext.singleton.netId, playerId);
         RpcActivate(gameObject);
-        StartCoroutine(WaitForAuthor());
-    }
-
-    IEnumerator WaitForAuthor()
-    {
-        while (!TaskContext.singleton.hasAuthority)
-        {
-            yield return null;
-        }
-        TaskContext.singleton.CmdNextObject();
     }
 
 
@@ -116,30 +121,53 @@ public class Teleporter : NetworkBehaviour
     {
         Debug.Log("RPC ACTIVAtea!");
         AudioSource.PlayClipAtPoint(beep, transform.position);
-        Rigidbody teleportRigid = go.gameObject.GetComponent<Rigidbody>();
+        Rigidbody teleportRigid = go.GetComponent<Rigidbody>();
         teleportRigid.velocity = Vector3.zero;
         StartCoroutine(TeleportEffect(go));
     }
 
     IEnumerator TeleportEffect(GameObject go)
     {
-        Rigidbody teleportRigid = go.gameObject.GetComponent<Rigidbody>();
-        Material mat = go.transform.GetChild(0).GetComponent<SkinnedMeshRenderer>().material;
+        Rigidbody teleportRigid = go.GetComponent<Rigidbody>();
+        Material mat;
+        if (go.GetComponent<MeshRenderer>().enabled)
+        {
+            mat = go.GetComponent<MeshRenderer>().material;
+        }
+        else
+        {
+            mat = go.transform.GetChild(0).GetComponent<SkinnedMeshRenderer>().material;
+        }
+        float outlineSize = mat.GetFloat("_OutlineWidth");
 
         float startTime = Time.time;
         while (Time.time - startTime < teleportTime)
         {
-            float dissolveValue = dissolveEffect.Evaluate((Time.time - startTime) / teleportTime);
-            float scaleValue = particleMovement.Evaluate((Time.time - startTime) / teleportTime);
+            float animCurveTime = (Time.time - startTime) / teleportTime;
+            float dissolveValue = dissolveEffect.Evaluate(animCurveTime);
+            float scaleValue = particleMovement.Evaluate(animCurveTime);
+            float outlineValue = outlineMovement.Evaluate(animCurveTime) * outlineSize;
             mat.SetFloat("_DissolveSize", dissolveValue);
+            mat.SetFloat("_OutlineWidth", outlineValue);
             standbyParticles.localScale = particleStartScale * scaleValue;
             yield return null;
         }
         mat.SetFloat("_DissolveSize", 0);
+        mat.SetFloat("_OutlineWidth", outlineSize);
         Destroy(Instantiate(teleportParticles, objectToTeleport.transform.position, Quaternion.identity), 2);
         objectToTeleport = null;
         teleportRigid.MovePosition(teleportTarget.position);
         go.GetComponent<ObjectInteractions>().startPos = teleportTarget.position;
+
+        startTime = Time.time;
+        AudioSource.PlayClipAtPoint(teleportSound, transform.position);
+        OnTeleportItem.Invoke();
+        while (Time.time - startTime < teleportTime)
+        {
+            float scaleValue = particleMovement.Evaluate((Time.time - startTime) / teleportTime);
+            receiverParticles.localScale = receiverStartScale * scaleValue;
+            yield return null;
+        }
 
     }
 

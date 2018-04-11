@@ -1,0 +1,3 @@
+Scene: MainSceneVR
+Errors: 3
+Time stared at a face: 0

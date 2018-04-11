@@ -86,6 +86,9 @@ public class PupilGazeTracker : MonoBehaviour
 
     #region Update
 
+    bool hasCalibrated = false;
+    void HasCalibrated() { hasCalibrated = true; }
+
     void Update()
     {
         if (PupilTools.IsCalibrating)
@@ -95,7 +98,7 @@ public class PupilGazeTracker : MonoBehaviour
 
         PupilTools.Connection.UpdateSubscriptionSockets();
 
-        if (PupilTools.IsConnected && (Input.GetKeyUp(KeyCode.C) || Input.GetKeyDown("joystick button 0") || Input.GetKeyDown("joystick button 2")))
+        if (PupilTools.IsConnected && (Input.GetKeyUp(KeyCode.C) || (Input.GetKeyDown("joystick button 0") && !hasCalibrated) || (Input.GetKeyDown("joystick button 2") && !hasCalibrated)))
         {
             if (PupilTools.IsCalibrating)
             {
@@ -104,6 +107,7 @@ public class PupilGazeTracker : MonoBehaviour
             else
             {
                 PupilTools.StartCalibration();
+                PupilTools.OnCalibrationEnded += HasCalibrated;
             }
         }
 #if !UNITY_WSA

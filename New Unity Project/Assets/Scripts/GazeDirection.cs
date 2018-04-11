@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class GazeDirection : MonoBehaviour
 {
@@ -8,8 +9,15 @@ public class GazeDirection : MonoBehaviour
     [SerializeField] bool searchingForPupil = false;
     [SerializeField] float markerDistance;
     [SerializeField] Transform marker;
+
     Camera cam;
     Coroutine connecting;
+    float tvLookTime = 0.0f;
+
+
+
+    public UnityEvent OnTVRealized = new UnityEvent();
+
 
     // Use this for initialization
     void Start()
@@ -21,6 +29,7 @@ public class GazeDirection : MonoBehaviour
 
     void OnEnable()
     {
+
         if (PupilTools.IsConnected)
         {
             Debug.Log("Starting gaze in 3d!");
@@ -32,6 +41,7 @@ public class GazeDirection : MonoBehaviour
             Debug.Log("can't find Pupil labs!", this);
             connecting = StartCoroutine(KeepConnected());
         }
+
     }
 
     IEnumerator KeepConnected()
@@ -55,12 +65,13 @@ public class GazeDirection : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         if (PupilTools.IsConnected && PupilTools.IsGazing)
         {
             marker.localPosition = PupilData._3D.GazePosition;
-      //      Debug.Log(PupilData._3D.Circle.Radius(0));
-        //    Debug.Log("World Space: " + PupilData._3D.GazePosition + ", LeftNorma: " + PupilData._3D.LeftGazeNormal + ", RightNormal: " + PupilData._3D.RightGazeNormal);
-          //  Debug.Log("Left Eye Norm X " + PupilData._3D.LeftGazeNormal.x + "  " + "Left Eye Norm Y " + PupilData._3D.LeftGazeNormal.y
+            //      Debug.Log(PupilData._3D.Circle.Radius(0));
+            //    Debug.Log("World Space: " + PupilData._3D.GazePosition + ", LeftNorma: " + PupilData._3D.LeftGazeNormal + ", RightNormal: " + PupilData._3D.RightGazeNormal);
+            //  Debug.Log("Left Eye Norm X " + PupilData._3D.LeftGazeNormal.x + "  " + "Left Eye Norm Y " + PupilData._3D.LeftGazeNormal.y
             //     + "  " + "Left Eye Norm Z " + PupilData._3D.LeftGazeNormal.z + ", normalized: " + PupilData._3D.GazePosition.normalized);
             Vector3 leftEyeDir, rightEyeDir;
             leftEyeDir = (PupilData._3D.LeftGazeNormal).normalized;
@@ -77,7 +88,17 @@ public class GazeDirection : MonoBehaviour
             if (hit.collider == null) { calculatedLookAt.position = transform.position + averageDir * markerDistance; }
             else if (hit.collider.gameObject.tag == "PlayerHead")
             {
+                Debug.Log("I see you!");
                 TaskContext.singleton.timeGazeAtFace += Time.deltaTime;
+            }
+            else if (hit.collider.gameObject.tag == "TV")
+            {
+                tvLookTime += Time.deltaTime;
+                // Debug.Log("Too much TV is bad for you!");
+                if (tvLookTime > 3)
+                {
+                    OnTVRealized.Invoke();
+                }
             }
             /*   laserEyes.SetPosition(0, transform.position);
                laserEyes.SetPosition(1, transform.position + (leftEyeDir + rightEyeDir).normalized * markerDistance);*/
@@ -89,5 +110,7 @@ public class GazeDirection : MonoBehaviour
         {
             if (connecting == null) connecting = StartCoroutine(KeepConnected());
         }
+
     }
 }
+

@@ -1,0 +1,3 @@
+Scene: MainSceneVR
+Errors: 22
+Time stared at a face: 26.25111

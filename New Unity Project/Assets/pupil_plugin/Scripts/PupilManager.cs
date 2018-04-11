@@ -83,7 +83,8 @@ public class PupilManager : MonoBehaviour
 
     void ShowCalibrate()
     {
-        calibrationText.text = "Press 'c' to start calibration.";
+        //    calibrationText.text = "Press 'c' to start calibration.";
+        calibrationText.text = "Press the menu button on either controller \nto start calibration.";
     }
 
     void OnCalibtaionStarted()
@@ -108,7 +109,7 @@ public class PupilManager : MonoBehaviour
 
     void OnCalibrationFailed()
     {
-        calibrationText.text = "Calibration failed\nPress 'c' to start it again.";
+        calibrationText.text = "Calibration failed\nPress the menu button on either controller \nto start calibration.";
 
         if (displayEyeImages)
             GetComponent<FramePublishing>().enabled = true;

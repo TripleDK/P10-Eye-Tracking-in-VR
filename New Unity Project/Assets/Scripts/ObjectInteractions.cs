@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.Events;
 
 [RequireComponent(typeof(Rigidbody))]
 public class ObjectInteractions : VRButton
@@ -9,6 +10,7 @@ public class ObjectInteractions : VRButton
 
     public bool attached = false;
     public Vector3 startPos;
+    [HideInInspector] public NetworkIdentity playerId = null;
     [SerializeField] float minHeight = 0.3f;
     [SerializeField] GameObject teleportParticles;
     FixedJoint tempJoint = null;
@@ -17,6 +19,8 @@ public class ObjectInteractions : VRButton
     Vector3 prevPosition;
     Quaternion prevAng;
     Rigidbody rigid;
+
+    public UnityEvent OnBallGrabbed = new UnityEvent();
 
     public override void Awake()
     {
@@ -29,16 +33,26 @@ public class ObjectInteractions : VRButton
     {
         if (!attached)
         {
+            OnBallGrabbed.Invoke();
             attached = true;
             //  transform.position = controller.transform.position;
             tempJoint = gameObject.AddComponent<FixedJoint>();
             tempJoint.connectedBody = controller.GetComponent<Rigidbody>();
             rigid.velocity = Vector3.zero;
             networkIdentity.localPlayerAuthority = true;
-            NetworkIdentity playerId = GameObject.FindGameObjectWithTag("LocalPlayer").GetComponent<NetworkIdentity>();
+            playerId = GameObject.FindGameObjectWithTag("LocalPlayer").GetComponent<NetworkIdentity>();
             playerId.GetComponent<Player>().CmdSetAuth(netId, playerId);
-            CmdAttach(playerId);
+            StartCoroutine(WaitForAuthAttach(playerId));
         }
+    }
+
+    IEnumerator WaitForAuthAttach(NetworkIdentity playerId)
+    {
+        while (!hasAuthority)
+        {
+            yield return null;
+        }
+        CmdAttach(playerId);
     }
 
     [Command]
@@ -101,7 +115,7 @@ public class ObjectInteractions : VRButton
 
     IEnumerator CheckForFall()
     {
-        while (rigid.velocity != Vector3.zero)
+        while (rigid.velocity.magnitude >= 0.1f)
         {
             yield return null;
         }
@@ -118,19 +132,22 @@ public class ObjectInteractions : VRButton
     IEnumerator ResetPositionCo(int delay)
     {
         yield return new WaitForSeconds(delay);
-        CmdResetPosition();
+        Vector3 ogPos = transform.position;
+        transform.position = startPos;
+        rigid.velocity = Vector3.zero;
+        CmdResetPosition(ogPos);
     }
 
     [Command]
-    public void CmdResetPosition()
+    public void CmdResetPosition(Vector3 ogPos)
     {
-        RpcResetPosition();
+        RpcResetPosition(ogPos);
     }
 
     [ClientRpc]
-    public void RpcResetPosition()
+    public void RpcResetPosition(Vector3 ogPos)
     {
-        Destroy(Instantiate(teleportParticles, transform.position, Quaternion.identity), 2);
+        Destroy(Instantiate(teleportParticles, ogPos, Quaternion.identity), 2);
         transform.position = startPos;
         rigid.velocity = Vector3.zero;
     }

@@ -12,6 +12,7 @@ public class CalibrationContext : MonoBehaviour
     public int gender = 0; //0 = Male, 1 = Female
     public int style = 0; //0 = Realistic, 1 = Disembodied cartoon
     public int role = 0; //0 = Fetcher, 1 = Fixer
+    public int eyeModel = 0; //0 = static, 1 = modelled, 2 = eye tracking
     public int calibrationProgress = 0;
 
     [SerializeField] PupilManager pupilManager;
@@ -21,8 +22,12 @@ public class CalibrationContext : MonoBehaviour
     [SerializeField] GameObject styleButtons;
     [SerializeField] GameObject roleSelect;
     [SerializeField] Transform pupilLabCalibratePos;
+    [SerializeField] BlackHole blackHole;
+    [SerializeField] FetcherTutorialContext fetcherTutorial;
+    [SerializeField] FixerTutorialContext fixerTutorial;
+    [SerializeField] Transform offsetCenterPosition;
     Transform fixerPos, fetcherPos;
-
+    Vector3 positionalOffset;
     Transform leftHand, rightHand, head;
     Transform[] startPos = new Transform[2];
 
@@ -38,6 +43,12 @@ public class CalibrationContext : MonoBehaviour
         }
         startPos[0] = GameObject.Find("Player1StartPos").transform;
         startPos[1] = GameObject.Find("Player2StartPos").transform;
+
+    }
+
+    void OnDrawGizmos()
+    {
+        Gizmos.DrawCube(offsetCenterPosition.position, new Vector3(.1f, 2, .1f));
     }
 
     void Start()
@@ -54,6 +65,7 @@ public class CalibrationContext : MonoBehaviour
 
     IEnumerator FindSteamVR()
     {
+
         while (leftHand == null || rightHand == null || head == null)
         {
             if (GameObject.Find("Controller (left)"))
@@ -64,6 +76,7 @@ public class CalibrationContext : MonoBehaviour
                 head = GameObject.Find("Camera (eye)").transform;
             yield return null;
         }
+
         genderSelect.SetActive(true);
         calibrationProgress = 1;
     }
@@ -134,24 +147,30 @@ public class CalibrationContext : MonoBehaviour
         }
         leftHand.GetChild(0).gameObject.SetActive(false);
         rightHand.GetChild(0).gameObject.SetActive(false);
-
+        positionalOffset = head.localPosition;
+        offsetCenterPosition.localPosition = positionalOffset;
+        positionalOffset.y = 0;
         roleSelect.SetActive(true);
-
     }
 
     public void ChooseRole(int role)
     {
         this.role = role;
         Transform cameraRig = GameObject.Find("[CameraRig]").transform;
-        cameraRig.rotation = startPos[this.role].rotation;
-        cameraRig.position = startPos[this.role].position;
-
+        if (role == 0)
+        {
+            cameraRig.position = startPos[this.role].position - startPos[this.role].rotation * positionalOffset;
+            cameraRig.rotation = startPos[this.role].rotation;
+            fetcherTutorial.StartTutorial();
+        }
         if (role == 1)
         {
             pupilManager.gameObject.SetActive(true);
-            cameraRig.position = pupilLabCalibratePos.position;
+            cameraRig.position = pupilLabCalibratePos.position - pupilLabCalibratePos.rotation * positionalOffset;
             cameraRig.rotation = pupilLabCalibratePos.rotation;
             PupilTools.OnCalibrationEnded += PupilCalibrateDone;
+            //Give blackhole authority
+            blackHole.TakeAuthority();
         }
         playerTransform.position = cameraRig.position;
     }
@@ -159,8 +178,9 @@ public class CalibrationContext : MonoBehaviour
     void PupilCalibrateDone()
     {
         Transform cameraRig = GameObject.Find("[CameraRig]").transform;
+        cameraRig.position = startPos[this.role].position - startPos[this.role].rotation * positionalOffset;
         cameraRig.rotation = startPos[this.role].rotation;
-        cameraRig.position = startPos[this.role].position;
         playerTransform.position = cameraRig.position;
+        fixerTutorial.StartTutorial();
     }
 }
