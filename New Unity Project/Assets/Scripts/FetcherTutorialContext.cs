@@ -11,6 +11,11 @@ public class FetcherTutorialContext : MonoBehaviour
     [SerializeField] Teleporter teleporter;
     ObjectInteractions spawnedTestObject;
 
+    void Awake()
+    {
+        textField.text = "";
+    }
+
     public void StartTutorial()
     {
         textField.text = "Welcome, your role is -Fetcher- Your task is to communicate with your partner about which object you have to fetch. Let’s try this out! Grab the big RED object; reach out and then hold the trigger button on the back of the controller.";

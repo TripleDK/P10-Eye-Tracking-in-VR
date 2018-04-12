@@ -12,6 +12,11 @@ public class FixerTutorialContext : MonoBehaviour
     [SerializeField] BlackHole blackHole;
     ObjectInteractions spawnedTestObject;
 
+    void Awake()
+    {
+        textField.text = "";
+    }
+
     public void StartTutorial()
     {
         textField.text = "Welcome, your role is -Fixer-. You need to fix the black hole by throwing in the correct objects. To get the objects, you must look through the window and communicate to your partner which objects you need. To see what objects you need, you must look at the monitor slightly above you.";

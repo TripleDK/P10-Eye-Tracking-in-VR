@@ -48,7 +48,6 @@ public class TaskContext : NetworkBehaviour
         {
             Debug.LogWarning("Two TaskContexts in scene!");
         }
-
     }
 
     public override void OnStartClient()
@@ -119,7 +118,7 @@ public class TaskContext : NetworkBehaviour
         NetworkServer.Destroy(tempObject);
         SyncListShuffledObjects.Remove(SyncListShuffledObjects[0]);
         previewObject.name = previewObject.name.Replace("(Clone)", string.Empty);
-        lookTargetController.pointsOfInterest[0] = spawnedObjects[0].transform;
+        lookTargetController.pointsOfInterest[0] = spawnedObjects[0].transform; //Array index out of range!!
         RpcNameChange(previewObject.name);
         spawnedObjects.RemoveAt(0);
     }
@@ -146,7 +145,7 @@ public class TaskContext : NetworkBehaviour
         AudioSource.PlayClipAtPoint(winSound, transform.position);
         File.WriteAllText("Assets/Resources/Logs/" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".txt",
             "Scene: " + SceneManager.GetActiveScene().name + "\nErrors: " + errorGrabs.ToString("0") + "\nTime stared at a face: " + timeGazeAtFace +
-            "\nTime taken: " + (Time.time - timeStart).ToString("0.00") + "\nAverage FPS: " + (Time.time - timeStart) / Time.frameCount);
+            "\nTime taken: " + (Time.time - timeStart).ToString("0.00") + "\nAverage FPS: " + (Time.frameCount / Time.time));
     }
 
     public void FetcherTutDone()
