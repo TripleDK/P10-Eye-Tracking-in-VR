@@ -120,6 +120,7 @@ public class CalibrationContext : MonoBehaviour
             {
                 eyeModel = 3;
             }
+            GUI.color = Color.black;
             GUI.Label(new Rect(10, 195, 300, 60), "Status:\nGender: " + gender + ", Style: " + style + " Rolee: " + role + " Eye Models: " + eyeModel);
             if (GUI.Button(new Rect(10, 230, 100, 30), "Ready"))
             {
