@@ -34,7 +34,7 @@ public class VRButton : NetworkBehaviour
     public virtual void OnTriggerEnter(Collider collision)
     {
         VRGrab controller = collision.gameObject.GetComponent<VRGrab>();
-        FeedbackColor(Color.green);
+        FeedbackColor(Color.green, 1.3f);
         if (collision.gameObject.name == "Controller (left)")
         {
             leftController = true;
@@ -65,11 +65,11 @@ public class VRButton : NetworkBehaviour
         }
         if (!leftController && !rightController)
         {
-            FeedbackColor(color);
+            FeedbackColor(color, 1.1f);
         }
     }
 
-    public virtual void FeedbackColor(Color color)
+    public virtual void FeedbackColor(Color color, float width)
     {
         material.SetColor("g_vOutlineColor", color);
     }

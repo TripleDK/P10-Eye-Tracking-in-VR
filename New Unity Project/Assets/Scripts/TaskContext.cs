@@ -7,6 +7,7 @@ using UnityEngine.Events;
 using TMPro;
 using System.IO;
 using System;
+using RealisticEyeMovements;
 
 public class TaskContext : NetworkBehaviour
 {
@@ -17,6 +18,9 @@ public class TaskContext : NetworkBehaviour
     public float timeGazeAtFace = 0;
     public GameObject previewObject;
     public List<GameObject> objects = new List<GameObject>();
+    public Transform realEyeTarget;
+    public LookTargetController lookTargetController;
+
     [SerializeField] List<Transform> spawnPos = new List<Transform>();
     [SerializeField] float previewRotationSpeed = 180f;
     [SerializeField] TextMeshPro nameField;
@@ -24,9 +28,9 @@ public class TaskContext : NetworkBehaviour
     [SerializeField] AudioClip winSound;
     [SyncVar] bool fetcherTutDone = false;
     [SyncVar] bool fixerTutDone = false;
+    List<GameObject> spawnedObjects = new List<GameObject>();
     float averageFPS;
-    [SerializeField]
-    bool winCon = false;
+
 
     [SerializeField] SyncListInt SyncListShuffledObjects = new SyncListInt();
     [SyncVar] public string previewObjectName = "Namerino";
@@ -94,7 +98,7 @@ public class TaskContext : NetworkBehaviour
             usedPos.Add(posIndex);
             var go = (GameObject)Instantiate(objects[y], spawnPos[posIndex].position, Quaternion.identity);
             NetworkServer.SpawnWithClientAuthority(go, playerId.connectionToClient);
-
+            spawnedObjects.Add(go);
         }
         CmdNextObject();
     }
@@ -115,7 +119,9 @@ public class TaskContext : NetworkBehaviour
         NetworkServer.Destroy(tempObject);
         SyncListShuffledObjects.Remove(SyncListShuffledObjects[0]);
         previewObject.name = previewObject.name.Replace("(Clone)", string.Empty);
+        lookTargetController.pointsOfInterest[0] = spawnedObjects[0].transform;
         RpcNameChange(previewObject.name);
+        spawnedObjects.RemoveAt(0);
     }
 
 

@@ -97,9 +97,10 @@ public class ObjectInteractions : VRButton
 
     }
 
-    public override void FeedbackColor(Color color)
+    public override void FeedbackColor(Color color, float width)
     {
         material.SetColor("_OutlineColor", color);
+        material.SetFloat("_OutlineWidth", width);
     }
 
     public override void OnTriggerEnter(Collider collision)
