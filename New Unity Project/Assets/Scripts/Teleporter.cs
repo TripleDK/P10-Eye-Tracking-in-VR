@@ -139,6 +139,7 @@ public class Teleporter : NetworkBehaviour
             mat = go.transform.GetChild(0).GetComponent<SkinnedMeshRenderer>().material;
         }
         float outlineSize = mat.GetFloat("_OutlineWidth");
+        AudioSource.PlayClipAtPoint(teleportSound, transform.position);
 
         float startTime = Time.time;
         while (Time.time - startTime < teleportTime)
@@ -160,7 +161,6 @@ public class Teleporter : NetworkBehaviour
         go.GetComponent<ObjectInteractions>().startPos = teleportTarget.position;
 
         startTime = Time.time;
-        AudioSource.PlayClipAtPoint(teleportSound, transform.position);
         OnTeleportItem.Invoke();
         while (Time.time - startTime < teleportTime)
         {

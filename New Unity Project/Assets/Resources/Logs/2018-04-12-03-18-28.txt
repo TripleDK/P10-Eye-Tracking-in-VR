@@ -1,0 +1,5 @@
+Scene: MainSceneVR
+Errors: 32
+Time stared at a face: 2.731704
+Time taken: 101.92
+Average FPS: 0.003972605

@@ -12,7 +12,7 @@ public class CalibrationContext : MonoBehaviour
     public int gender = 0; //0 = Male, 1 = Female
     public int style = 0; //0 = Realistic, 1 = Disembodied cartoon
     public int role = 0; //0 = Fetcher, 1 = Fixer
-    public int eyeModel = 0; //0 = static, 1 = modelled, 2 = eye tracking
+    public int eyeModel = 0; //0 = static, 1 = Hmd, 2 = modelled, 3 = eye tracking
     public int calibrationProgress = 0;
 
     [SerializeField] PupilManager pupilManager;
@@ -30,6 +30,8 @@ public class CalibrationContext : MonoBehaviour
     Vector3 positionalOffset;
     Transform leftHand, rightHand, head;
     Transform[] startPos = new Transform[2];
+    bool steamVRActive = false;
+    bool readyUp = false;
 
     void Awake()
     {
@@ -48,7 +50,7 @@ public class CalibrationContext : MonoBehaviour
 
     void OnDrawGizmos()
     {
-        Gizmos.DrawCube(offsetCenterPosition.position, new Vector3(.1f, 2, .1f));
+        if (offsetCenterPosition) Gizmos.DrawCube(offsetCenterPosition.position, new Vector3(.1f, 2, .1f));
     }
 
     void Start()
@@ -56,12 +58,79 @@ public class CalibrationContext : MonoBehaviour
         networkButtons.SetActive(false);
         genderSelect.SetActive(false);
         styleButtons.SetActive(false);
+        string ip = Network.player.ipAddress;
+        if (ip == "192.168.0.1")
+        {
+            networkFunction = 0;
+        }
+        else
+        {
+            networkFunction = 1;
+        }
         for (int i = 0; i < transform.childCount; i++)
         {
             transform.GetChild(i).gameObject.SetActive(false);
         }
         StartCoroutine(FindSteamVR());
     }
+
+    void OnGUI()
+    {
+        if (readyUp == false)
+        {
+            GUI.color = Color.yellow;
+            GUI.Label(new Rect(10, 10, 200, 100), "SteamVR active: " + steamVRActive);
+            if (GUI.Button(new Rect(10, 40, 100, 30), "Male"))
+            {
+                gender = 0;
+            }
+            if (GUI.Button(new Rect(120, 40, 100, 30), "Female"))
+            {
+                gender = 1;
+            }
+            if (GUI.Button(new Rect(10, 80, 100, 30), "Cartoony"))
+            {
+                style = 0;
+            }
+            if (GUI.Button(new Rect(120, 80, 100, 30), "Realistic"))
+            {
+                style = 1;
+            }
+            if (GUI.Button(new Rect(10, 120, 100, 30), "Fetcher"))
+            {
+                role = 0;
+            }
+            if (GUI.Button(new Rect(120, 120, 100, 30), "Fixer"))
+            {
+                role = 1;
+            }
+            if (GUI.Button(new Rect(10, 160, 100, 30), "Static"))
+            {
+                eyeModel = 0;
+            }
+            if (GUI.Button(new Rect(120, 160, 100, 30), "Hmd"))
+            {
+                eyeModel = 1;
+            }
+            if (GUI.Button(new Rect(240, 160, 100, 30), "Model"))
+            {
+                eyeModel = 2;
+            }
+            if (GUI.Button(new Rect(360, 160, 100, 30), "Real tracking"))
+            {
+                eyeModel = 3;
+            }
+            GUI.color = Color.black;
+            GUI.Label(new Rect(10, 195, 300, 60), "Status:\nGender: " + gender + ", Style: " + style + " Rolee: " + role + " Eye Models: " + eyeModel);
+            if (GUI.Button(new Rect(10, 230, 100, 30), "Ready"))
+            {
+                readyUp = true;
+                StartCoroutine(WaitForCalibrate());
+            }
+        }
+    }
+
+
 
     IEnumerator FindSteamVR()
     {
@@ -76,8 +145,8 @@ public class CalibrationContext : MonoBehaviour
                 head = GameObject.Find("Camera (eye)").transform;
             yield return null;
         }
-
-        genderSelect.SetActive(true);
+        steamVRActive = true;
+        //  genderSelect.SetActive(true);
         calibrationProgress = 1;
     }
 

@@ -12,6 +12,11 @@ public class FixerTutorialContext : MonoBehaviour
     [SerializeField] BlackHole blackHole;
     ObjectInteractions spawnedTestObject;
 
+    void Awake()
+    {
+        textField.text = "";
+    }
+
     public void StartTutorial()
     {
         textField.text = "Welcome, your role is -Fixer-. You need to fix the black hole by throwing in the correct objects. To get the objects, you must look through the window and communicate to your partner which objects you need. To see what objects you need, you must look at the monitor slightly above you.";
@@ -38,6 +43,12 @@ public class FixerTutorialContext : MonoBehaviour
         blackHole.OnEatObject.RemoveListener(FinishTutorial);
         textField.text = "Well done! Soon the window will open and you will be able to communicate with your partner. Remember to look at the monitor above you to check what object you need next.";
         TaskContext.singleton.FixerTutDone();
+        StartCoroutine(TutorialFiveSecDelay());
     }
 
+    IEnumerator TutorialFiveSecDelay()
+    {
+        yield return new WaitForSeconds(5);
+        Destroy(textField.gameObject);
+    }
 }
