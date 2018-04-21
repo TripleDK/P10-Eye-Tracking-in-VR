@@ -118,7 +118,7 @@ GameObject:
   - component: {fileID: 413432}
   - component: {fileID: 2082592}
   - component: {fileID: 12409152}
-  - component: {fileID: 114510297398844048}
+  - component: {fileID: 114158782275042734}
   m_Layer: 0
   m_Name: Camera (eye)
   m_TagString: MainCamera
@@ -191,8 +191,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 146900}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.36, y: 0, z: -4}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
+  m_LocalPosition: {x: 38.397, y: 0.17, z: -1.245}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 458974}
@@ -201,7 +201,7 @@ Transform:
   - {fileID: 224191159796207848}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!4 &439042
 Transform:
   m_ObjectHideFlags: 1
@@ -497,17 +497,17 @@ MonoBehaviour:
   wireframeHeight: 2
   drawWireframeWhenSelectedOnly: 0
   drawInGame: 0
-  size: 2
+  size: 0
   color: {r: 0.9034481, g: 0, b: 1, a: 1}
   vertices:
-  - {x: 1.5, y: 0.01, z: -1.125}
-  - {x: -1.5, y: 0.01, z: -1.125}
-  - {x: -1.5, y: 0.01, z: 1.125}
-  - {x: 1.5, y: 0.01, z: 1.125}
-  - {x: 1.65, y: 0.01, z: -1.275}
-  - {x: -1.65, y: 0.01, z: -1.275}
-  - {x: -1.65, y: 0.01, z: 1.275}
-  - {x: 1.65, y: 0.01, z: 1.275}
+  - {x: 1.9999993, y: 0.01, z: -1.9999993}
+  - {x: -1.9999993, y: 0.01, z: -1.9999993}
+  - {x: -1.9999993, y: 0.01, z: 1.9999993}
+  - {x: 1.9999993, y: 0.01, z: 1.9999993}
+  - {x: 2.1499994, y: 0.01, z: -2.1499994}
+  - {x: -2.1499994, y: 0.01, z: -2.1499994}
+  - {x: -2.1499994, y: 0.01, z: 2.1499994}
+  - {x: 2.1499994, y: 0.01, z: 2.1499994}
 --- !u!124 &12409152
 Behaviour:
   m_ObjectHideFlags: 1
@@ -699,7 +699,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 1000
+  far clip plane: 10
   field of view: 60
   orthographic: 0
   orthographic size: 5
@@ -773,13 +773,27 @@ MonoBehaviour:
   objectsToLoad:
   - {fileID: 189822}
   currentSceneIndex: 0
+--- !u!114 &114158782275042734
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 189822}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bca9ccf900ccc84c887d783321d27e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _head: {fileID: 408470}
+  _ears: {fileID: 439042}
+  wireframe: 0
 --- !u!114 &114184801625516018
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1252985904858878}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9acc788537a737742b0c34d52fa7cc4b, type: 3}
   m_Name: 
@@ -801,6 +815,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   handAnim: {fileID: 0}
+  grabSound: {fileID: 0}
   grabbedObject: []
 --- !u!114 &114290174280373502
 MonoBehaviour:
@@ -823,11 +838,11 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 64
+    m_FontSize: 40
     m_FontStyle: 1
     m_BestFit: 0
     m_MinSize: 0
-    m_MaxSize: 100
+    m_MaxSize: 300
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -851,20 +866,6 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &114510297398844048
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 189822}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6bca9ccf900ccc84c887d783321d27e2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _head: {fileID: 408470}
-  _ears: {fileID: 439042}
-  wireframe: 0
 --- !u!114 &114590212453746600
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -924,14 +925,21 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1252985904858878}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ed3c344ee491aaa418293100a6edfef1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   calculatedLookAt: {fileID: 0}
+  searchingForPupil: 0
   markerDistance: 100
   marker: {fileID: 0}
+  debugBall: 0
+  OnTVRealized:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
 --- !u!114 &114890205814278200
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -957,6 +965,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   handAnim: {fileID: 0}
+  grabSound: {fileID: 0}
   grabbedObject: []
 --- !u!135 &135167474594015210
 SphereCollider:

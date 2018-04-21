@@ -9,11 +9,19 @@ public class GazeDirection : MonoBehaviour
     [SerializeField] bool searchingForPupil = false;
     [SerializeField] float markerDistance;
     [SerializeField] Transform marker;
-
+    Transform pupilMarkerYellow;
     Camera cam;
     Coroutine connecting;
     float tvLookTime = 0.0f;
+    [SerializeField] bool debugBall;
+    public bool _debugBall
+    {
+        get { return debugBall; }
+        set
+        {
 
+        }
+    }
 
 
     public UnityEvent OnTVRealized = new UnityEvent();
@@ -24,6 +32,7 @@ public class GazeDirection : MonoBehaviour
     {
         PupilData.calculateMovingAverage = true;
         if (GetComponent<Camera>()) cam = GetComponent<Camera>(); else cam = transform.parent.GetComponent<Camera>();
+
     }
 
 
@@ -35,6 +44,14 @@ public class GazeDirection : MonoBehaviour
             Debug.Log("Starting gaze in 3d!");
             PupilGazeTracker.Instance.StartVisualizingGaze();
             searchingForPupil = false;
+
+            debugBall = _debugBall;
+            calculatedLookAt.GetComponent<Renderer>().enabled = debugBall;
+            if (pupilMarkerYellow == null)
+            {
+                pupilMarkerYellow = GameObject.Find("Gaze_3D").transform;
+            }
+            pupilMarkerYellow.gameObject.SetActive(debugBall);
         }
         else
         {
@@ -56,9 +73,20 @@ public class GazeDirection : MonoBehaviour
                 searchingForPupil = false;
                 connecting = null;
                 this.enabled = true;
+
+
+                Debug.Log(debugBall);
+                debugBall = _debugBall;
+                calculatedLookAt.GetComponent<Renderer>().enabled = debugBall;
+                if (pupilMarkerYellow == null)
+                {
+                    pupilMarkerYellow = GameObject.Find("Gaze_3D").transform;
+                }
+                pupilMarkerYellow.gameObject.SetActive(debugBall);
                 yield break;
             }
             yield return null;
+
         }
     }
 

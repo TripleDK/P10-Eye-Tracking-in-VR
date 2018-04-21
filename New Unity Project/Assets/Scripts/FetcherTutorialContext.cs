@@ -25,7 +25,7 @@ public class FetcherTutorialContext : MonoBehaviour
 
     }
 
-    void MoveObjectToTeleporter()
+    void MoveObjectToTeleporter(GameObject sender)
     {
         spawnedTestObject.OnBallGrabbed.RemoveListener(MoveObjectToTeleporter);
         textField.text = "Now move the object over to the teleporter and let go of it by releasing the trigger.";

@@ -29,7 +29,7 @@ public class VRGrab : MonoBehaviour
             if (handAnim) handAnim.ChangeGrabL(Input.GetAxis("LeftTrigger"));
             if (Input.GetKeyDown("joystick button 14"))
             {
-                AudioSource.PlayClipAtPoint(grabSound, transform.position);
+                //   AudioSource.PlayClipAtPoint(grabSound, transform.position);
                 if (grabbedObject.Count > 0) grabbedObject[0].Action(VRButton.Controller.left, this);
                 if (grabbedObject.Count > 0) grabbedObject[0].Action(VRButton.Controller.left);
 
@@ -48,7 +48,7 @@ public class VRGrab : MonoBehaviour
             if (handAnim) handAnim.ChangeGrabR(Input.GetAxis("RightTrigger"));
             if (Input.GetKeyDown("joystick button 15"))
             {
-                AudioSource.PlayClipAtPoint(grabSound, transform.position);
+                //AudioSource.PlayClipAtPoint(grabSound, transform.position);
                 if (grabbedObject.Count > 0) grabbedObject[0].Action(VRButton.Controller.right, this);
                 if (grabbedObject.Count > 0) grabbedObject[0].Action(VRButton.Controller.right);
 

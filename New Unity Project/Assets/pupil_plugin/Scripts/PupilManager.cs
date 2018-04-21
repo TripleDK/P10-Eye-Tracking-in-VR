@@ -84,7 +84,7 @@ public class PupilManager : MonoBehaviour
     void ShowCalibrate()
     {
         //    calibrationText.text = "Press 'c' to start calibration.";
-        calibrationText.text = "Press the menu button on either controller \nto start calibration.";
+        calibrationText.text = "Press the menu button on either \ncontroller to start calibration.";
     }
 
     void OnCalibtaionStarted()

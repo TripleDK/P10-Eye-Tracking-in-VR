@@ -54,6 +54,12 @@ ModelImporter:
     400044: pCylinder3
     400046: pCylinder4
     2100000: lambert1
+    2100002: TableSubTable
+    2100004: TableMat2
+    2100006: TableMat1
+    2100008: TableHinge
+    2100010: TableScreen
+    2100012: TableComp
     2300000: pCube1
     2300002: pCube10
     2300004: pCube11

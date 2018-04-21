@@ -38,6 +38,12 @@ ModelImporter:
     400028: pTorus1
     400030: pTorus2
     2100000: lambert1
+    2100002: SpikeDetail
+    2100004: SpikeMain
+    2100006: TeleporterSidePlateMid
+    2100008: TeleporterPad
+    2100010: TeleporterSidePlateMain
+    2100012: TeleporterSidePlateTop
     2300000: pCube1
     2300002: pCube10
     2300004: pCube2

@@ -144,6 +144,14 @@ ModelImporter:
     400134: transform1
     400136: transform2
     2100000: lambert1
+    2100002: ReceiverMat1
+    2100004: ReceiverBarrelMain
+    2100006: ReceiverBarrelMid
+    2100008: ReceiverMat2
+    2100010: ReceiverRingBase
+    2100012: ReceiverRing
+    2100014: ReceiverBinBase
+    2100016: ReceiverBaseSides
     2300000: pCube10
     2300002: pCube11
     2300004: pCube12

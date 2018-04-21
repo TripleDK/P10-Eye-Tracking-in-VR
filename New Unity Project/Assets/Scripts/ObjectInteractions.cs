@@ -20,7 +20,9 @@ public class ObjectInteractions : VRButton
     Quaternion prevAng;
     Rigidbody rigid;
 
-    public UnityEvent OnBallGrabbed = new UnityEvent();
+    public GOEvent OnBallGrabbed = new GOEvent();
+
+    public class GOEvent : UnityEvent<GameObject> { }
 
     public override void Awake()
     {
@@ -33,16 +35,19 @@ public class ObjectInteractions : VRButton
     {
         if (!attached)
         {
-            OnBallGrabbed.Invoke();
+            OnBallGrabbed.Invoke(gameObject);
             attached = true;
             //  transform.position = controller.transform.position;
             tempJoint = gameObject.AddComponent<FixedJoint>();
             tempJoint.connectedBody = controller.GetComponent<Rigidbody>();
             rigid.velocity = Vector3.zero;
             networkIdentity.localPlayerAuthority = true;
-            playerId = GameObject.FindGameObjectWithTag("LocalPlayer").GetComponent<NetworkIdentity>();
-            playerId.GetComponent<Player>().CmdSetAuth(netId, playerId);
-            StartCoroutine(WaitForAuthAttach(playerId));
+            if (NetworkClient.active) //Untested
+            {
+                playerId = GameObject.FindGameObjectWithTag("LocalPlayer").GetComponent<NetworkIdentity>();
+                playerId.GetComponent<Player>().CmdSetAuth(netId, playerId);
+                StartCoroutine(WaitForAuthAttach(playerId));
+            }
         }
     }
 
@@ -87,7 +92,7 @@ public class ObjectInteractions : VRButton
 
             rigid.maxAngularVelocity = rigid.angularVelocity.magnitude;
         }
-        CmdDetach();
+        if (NetworkClient.active) CmdDetach();
     }
 
     [Command]

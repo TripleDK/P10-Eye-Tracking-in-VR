@@ -15,13 +15,26 @@ public class SinglePlayerTask : MonoBehaviour
     GazeDirection gazeDirection;
     [SerializeField] GameObject pupilManager;
     List<float> angleOffSets = new List<float>();
+    List<string> objectNames = new List<string>();
     List<GameObject> instantiatedObjects = new List<GameObject>();
+    List<GameObject> currrentRoundObjects = new List<GameObject>();
     Material objectMat;
     Color originColor;
+    [SerializeField]
+    int listRounds = 3;
+    [SerializeField]
+    AudioClip prelimWinSound;
+    [SerializeField]
+    AudioClip objectLogged;
+    [SerializeField] Transform cameraRig;
+    Vector3 cameraRigStartPos;
+    [SerializeField] Color highLightColor = Color.black;
 
     // Use this for initialization
     void Start()
     {
+        cameraRigStartPos = cameraRig.position;
+        cameraRig.position = new Vector3(300, 300, 300);
         pupilManager.SetActive(true);
         PupilTools.OnCalibrationEnded += StartTask;
     }
@@ -29,29 +42,34 @@ public class SinglePlayerTask : MonoBehaviour
 
     void StartTask()
     {
+        cameraRig.position = cameraRigStartPos;
         foreach (GameObject go in shelfObjects)
         {
             int startIndex = Random.Range(0, startPositions.Count);
             instantiatedObjects.Add((GameObject)Instantiate(go, startPositions[startIndex].position, startPositions[startIndex].rotation));
             instantiatedObjects[instantiatedObjects.Count - 1].GetComponent<Rigidbody>().isKinematic = true;
+            instantiatedObjects[instantiatedObjects.Count - 1].name = startPositions[startIndex].name;
             startPositions.RemoveAt(startIndex);
 
         }
-        StartCoroutine(AccuracyOffSet(instantiatedObjects[0]));
+        currrentRoundObjects = new List<GameObject>(instantiatedObjects);
+        StartCoroutine(AccuracyOffSet(currrentRoundObjects[Random.Range(0, currrentRoundObjects.Count - 1)]));
     }
 
     IEnumerator AccuracyOffSet(GameObject targetObject)
     {
         //highlight object
-        objectMat = targetObject.transform.GetChild(0).GetComponent<SkinnedMeshRenderer>().material;
+        objectMat = targetObject.transform.GetComponent<Renderer>().material;
         originColor = objectMat.color;
-        objectMat.SetColor("_Color", new Color(1, 1, 1));
+        objectMat.SetColor("_Color", highLightColor);
 
         //wait for object fixation
         while (true)
         {
+            //press trigger buttons 
             if (Input.GetKeyUp("joystick button 14") || Input.GetKeyUp("joystick button 15"))
             {
+                AudioSource.PlayClipAtPoint(objectLogged, Camera.main.transform.position);
                 break;
             }
             yield return null;
@@ -62,25 +80,47 @@ public class SinglePlayerTask : MonoBehaviour
         Vector3 trackedLookAtPos = gazeDirection.calculatedLookAt.position - gazeDirection.transform.position;
         float positionAngle = Vector3.Angle(objToHeadPos, trackedLookAtPos);
         angleOffSets.Add(positionAngle);
+        objectNames.Add(targetObject.name);
+        Debug.Log(positionAngle);
         //        Debug.Log("Count before: " + instantiatedObjects.Count);
-        instantiatedObjects.RemoveAt(0);
+        currrentRoundObjects.Remove(targetObject);
         yield return null;
         //      Debug.Log("Count before: " + instantiatedObjects.Count);
         objectMat.SetColor("_Color", originColor);
-        if (instantiatedObjects.Count == 0)
+        if (currrentRoundObjects.Count == 0)
         {
-            string data = "";
-            foreach (float f in angleOffSets)
+            listRounds -= 1;
+            if (listRounds <= 0)
             {
-                data += f.ToString("0.00") + "\n";
+                string data = "";
+                //foreach (float f in angleOffSets)
+                for (int i = 0; i < angleOffSets.Count; i++)
+                {
+                    data += angleOffSets[i].ToString("0.00") + " - " + objectNames[i] + "\n";
+                }
+                File.WriteAllText("Assets/Resources/Logs/AccuracyTest/" + System.DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".txt",
+                    data + "\n" + "Average: " + angleOffSets.Average().ToString("0.000"));
+                if (File.Exists("Assets/Resources/Logs/AccuracyTest/Averages.txt"))
+                {
+                    File.AppendAllText("Assets/Resources/Logs/AccuracyTest/Averages.txt", angleOffSets.Average().ToString("0.000") + "\n");
+                }
+                else
+                {
+                    File.WriteAllText("Assets/Resources/Logs/AccuracyTest/Averages.txt", "Experiment averages: \n" + angleOffSets.Average().ToString("0.000") + "\n");
+                }
+                AudioSource.PlayClipAtPoint(prelimWinSound, Camera.main.transform.position);
             }
-            File.WriteAllText("Assets/Resources/Logs/AccuracyTest/" + System.DateTime.Now.ToString("hh-mm-ss tt") + ".txt",
-                data + "\n" + "Average: " + angleOffSets.Average().ToString("0.000"));
+            else
+            {
+                currrentRoundObjects = new List<GameObject>(instantiatedObjects);
+                objectMat.SetColor("_Color", originColor);
+                StartCoroutine(AccuracyOffSet(currrentRoundObjects[Random.Range(0, currrentRoundObjects.Count - 1)]));
+            }
         }
         else
         {
             objectMat.SetColor("_Color", originColor);
-            StartCoroutine(AccuracyOffSet(instantiatedObjects[0]));
+            StartCoroutine(AccuracyOffSet(currrentRoundObjects[Random.Range(0, currrentRoundObjects.Count - 1)]));
         }
     }
 }

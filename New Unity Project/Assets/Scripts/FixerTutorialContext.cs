@@ -31,7 +31,7 @@ public class FixerTutorialContext : MonoBehaviour
         spawnedTestObject.OnBallGrabbed.AddListener(ThrowInBlackHole);
     }
 
-    void ThrowInBlackHole()
+    void ThrowInBlackHole(GameObject sender)
     {
         spawnedTestObject.OnBallGrabbed.RemoveListener(ThrowInBlackHole);
         textField.text = "Then to your right is the black hole where you must put the object. Throw the object by releasing the trigger.";
