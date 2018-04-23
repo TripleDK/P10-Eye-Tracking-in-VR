@@ -120,6 +120,8 @@ MonoBehaviour:
   color: {r: 0.86146027, g: 0.9117647, b: 0, a: 1}
   controllerGrab:
   - {fileID: 0}
+  unSelectedWidth: 1.9
+  selectedWidth: 2
   networkIdentity: {fileID: 0}
   attached: 0
   startPos: {x: 0, y: 0, z: 0}
@@ -127,11 +129,7 @@ MonoBehaviour:
   minHeight: 0.3
   teleportParticles: {fileID: 1256892938605860, guid: 1e9c0860de1d43c4a827535c7efd4ec7,
     type: 2}
-  OnBallGrabbed:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
+  grabSound: {fileID: 8300000, guid: b8e3ae93edc0f8f46812d502c80ec450, type: 3}
 --- !u!114 &114557084605207892
 MonoBehaviour:
   m_ObjectHideFlags: 1

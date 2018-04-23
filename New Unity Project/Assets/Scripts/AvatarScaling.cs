@@ -55,7 +55,7 @@ public class AvatarScaling : NetworkBehaviour
 
     void Start()
     {
-        if (CalibrationContext.singleton.calibrationProgress == 0)
+        if (CalibrationContext.singleton != null && CalibrationContext.singleton.calibrationProgress == 0)
         {
             if (isLocalPlayer) gameObject.tag = "LocalPlayer";
             //  gameObject.SetActive(false);

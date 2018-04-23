@@ -9,8 +9,11 @@ public class FixerTutorialContext : MonoBehaviour
     [SerializeField] GazeDirection gaze;
     [SerializeField] ObjectInteractions testObject;
     [SerializeField] Transform testObjectStartPos;
+    [SerializeField] Transform testObjectPreviewPos;
+    [SerializeField] TextMeshPro previewText;
     [SerializeField] BlackHole blackHole;
     ObjectInteractions spawnedTestObject;
+    ObjectInteractions spawnedTestObjectPreview;
 
     void Awake()
     {
@@ -20,6 +23,8 @@ public class FixerTutorialContext : MonoBehaviour
     public void StartTutorial()
     {
         textField.text = "Welcome, your role is -Fixer-. You need to fix the black hole by throwing in the correct objects. To get the objects, you must look through the window and communicate to your partner which objects you need. To see what objects you need, you must look at the monitor slightly above you.";
+        spawnedTestObjectPreview = Instantiate(testObject, testObjectPreviewPos.position, testObjectPreviewPos.rotation);
+        previewText.text = "Test ball";
         gaze.OnTVRealized.AddListener(GrabAnObject);
     }
 
@@ -41,6 +46,8 @@ public class FixerTutorialContext : MonoBehaviour
     void FinishTutorial()
     {
         blackHole.OnEatObject.RemoveListener(FinishTutorial);
+        previewText.text = "";
+        Destroy(spawnedTestObjectPreview);
         textField.text = "Well done! Soon the window will open and you will be able to communicate with your partner. Remember to look at the monitor above you to check what object you need next.";
         TaskContext.singleton.FixerTutDone();
         StartCoroutine(TutorialFiveSecDelay());

@@ -34,7 +34,7 @@ public class PupilManager : MonoBehaviour
         if (calibrationText == null)
             calibrationText = cameraObject.GetComponentInChildren<Text>();
 
-        calibrationText.text = "Trying to connect to Pupil.\nPlease wait for your eyes to show\n(if you have not done so, already)";
+        calibrationText.text = "Trying to connect to Pupil.\nPlease wait for your eyes to show";
     }
 
     void OnDisconnecting()

@@ -127,11 +127,7 @@ MonoBehaviour:
   minHeight: 0.3
   teleportParticles: {fileID: 1256892938605860, guid: 1e9c0860de1d43c4a827535c7efd4ec7,
     type: 2}
-  OnBallGrabbed:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
+  grabSound: {fileID: 8300000, guid: b8e3ae93edc0f8f46812d502c80ec450, type: 3}
 --- !u!114 &114557084605207892
 MonoBehaviour:
   m_ObjectHideFlags: 1

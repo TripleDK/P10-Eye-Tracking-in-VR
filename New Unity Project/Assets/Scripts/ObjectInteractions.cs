@@ -13,6 +13,7 @@ public class ObjectInteractions : VRButton
     [HideInInspector] public NetworkIdentity playerId = null;
     [SerializeField] float minHeight = 0.3f;
     [SerializeField] GameObject teleportParticles;
+    [SerializeField] AudioClip grabSound;
     FixedJoint tempJoint = null;
     Vector3 velocity;
     Quaternion angVelocity;
@@ -37,6 +38,7 @@ public class ObjectInteractions : VRButton
         {
             OnBallGrabbed.Invoke(gameObject);
             attached = true;
+            AudioSource.PlayClipAtPoint(grabSound, transform.position);
             //  transform.position = controller.transform.position;
             tempJoint = gameObject.AddComponent<FixedJoint>();
             tempJoint.connectedBody = controller.GetComponent<Rigidbody>();

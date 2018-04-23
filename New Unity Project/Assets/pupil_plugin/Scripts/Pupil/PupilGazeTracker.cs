@@ -71,7 +71,6 @@ public class PupilGazeTracker : MonoBehaviour
         PupilTools.Calibration.rightEyeTranslation = new float[] { relativeRightEyePosition.z * PupilSettings.PupilUnitScalingFactor, 0, 0 };
         var relativeLeftEyePosition = UnityEngine.XR.InputTracking.GetLocalPosition(UnityEngine.XR.XRNode.LeftEye) - UnityEngine.XR.InputTracking.GetLocalPosition(UnityEngine.XR.XRNode.CenterEye);
         PupilTools.Calibration.leftEyeTranslation = new float[] { relativeLeftEyePosition.z * PupilSettings.PupilUnitScalingFactor, 0, 0 };
-
 #if !UNITY_WSA
         RunConnect();
 #endif

@@ -11,6 +11,8 @@ public class VRButton : NetworkBehaviour
     public Material material;
     public Color color;
     public VRGrab[] controllerGrab;
+    [SerializeField] float unSelectedWidth = 1.1f;
+    [SerializeField] float selectedWidth = 1.3f;
 
     public enum Controller
     {
@@ -34,7 +36,7 @@ public class VRButton : NetworkBehaviour
     public virtual void OnTriggerEnter(Collider collision)
     {
         VRGrab controller = collision.gameObject.GetComponent<VRGrab>();
-        FeedbackColor(Color.green, 1.3f);
+        FeedbackColor(Color.green, selectedWidth);
         if (collision.gameObject.name == "Controller (left)")
         {
             leftController = true;
@@ -65,7 +67,7 @@ public class VRButton : NetworkBehaviour
         }
         if (!leftController && !rightController)
         {
-            FeedbackColor(color, 1.1f);
+            FeedbackColor(color, unSelectedWidth);
         }
     }
 

@@ -25,24 +25,39 @@ public class DisembodiedAvatarControls : MonoBehaviour
 
     public void LocalIKSetup()
     {
+        StartCoroutine(LocalIKSetupCo());
+    }
+
+    IEnumerator LocalIKSetupCo()
+    {
+        while (GameObject.Find("Camera (eye)") == null)
+        {
+            yield return new WaitForSeconds(1);
+        }
         isLocalPlayer = true;
         rightHandTarget = GameObject.Find("Controller (right)").transform;
         leftHandTarget = GameObject.Find("Controller (left)").transform;
         headTarget = GameObject.Find("Camera (eye)").transform;
         lookTargetController = GetComponent<LookTargetController>();
-        lookTargetController.pointsOfInterest = new Transform[1];
-        TaskContext.singleton.lookTargetController = this.lookTargetController;
-        if (eyeGazeModel == EyeGazeModel.Eyetracking)
+        if (lookTargetController != null)
         {
-            lookAtTarget = headTarget.gameObject.transform.Find("GazeDirection").GetComponent<GazeDirection>().calculatedLookAt;
+            lookTargetController.pointsOfInterest = new Transform[1];
+            TaskContext.singleton.lookTargetController = this.lookTargetController;
+            if (eyeGazeModel == EyeGazeModel.Eyetracking)
+            {
+                lookAtTarget = headTarget.gameObject.transform.Find("GazeDirection").GetComponent<GazeDirection>().calculatedLookAt;
+            }
+            else if (eyeGazeModel == EyeGazeModel.Modelled)
+            {
+                eyeModel = GetComponent<EyeAndHeadAnimator>();
+                eyeModel.enabled = true;
+            }
         }
-        else if (eyeGazeModel == EyeGazeModel.Modelled)
+        else
         {
-            eyeModel = GetComponent<EyeAndHeadAnimator>();
-            eyeModel.enabled = true;
+            Debug.Log("No looktarget controller on player!");
         }
     }
-
 
     public void ResetTorsoPosition()
     {

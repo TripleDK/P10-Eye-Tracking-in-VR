@@ -74,7 +74,6 @@ public class GazeDirection : MonoBehaviour
                 connecting = null;
                 this.enabled = true;
 
-
                 Debug.Log(debugBall);
                 debugBall = _debugBall;
                 calculatedLookAt.GetComponent<Renderer>().enabled = debugBall;
