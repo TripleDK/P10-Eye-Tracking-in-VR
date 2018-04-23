@@ -33,11 +33,12 @@ public class PreliminaryTestContext : MonoBehaviour
     void Start()
     {
         cameraRigStartPos = cameraRig.position;
-        cameraRig.position = new Vector3(300, 300, 300);
         startScale = transform.localScale;
         startPos = transform.position;
         objStartScale = shelfObjects[0].transform.localScale;
-        pupilManager.SetActive(true);
+        //Following lines if eyetracker!
+        // cameraRig.position = new Vector3(300, 300, 300);
+        //   pupilManager.SetActive(true);
         pupilManagerRecording.SetActive(true);
         PupilTools.OnCalibrationEnded += StartTask;
     }
@@ -158,6 +159,11 @@ public class PreliminaryTestContext : MonoBehaviour
     void OnGUI()
     {
         GUI.color = Color.yellow;
+
+        if (GUI.Button(new Rect(110, 40, 100, 30), "Start task!"))
+        {
+            StartTask();
+        }
 
         if (GUI.Button(new Rect(10, 40, 100, 30), "Shrink"))
         {

@@ -15,6 +15,7 @@ public class SinglePlayerTask : MonoBehaviour
     GazeDirection gazeDirection;
     [SerializeField] GameObject pupilManager;
     List<float> angleOffSets = new List<float>();
+    List<float> eyeOffsets = new List<float>();
     List<string> objectNames = new List<string>();
     List<GameObject> instantiatedObjects = new List<GameObject>();
     List<GameObject> currrentRoundObjects = new List<GameObject>();
@@ -80,8 +81,10 @@ public class SinglePlayerTask : MonoBehaviour
         Vector3 trackedLookAtPos = gazeDirection.calculatedLookAt.position - gazeDirection.transform.position;
         float positionAngle = Vector3.Angle(objToHeadPos, trackedLookAtPos);
         angleOffSets.Add(positionAngle);
+        float eyeAngle = Vector3.Angle(trackedLookAtPos, gazeDirection.transform.parent.forward);
+        eyeOffsets.Add(eyeAngle);
         objectNames.Add(targetObject.name);
-        Debug.Log(positionAngle);
+        Debug.Log(positionAngle + ", " + eyeAngle);
         //        Debug.Log("Count before: " + instantiatedObjects.Count);
         currrentRoundObjects.Remove(targetObject);
         yield return null;
@@ -96,7 +99,7 @@ public class SinglePlayerTask : MonoBehaviour
                 //foreach (float f in angleOffSets)
                 for (int i = 0; i < angleOffSets.Count; i++)
                 {
-                    data += angleOffSets[i].ToString("0.00") + " - " + objectNames[i] + "\n";
+                    data += angleOffSets[i].ToString("0.00") + ", " + eyeOffsets[i].ToString("0.00") + " - " + objectNames[i] + "\n";
                 }
                 File.WriteAllText("Assets/Resources/Logs/AccuracyTest/" + System.DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".txt",
                     data + "\n" + "Average: " + angleOffSets.Average().ToString("0.000"));

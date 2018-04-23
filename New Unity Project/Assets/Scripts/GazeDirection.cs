@@ -92,7 +92,6 @@ public class GazeDirection : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
         if (PupilTools.IsConnected && PupilTools.IsGazing)
         {
             marker.localPosition = PupilData._3D.GazePosition;

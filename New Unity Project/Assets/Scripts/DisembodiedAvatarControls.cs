@@ -43,20 +43,21 @@ public class DisembodiedAvatarControls : MonoBehaviour
         {
             lookTargetController.pointsOfInterest = new Transform[1];
             TaskContext.singleton.lookTargetController = this.lookTargetController;
-            if (eyeGazeModel == EyeGazeModel.Eyetracking)
-            {
-                lookAtTarget = headTarget.gameObject.transform.Find("GazeDirection").GetComponent<GazeDirection>().calculatedLookAt;
-            }
-            else if (eyeGazeModel == EyeGazeModel.Modelled)
-            {
-                eyeModel = GetComponent<EyeAndHeadAnimator>();
-                eyeModel.enabled = true;
-            }
         }
         else
         {
             Debug.Log("No looktarget controller on player!");
         }
+        if (eyeGazeModel == EyeGazeModel.Eyetracking)
+        {
+            lookAtTarget = headTarget.gameObject.transform.Find("GazeDirection").GetComponent<GazeDirection>().calculatedLookAt;
+        }
+        else if (eyeGazeModel == EyeGazeModel.Modelled)
+        {
+            eyeModel = GetComponent<EyeAndHeadAnimator>();
+            eyeModel.enabled = true;
+        }
+
     }
 
     public void ResetTorsoPosition()

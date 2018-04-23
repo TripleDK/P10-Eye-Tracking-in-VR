@@ -5,7 +5,7 @@ using UnityEngine;
 public class MotionCapturePlayback : MonoBehaviour
 {
 
-    [SerializeField] MotionRecording recording;
+    [SerializeField] MotionRecording recording; //Make it a list 
     [SerializeField] List<Transform> playbackObjects;
     bool isPlaying = false;
     string buttonText = "Start playback!";
@@ -24,7 +24,7 @@ public class MotionCapturePlayback : MonoBehaviour
             {
                 StartPlayback();
             }
-            else if (isPlaying)
+            else if (isPlaying) //Make a pause function
             {
                 EndPlayback();
             }
@@ -45,7 +45,7 @@ public class MotionCapturePlayback : MonoBehaviour
         StartCoroutine(Playback());
     }
 
-    IEnumerator Playback()
+    IEnumerator Playback() // Make a transition into another playback , use animation curve for weigths then average two positions
     {
         int index = 0;
         Debug.Log(recording.data.Count);
