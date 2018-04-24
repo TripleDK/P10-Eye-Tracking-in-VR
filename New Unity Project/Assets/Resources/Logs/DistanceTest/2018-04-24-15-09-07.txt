@@ -1,0 +1,9 @@
+Correct: MR SP, Depth: 3.169335, Object distance: 0.5746727
+Correct: LM SP, Depth: 3.188985, Object distance: 0.5746727
+Wrong: LL SP, Depth: 3.188364, Object distance: 0.5746727
+Wrong: UM SP, Depth: 3.183774, Object distance: 0.5746727
+Correct: UR SP, Depth: 3.294891, Object distance: 0.5746727
+Correct: UM SP, Depth: 3.31019, Object distance: 0.5746727
+Correct: LL SP, Depth: 3.208942, Object distance: 0.5746727
+Wrong: UM SP, Depth: 3.264613, Object distance: 0.5746727
+Correct: LR SP, Depth: 3.215605, Object distance: 0.5746727

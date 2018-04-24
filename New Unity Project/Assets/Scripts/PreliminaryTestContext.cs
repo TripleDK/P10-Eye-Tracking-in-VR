@@ -1,10 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using UnityEngine;
 using RealisticEyeMovements;
 
 public class PreliminaryTestContext : MonoBehaviour
 {
+    public float depth;
+    public float objectDistance;
+    public float maxDistanceObjectAndFixer;
+    public float maxAngle;
     [SerializeField] GameObject pupilManager;
     [SerializeField] GameObject pupilManagerRecording;
     [SerializeField] GameObject window;
@@ -15,19 +21,29 @@ public class PreliminaryTestContext : MonoBehaviour
     [SerializeField]
     List<Transform> startPositions = new List<Transform>();
     [SerializeField] Transform cameraRig;
+    [SerializeField] Transform fixerHead;
+    [SerializeField] MotionCapturePlayback motionCapturePlayback;
     [SerializeField] int rounds = 3;
     [SerializeField] AudioClip correctSound;
     [SerializeField] AudioClip failSound;
+    [SerializeField] AudioClip moveSound;
     [SerializeField] AudioClip winSound;
 
-    List<GameObject> instantiatedObjects = new List<GameObject>();
+    public List<GameObject> instantiatedObjects = new List<GameObject>();
     List<GameObject> currentRoundObjects = new List<GameObject>();
     Vector3 startScale;
     Vector3 startPos;
     Vector3 cameraRigStartPos;
     Vector3 objStartScale;
 
+    public int depthLevel = 0;
+    public int scaleLevel = 0;
+
     ObjectInteractions currentObject;
+
+    public const float MINIMUM_ANGLE = 7.2f;
+
+    string data = "";
 
     // Use this for initialization
     void Start()
@@ -36,7 +52,7 @@ public class PreliminaryTestContext : MonoBehaviour
         startScale = transform.localScale;
         startPos = transform.position;
         objStartScale = shelfObjects[0].transform.localScale;
-        //Following lines if eyetracker!
+        //Next two lines if eyetracker!
         // cameraRig.position = new Vector3(300, 300, 300);
         //   pupilManager.SetActive(true);
         pupilManagerRecording.SetActive(true);
@@ -45,8 +61,11 @@ public class PreliminaryTestContext : MonoBehaviour
 
     void StartTask()
     {
+        motionCapturePlayback.gameObject.SetActive(true);
+        motionCapturePlayback.StartPlayback();
         cameraRig.position = cameraRigStartPos;
-        window.SetActive(true);
+        window.GetComponent<AudioSource>().Play();
+        window.GetComponent<Animator>().SetTrigger("Open");
 
         for (int i = 0; i < shelfObjects.Count; i++)
         {
@@ -60,6 +79,13 @@ public class PreliminaryTestContext : MonoBehaviour
             //   instantiatedObjects[instantiatedObjects.Count - 1].transform.parent = this.transform;
         }
         currentRoundObjects = new List<GameObject>(instantiatedObjects);
+        StartCoroutine(StartDelay());
+    }
+
+    IEnumerator StartDelay()
+    {
+        motionCapturePlayback.StartRecording(0);
+        yield return new WaitForSeconds(5);
         GuessObject(currentRoundObjects[Random.Range(0, currentRoundObjects.Count - 1)]);
     }
 
@@ -69,16 +95,19 @@ public class PreliminaryTestContext : MonoBehaviour
         if (go.GetComponent<ObjectInteractions>() == currentObject)
         {
             Debug.Log("You did it!");
+            data += "Correct: ";
             AudioSource.PlayClipAtPoint(correctSound, go.transform.position);
             Shrink();
         }
         else
         {
             Debug.Log("Wrong :(");
+            data += "Wrong: ";
             AudioSource.PlayClipAtPoint(failSound, go.transform.position);
             Expand();
         }
-        currentRoundObjects.Remove(go);
+        data += go.name + ", Depth: " + depth + ", Object distance: " + objectDistance + "\n";
+        currentRoundObjects.Remove(currentObject.gameObject);
         Debug.Log("Objects left: " + currentRoundObjects.Count);
         if (currentRoundObjects.Count == 0)
         {
@@ -87,10 +116,15 @@ public class PreliminaryTestContext : MonoBehaviour
             {
                 AudioSource.PlayClipAtPoint(winSound, Camera.main.transform.position);
                 Debug.Log("Winner!");
+                motionCapturePlayback.StartRecording(0);
+                File.WriteAllText("Assets/Resources/Logs/DistanceTest/" + System.DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".txt",
+                   data);
+
             }
             else
             {
                 Debug.Log("Next round!");
+                AudioSource.PlayClipAtPoint(moveSound, Camera.main.transform.position);
                 currentRoundObjects = new List<GameObject>(instantiatedObjects);
                 MoveBack();
                 ResetScale();
@@ -107,17 +141,33 @@ public class PreliminaryTestContext : MonoBehaviour
     void GuessObject(GameObject ob)
     {
         currentObject = ob.GetComponent<ObjectInteractions>();
+        int recordingIndex = 0;
+        if (motionCapturePlayback.recordings.FirstOrDefault(obj => obj.name == ob.name + " " + scaleLevel + " " + depthLevel) != null)
+        {
+            MotionRecording clipToPlay = motionCapturePlayback.recordings.Single(obj => obj.name == ob.name + " " + scaleLevel + " " + depthLevel);
+            recordingIndex = motionCapturePlayback.recordings.IndexOf(clipToPlay);
+        }
+
+        motionCapturePlayback.StartRecording(recordingIndex);
+        Debug.Log("Current object to find is: " + currentObject.name);
 
     }
 
     void Shrink()
     {
         transform.localScale /= shrinkExpandFactor;
+        scaleLevel--;
         UpdateObjectPositions();
+        CalculateData();
+        if (maxAngle < MINIMUM_ANGLE)
+        {
+            Expand();
+        }
     }
     void Expand()
     {
         transform.localScale *= shrinkExpandFactor;
+        scaleLevel++;
         UpdateObjectPositions();
     }
 
@@ -125,12 +175,16 @@ public class PreliminaryTestContext : MonoBehaviour
     {
         transform.position -= new Vector3(0, 0, moveStep);
         cameraRig.position -= new Vector3(0, 0, moveStep);
+        AudioSource.PlayClipAtPoint(moveSound, transform.position);
+        depthLevel--;
         UpdateObjectPositions();
     }
     void MoveForward()
     {
         transform.position += new Vector3(0, 0, moveStep);
         cameraRig.position += new Vector3(0, 0, moveStep);
+        AudioSource.PlayClipAtPoint(moveSound, transform.position);
+        depthLevel++;
         UpdateObjectPositions();
     }
 
@@ -145,6 +199,7 @@ public class PreliminaryTestContext : MonoBehaviour
     void ResetScale()
     {
         transform.localScale = startScale;
+        scaleLevel = 0;
         UpdateObjectPositions();
     }
 
@@ -153,6 +208,8 @@ public class PreliminaryTestContext : MonoBehaviour
         transform.localScale = startScale;
         transform.position = startPos;
         cameraRig.position = cameraRigStartPos;
+        scaleLevel = 0;
+        depthLevel = 0;
         UpdateObjectPositions();
     }
 
@@ -160,11 +217,11 @@ public class PreliminaryTestContext : MonoBehaviour
     {
         GUI.color = Color.yellow;
 
-        if (GUI.Button(new Rect(110, 40, 100, 30), "Start task!"))
+        if (GUI.Button(new Rect(120, 80, 100, 30), "Start task!"))
         {
             StartTask();
         }
-
+        GUI.Label(new Rect(120, 40, 100, 30), "Scale Level: " + scaleLevel);
         if (GUI.Button(new Rect(10, 40, 100, 30), "Shrink"))
         {
             Shrink();
@@ -173,6 +230,7 @@ public class PreliminaryTestContext : MonoBehaviour
         {
             Expand();
         }
+        GUI.Label(new Rect(120, 120, 100, 30), "Depth Level: " + depthLevel);
         if (GUI.Button(new Rect(10, 120, 100, 30), "Move Forward"))
         {
             MoveForward();
@@ -189,6 +247,17 @@ public class PreliminaryTestContext : MonoBehaviour
         {
             ResetAll();
         }
+        CalculateData();
+        if (maxAngle <= MINIMUM_ANGLE) GUI.color = Color.red;
+        GUI.Label(new Rect(10, 290, 250, 90), "Depth: " + depth + "\nObject separation: " + objectDistance + "\nDistance fixer-corner:" + maxDistanceObjectAndFixer + "\nmax angle = " + maxAngle);
+    }
+
+    void CalculateData()
+    {
+        depth = (new Vector2(transform.position.x, transform.position.z) - new Vector2(fixerHead.transform.position.x, fixerHead.transform.position.z)).magnitude;
+        objectDistance = (startPositions[0].position - startPositions[1].position).magnitude;
+        maxDistanceObjectAndFixer = (fixerHead.transform.position - startPositions[0].position).magnitude;
+        maxAngle = Mathf.Rad2Deg * Mathf.Atan((objectDistance / maxDistanceObjectAndFixer));
     }
 }
 

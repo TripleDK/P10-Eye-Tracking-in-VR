@@ -7,15 +7,18 @@ using UnityEditor;
 
 public class MotionCaptureRecorder : MonoBehaviour
 {
-
+    public MotionRecording recording;
     [SerializeField] int fps = 24;
     // [SerializeField] bool allowInfiniteRecording = false;
     [SerializeField] int recordingTime = 60;
     [SerializeField] List<Transform> recordingObjects = new List<Transform>();
-
+    [SerializeField] PreliminaryTestContext textContext;
+    [SerializeField] RecordPrelim2 recordPrelim2;
     string buttonText = "Start recording!";
     List<List<Vector3>> recordings = new List<List<Vector3>>();
     bool isRecording = false;
+
+
 
     // Use this for initialization
     void Start()
@@ -26,7 +29,7 @@ public class MotionCaptureRecorder : MonoBehaviour
 #if UNITY_EDITOR
     void OnGUI()
     {
-        if (GUI.Button(new Rect(10, 10, 250, 50), buttonText))
+        if (GUI.Button(new Rect(80, 10, 250, 50), buttonText))
         {
             if (!isRecording)
             {
@@ -40,7 +43,24 @@ public class MotionCaptureRecorder : MonoBehaviour
 
     }
 
-    void StartRecording()
+    // Update is called once per frame
+    void Update()
+    {
+        if (Input.GetKeyDown("joystick button 14") || Input.GetKeyDown("joystick button 15"))
+        {
+            if (!isRecording)
+            {
+                StartRecording();
+            }
+            else if (isRecording)
+            {
+                EndRecording();
+            }
+        }
+    }
+
+
+    public void StartRecording()
     {
         buttonText = "Recording!!";
         isRecording = true;
@@ -81,11 +101,11 @@ public class MotionCaptureRecorder : MonoBehaviour
     }
 
 
-    void EndRecording()
+    public void EndRecording()
     {
         buttonText = "Start recording!";
         isRecording = false;
-        MotionRecording recording = ScriptableObject.CreateInstance<MotionRecording>();
+        recording = ScriptableObject.CreateInstance<MotionRecording>();
         recording.data = new List<MotionRecording.MotionData>();
         int j = 0;
         for (int i = 0; j < recordingObjects.Count; i += 2, j++)
@@ -101,10 +121,23 @@ public class MotionCaptureRecorder : MonoBehaviour
             Debug.Log(ob.gameObject.name);
             recording.transformNames.Add(ob.gameObject.name);
         }
+        if (recordPrelim2 == null)
+        {
+            SaveTime(recording);
+        }
+        else
+        {
+            recordPrelim2.SaveTestMotion(recording);
+        }
+    }
 
+    void SaveTime(MotionRecording recording)
+    {
         AssetDatabase.CreateAsset(recording, "Assets/Resources/Recordings/MotionCapture - " + DateTime.Now.ToString("h-mm-ss tt") + ".asset");
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
     }
+
+
 #endif
 }
