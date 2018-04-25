@@ -11,6 +11,7 @@ public class PreliminaryTestContext : MonoBehaviour
     public float objectDistance;
     public float maxDistanceObjectAndFixer;
     public float maxAngle;
+    public float cornerObjectAngle;
     [SerializeField] GameObject pupilManager;
     [SerializeField] GameObject pupilManagerRecording;
     [SerializeField] GameObject window;
@@ -42,6 +43,8 @@ public class PreliminaryTestContext : MonoBehaviour
     ObjectInteractions currentObject;
 
     public const float MINIMUM_ANGLE = 7.2f;
+    public float maxShelfHeight = 100.0f;
+    public int numOfObjectsInRound = 3;
 
     string data = "";
 
@@ -97,19 +100,19 @@ public class PreliminaryTestContext : MonoBehaviour
             Debug.Log("You did it!");
             data += "Correct: ";
             AudioSource.PlayClipAtPoint(correctSound, go.transform.position);
-            Shrink();
+            //Shrink();
         }
         else
         {
             Debug.Log("Wrong :(");
             data += "Wrong: ";
             AudioSource.PlayClipAtPoint(failSound, go.transform.position);
-            Expand();
+            //Expand();
         }
         data += go.name + ", Depth: " + depth + ", Object distance: " + objectDistance + "\n";
         currentRoundObjects.Remove(currentObject.gameObject);
         Debug.Log("Objects left: " + currentRoundObjects.Count);
-        if (currentRoundObjects.Count == 0)
+        if (currentRoundObjects.Count <= instantiatedObjects.Count - numOfObjectsInRound)
         {
             rounds--;
             if (rounds <= 0)
@@ -126,9 +129,10 @@ public class PreliminaryTestContext : MonoBehaviour
                 Debug.Log("Next round!");
                 AudioSource.PlayClipAtPoint(moveSound, Camera.main.transform.position);
                 currentRoundObjects = new List<GameObject>(instantiatedObjects);
-                MoveBack();
-                ResetScale();
+                //  MoveBack();
+                // ResetScale();
                 GuessObject(currentRoundObjects[Random.Range(0, currentRoundObjects.Count - 1)]);
+                Shrink();
             }
 
         }
@@ -159,17 +163,21 @@ public class PreliminaryTestContext : MonoBehaviour
         scaleLevel--;
         UpdateObjectPositions();
         CalculateData();
-        if (maxAngle < MINIMUM_ANGLE)
+        /*if (maxAngle < MINIMUM_ANGLE)
         {
             Expand();
-        }
+        }*/
     }
-    void Expand()
+    /*void Expand()
     {
         transform.localScale *= shrinkExpandFactor;
         scaleLevel++;
         UpdateObjectPositions();
-    }
+        if (startPositions[0].position.y > maxShelfHeight)
+        {
+            Shrink();
+        }
+    }*/
 
     void MoveBack()
     {
@@ -215,8 +223,7 @@ public class PreliminaryTestContext : MonoBehaviour
 
     void OnGUI()
     {
-        GUI.color = Color.yellow;
-
+        GUI.color = Color.blue;
         if (GUI.Button(new Rect(120, 80, 100, 30), "Start task!"))
         {
             StartTask();
@@ -228,7 +235,7 @@ public class PreliminaryTestContext : MonoBehaviour
         }
         if (GUI.Button(new Rect(10, 80, 100, 30), "Expand"))
         {
-            Expand();
+            //Expand();
         }
         GUI.Label(new Rect(120, 120, 100, 30), "Depth Level: " + depthLevel);
         if (GUI.Button(new Rect(10, 120, 100, 30), "Move Forward"))
@@ -249,7 +256,8 @@ public class PreliminaryTestContext : MonoBehaviour
         }
         CalculateData();
         if (maxAngle <= MINIMUM_ANGLE) GUI.color = Color.red;
-        GUI.Label(new Rect(10, 290, 250, 90), "Depth: " + depth + "\nObject separation: " + objectDistance + "\nDistance fixer-corner:" + maxDistanceObjectAndFixer + "\nmax angle = " + maxAngle);
+        GUI.Label(new Rect(10, 290, 300, 90), "Depth: " + depth + "\nObject separation: " + objectDistance + "\nDistance fixer-corner:" + maxDistanceObjectAndFixer +
+                  "\nAngle at outermost object: " + maxAngle + "\nAngle between two corner objects: " + cornerObjectAngle);
     }
 
     void CalculateData()
@@ -258,6 +266,7 @@ public class PreliminaryTestContext : MonoBehaviour
         objectDistance = (startPositions[0].position - startPositions[1].position).magnitude;
         maxDistanceObjectAndFixer = (fixerHead.transform.position - startPositions[0].position).magnitude;
         maxAngle = Mathf.Rad2Deg * Mathf.Atan((objectDistance / maxDistanceObjectAndFixer));
+        cornerObjectAngle = Vector3.Angle(startPositions[0].position - fixerHead.transform.position, startPositions[startPositions.Count - 1].position - fixerHead.transform.position);
     }
 }
 
