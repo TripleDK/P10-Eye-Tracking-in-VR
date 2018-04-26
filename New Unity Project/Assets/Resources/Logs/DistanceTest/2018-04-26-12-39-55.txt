@@ -1,0 +1,61 @@
+Wrong: LM SP, Depth: 4.407663, Object distance: 0.5746727, HMD active: False
+Correct: UL SP, Depth: 4.424442, Object distance: 0.5746727, HMD active: False
+Wrong: MR SP, Depth: 4.409818, Object distance: 0.5746727, HMD active: False
+Correct: LM SP, Depth: 4.388984, Object distance: 0.5746727, HMD active: False
+Correct: UM SP, Depth: 4.428209, Object distance: 0.5746727, HMD active: False
+Correct: MR SP, Depth: 4.393312, Object distance: 0.5746727, HMD active: True
+Correct: UR SP, Depth: 4.408964, Object distance: 0.5746727, HMD active: True
+Correct: UL SP, Depth: 4.42265, Object distance: 0.5746727, HMD active: True
+Correct: ML SP, Depth: 4.399264, Object distance: 0.5746727, HMD active: True
+Correct: LM SP, Depth: 4.392491, Object distance: 0.5746727, HMD active: True
+
+Wrong: MR SP, Depth: 4.362011, Object distance: 0.5224304, HMD active: False
+Wrong: LM SP, Depth: 4.380185, Object distance: 0.5224304, HMD active: False
+Correct: UM SP, Depth: 4.389612, Object distance: 0.5224304, HMD active: False
+Correct: LM SP, Depth: 4.377778, Object distance: 0.5224304, HMD active: False
+Correct: LL SP, Depth: 4.365862, Object distance: 0.5224304, HMD active: False
+Wrong: UR SP, Depth: 4.370315, Object distance: 0.5224304, HMD active: True
+Correct: UR SP, Depth: 4.360399, Object distance: 0.5224304, HMD active: True
+Correct: MM SP, Depth: 4.365183, Object distance: 0.5224304, HMD active: True
+Correct: UM SP, Depth: 4.395446, Object distance: 0.5224304, HMD active: True
+Correct: ML SP, Depth: 4.363756, Object distance: 0.5224304, HMD active: True
+
+Correct: UL SP, Depth: 4.351662, Object distance: 0.4749374, HMD active: True
+Correct: LM SP, Depth: 4.35243, Object distance: 0.4749374, HMD active: True
+Correct: UM SP, Depth: 4.351042, Object distance: 0.4749374, HMD active: True
+Wrong: UL SP, Depth: 4.35007, Object distance: 0.4749374, HMD active: True
+Wrong: UM SP, Depth: 4.345654, Object distance: 0.4749374, HMD active: True
+Wrong: LL SP, Depth: 4.343742, Object distance: 0.4749374, HMD active: False
+Correct: LL SP, Depth: 4.349272, Object distance: 0.4749374, HMD active: False
+Wrong: LM SP, Depth: 4.342494, Object distance: 0.4749374, HMD active: False
+Wrong: MM SP, Depth: 4.35171, Object distance: 0.4749374, HMD active: False
+Wrong: LR SP, Depth: 4.339367, Object distance: 0.4749374, HMD active: False
+
+Wrong: UR SP, Depth: 4.348112, Object distance: 0.4317589, HMD active: True
+Correct: LM SP, Depth: 4.343412, Object distance: 0.4317589, HMD active: True
+Correct: UM SP, Depth: 4.347031, Object distance: 0.4317589, HMD active: True
+Correct: UR SP, Depth: 4.345755, Object distance: 0.4317589, HMD active: True
+Wrong: LL SP, Depth: 4.338751, Object distance: 0.4317589, HMD active: True
+Wrong: LL SP, Depth: 4.345632, Object distance: 0.4317589, HMD active: False
+Wrong: MM SP, Depth: 4.346717, Object distance: 0.4317589, HMD active: False
+Wrong: LM SP, Depth: 4.348116, Object distance: 0.4317589, HMD active: False
+Wrong: LR SP, Depth: 4.3474, Object distance: 0.4317589, HMD active: False
+Wrong: LL SP, Depth: 4.34684, Object distance: 0.4317589, HMD active: False
+
+Wrong: LL SP, Depth: 4.337222, Object distance: 0.3925095, HMD active: False
+Wrong: LM SP, Depth: 4.340752, Object distance: 0.3925095, HMD active: False
+Correct: LM SP, Depth: 4.336723, Object distance: 0.3925095, HMD active: False
+Wrong: LL SP, Depth: 4.333722, Object distance: 0.3925095, HMD active: False
+Wrong: MM SP, Depth: 4.337366, Object distance: 0.3925095, HMD active: False
+Wrong: MR SP, Depth: 4.338949, Object distance: 0.3925095, HMD active: True
+Wrong: UL SP, Depth: 4.359182, Object distance: 0.3925095, HMD active: True
+Correct: ML SP, Depth: 4.34164, Object distance: 0.3925095, HMD active: True
+Wrong: MM SP, Depth: 4.339184, Object distance: 0.3925095, HMD active: True
+Correct: UM SP, Depth: 4.33651, Object distance: 0.3925095, HMD active: True
+
+Correct with eye tracking: 8, Correct without eye tracking: 17
+Scale level: 0, Correct with eye tracking: 3, Correct without eye tracking: 5
+Scale level: -1, Correct with eye tracking: 3, Correct without eye tracking: 4
+Scale level: -2, Correct with eye tracking: 1, Correct without eye tracking: 3
+Scale level: -3, Correct with eye tracking: 0, Correct without eye tracking: 3
+Scale level: -4, Correct with eye tracking: 1, Correct without eye tracking: 2

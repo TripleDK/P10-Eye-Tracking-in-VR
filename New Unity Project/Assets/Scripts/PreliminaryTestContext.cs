@@ -23,6 +23,7 @@ public class PreliminaryTestContext : MonoBehaviour
     List<Transform> startPositions = new List<Transform>();
     [SerializeField] Transform cameraRig;
     [SerializeField] Transform fixerHead;
+    [SerializeField] GameObject hmd;
     [SerializeField] MotionCapturePlayback motionCapturePlayback;
     [SerializeField] int rounds = 3;
     [SerializeField] AudioClip correctSound;
@@ -43,10 +44,18 @@ public class PreliminaryTestContext : MonoBehaviour
     ObjectInteractions currentObject;
 
     public const float MINIMUM_ANGLE = 7.2f;
-    public float maxShelfHeight = 100.0f;
+    public float maxShelfHeight = 3.0f;
     public int numOfObjectsInRound = 3;
 
     string data = "";
+    string summaryData = "";
+    bool useEyetracking = true;
+
+    int correctWithHmd = 0;
+    int correctWithoutHmd = 0;
+    int correctWithHmdOneRound = 0;
+    int correctWithoutHmdOneRound = 0;
+
 
     // Use this for initialization
     void Start()
@@ -88,17 +97,47 @@ public class PreliminaryTestContext : MonoBehaviour
     IEnumerator StartDelay()
     {
         motionCapturePlayback.StartRecording(0);
+        if (Random.Range(0, 2) == 0)
+        {
+            useEyetracking = false;
+        }
+        else
+        {
+            useEyetracking = true;
+        }
+        SetHmd();
         yield return new WaitForSeconds(5);
         GuessObject(currentRoundObjects[Random.Range(0, currentRoundObjects.Count - 1)]);
     }
 
+    float grazePeriod = 2.0f;
+    float lastTimeGrabbed = 0.0f;
     void BallGrabbed(GameObject go)
     {
-        Debug.Log(go.name);
+        Debug.Log("Picked " + go.name);
+        if (currentObject == null)
+        {
+            Debug.LogWarning("No object has been chosen yet");
+        }
+        if (Time.time - lastTimeGrabbed < grazePeriod)
+        {
+            return;
+        }
+        lastTimeGrabbed = Time.time;
         if (go.GetComponent<ObjectInteractions>() == currentObject)
         {
             Debug.Log("You did it!");
             data += "Correct: ";
+            if (useEyetracking)
+            {
+                correctWithoutHmd++;
+                correctWithoutHmdOneRound++;
+            }
+            else
+            {
+                correctWithHmd++;
+                correctWithHmdOneRound++;
+            }
             AudioSource.PlayClipAtPoint(correctSound, go.transform.position);
             //Shrink();
         }
@@ -109,7 +148,7 @@ public class PreliminaryTestContext : MonoBehaviour
             AudioSource.PlayClipAtPoint(failSound, go.transform.position);
             //Expand();
         }
-        data += go.name + ", Depth: " + depth + ", Object distance: " + objectDistance + "\n";
+        data += "Picked object: " + go.name + ", Target object: " + currentObject.name + "Correct to chosen distance: " + (go.transform.position - currentObject.transform.position).magnitude + ", Depth: " + depth + ", Object distance: " + objectDistance + ", HMD active: " + !useEyetracking + "\n";
         currentRoundObjects.Remove(currentObject.gameObject);
         Debug.Log("Objects left: " + currentRoundObjects.Count);
         if (currentRoundObjects.Count <= instantiatedObjects.Count - numOfObjectsInRound)
@@ -120,19 +159,44 @@ public class PreliminaryTestContext : MonoBehaviour
                 AudioSource.PlayClipAtPoint(winSound, Camera.main.transform.position);
                 Debug.Log("Winner!");
                 motionCapturePlayback.StartRecording(0);
+                summaryData += "\nScale level: " + scaleLevel + ", Correct with eye tracking: " + correctWithoutHmdOneRound + ", Correct without eye tracking: " + correctWithHmdOneRound;
+
+                data += "\nCorrect with eye tracking: " + correctWithoutHmd + ", Correct without eye tracking: " + correctWithHmd;
                 File.WriteAllText("Assets/Resources/Logs/DistanceTest/" + System.DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".txt",
-                   data);
+                   data + summaryData);
 
             }
             else
             {
-                Debug.Log("Next round!");
-                AudioSource.PlayClipAtPoint(moveSound, Camera.main.transform.position);
+
                 currentRoundObjects = new List<GameObject>(instantiatedObjects);
                 //  MoveBack();
                 // ResetScale();
+
+                if (rounds % 2 == 1)
+                {
+                    useEyetracking = !useEyetracking;
+                }
+                else
+                {
+                    if (Random.Range(0, 2) == 0)
+                    {
+                        useEyetracking = false;
+                    }
+                    else
+                    {
+                        useEyetracking = true;
+                    }
+                    summaryData += "\nScale level: " + scaleLevel + ", Correct with eye tracking: " + correctWithoutHmdOneRound + ", Correct without eye tracking: " + correctWithHmdOneRound;
+                    data += "\n";
+                    correctWithHmdOneRound = 0;
+                    correctWithoutHmdOneRound = 0;
+                    Shrink();
+                    AudioSource.PlayClipAtPoint(moveSound, Camera.main.transform.position);
+                }
+                SetHmd();
+                Debug.Log("Next round! " + rounds + " using eyetracking: " + useEyetracking);
                 GuessObject(currentRoundObjects[Random.Range(0, currentRoundObjects.Count - 1)]);
-                Shrink();
             }
 
         }
@@ -141,6 +205,19 @@ public class PreliminaryTestContext : MonoBehaviour
             GuessObject(currentRoundObjects[Random.Range(0, currentRoundObjects.Count - 1)]);
         }
     }
+
+    void SetHmd()
+    {
+        if (!useEyetracking)
+        {
+            hmd.SetActive(true);
+        }
+        else
+        {
+            hmd.SetActive(false);
+        }
+    }
+
 
     void GuessObject(GameObject ob)
     {
@@ -163,21 +240,22 @@ public class PreliminaryTestContext : MonoBehaviour
         scaleLevel--;
         UpdateObjectPositions();
         CalculateData();
-        /*if (maxAngle < MINIMUM_ANGLE)
-        {
-            Expand();
-        }*/
+        /* if (maxAngle < MINIMUM_ANGLE)
+         {
+             Expand();
+         }*/
     }
-    /*void Expand()
+    void Expand()
     {
         transform.localScale *= shrinkExpandFactor;
         scaleLevel++;
         UpdateObjectPositions();
+        CalculateData();
         if (startPositions[0].position.y > maxShelfHeight)
         {
             Shrink();
         }
-    }*/
+    }
 
     void MoveBack()
     {

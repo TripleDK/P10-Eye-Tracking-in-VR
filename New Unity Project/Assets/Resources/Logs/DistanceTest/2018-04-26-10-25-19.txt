@@ -1,0 +1,45 @@
+Correct: ML SP, Depth: 4.402629, Object distance: 0.5746727, HMD active: True
+Correct: UM SP, Depth: 4.428209, Object distance: 0.5746727, HMD active: True
+Correct: MR SP, Depth: 4.395001, Object distance: 0.5746727, HMD active: True
+Correct: MM SP, Depth: 4.398203, Object distance: 0.5746727, HMD active: True
+Correct: LL SP, Depth: 4.389453, Object distance: 0.5746727, HMD active: True
+Wrong: LL SP, Depth: 4.398083, Object distance: 0.5746727, HMD active: False
+Correct: MR SP, Depth: 4.38974, Object distance: 0.5746727, HMD active: False
+Correct: UR SP, Depth: 4.413928, Object distance: 0.5746727, HMD active: False
+Wrong: ML SP, Depth: 4.420622, Object distance: 0.5746727, HMD active: False
+Correct: UM SP, Depth: 4.426256, Object distance: 0.5746727, HMD active: False
+Wrong: MM SP, Depth: 4.396334, Object distance: 0.5224304, HMD active: False
+Correct: UR SP, Depth: 4.361158, Object distance: 0.5224304, HMD active: False
+Correct: MM SP, Depth: 4.36676, Object distance: 0.5224304, HMD active: False
+Correct: LM SP, Depth: 4.3761, Object distance: 0.5224304, HMD active: False
+Wrong: LL SP, Depth: 4.365034, Object distance: 0.5224304, HMD active: False
+Correct: ML SP, Depth: 4.365034, Object distance: 0.5224304, HMD active: True
+Correct: UR SP, Depth: 4.360851, Object distance: 0.5224304, HMD active: True
+Wrong: MM SP, Depth: 4.378621, Object distance: 0.5224304, HMD active: True
+Wrong: ML SP, Depth: 4.365821, Object distance: 0.5224304, HMD active: True
+Wrong: UL SP, Depth: 4.3687, Object distance: 0.5224304, HMD active: True
+Wrong: MM SP, Depth: 4.353065, Object distance: 0.4749374, HMD active: False
+Correct: LM SP, Depth: 4.354995, Object distance: 0.4749374, HMD active: False
+Wrong: LL SP, Depth: 4.344639, Object distance: 0.4749374, HMD active: False
+Wrong: LL SP, Depth: 4.341927, Object distance: 0.4749374, HMD active: False
+Correct: UL SP, Depth: 4.356395, Object distance: 0.4749374, HMD active: False
+Correct: ML SP, Depth: 4.343751, Object distance: 0.4749374, HMD active: True
+Wrong: UM SP, Depth: 4.344646, Object distance: 0.4749374, HMD active: True
+Correct: UM SP, Depth: 4.351961, Object distance: 0.4749374, HMD active: True
+Correct: MR SP, Depth: 4.344532, Object distance: 0.4749374, HMD active: True
+Wrong: MM SP, Depth: 4.350088, Object distance: 0.4749374, HMD active: True
+Wrong: UL SP, Depth: 4.345108, Object distance: 0.4317589, HMD active: True
+Correct: UL SP, Depth: 4.3357, Object distance: 0.4317589, HMD active: True
+Correct: UM SP, Depth: 4.347309, Object distance: 0.4317589, HMD active: True
+Wrong: MM SP, Depth: 4.344561, Object distance: 0.4317589, HMD active: True
+Wrong: ML SP, Depth: 4.342342, Object distance: 0.4317589, HMD active: True
+Wrong: LM SP, Depth: 4.343039, Object distance: 0.4317589, HMD active: False
+Correct: LL SP, Depth: 4.341898, Object distance: 0.4317589, HMD active: False
+Correct: ML SP, Depth: 4.342197, Object distance: 0.4317589, HMD active: False
+Correct: UR SP, Depth: 4.349982, Object distance: 0.4317589, HMD active: False
+Wrong: ML SP, Depth: 4.335159, Object distance: 0.4317589, HMD active: False
+
+Correct with eye tracking: 11, Correct without eye tracking: 12
+Scale level: 0, Correct with eye tracking: 3, Correct without eye tracking: 5
+Scale level: -1, Correct with eye tracking: 3, Correct without eye tracking: 2
+Scale level: -2, Correct with eye tracking: 2, Correct without eye tracking: 3

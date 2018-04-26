@@ -10,6 +10,7 @@ public class VRButton : NetworkBehaviour
     public Rigidbody prevConnected;
     public Material material;
     public Color color;
+    public Color selectColor = Color.green;
     public VRGrab[] controllerGrab;
     [SerializeField] float unSelectedWidth = 1.1f;
     [SerializeField] float selectedWidth = 1.3f;
@@ -22,6 +23,7 @@ public class VRButton : NetworkBehaviour
 
     public virtual void Awake()
     {
+
         if (GetComponent<MeshRenderer>().enabled)
         {
             material = GetComponent<MeshRenderer>().material;
@@ -30,13 +32,14 @@ public class VRButton : NetworkBehaviour
         {
             material = transform.GetChild(0).GetComponent<SkinnedMeshRenderer>().material;
         }
+        FeedbackColor(color, unSelectedWidth);
         networkIdentity = GetComponent<NetworkIdentity>();
         controllerGrab = new VRGrab[] { null, null };
     }
     public virtual void OnTriggerEnter(Collider collision)
     {
         VRGrab controller = collision.gameObject.GetComponent<VRGrab>();
-        FeedbackColor(Color.green, selectedWidth);
+        FeedbackColor(selectColor, selectedWidth);
         if (collision.gameObject.name == "Controller (left)")
         {
             leftController = true;

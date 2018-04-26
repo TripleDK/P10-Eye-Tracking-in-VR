@@ -24,7 +24,7 @@ public class MotionCapturePlayback : MonoBehaviour
 
     void OnGUI()
     {
-        if (GUI.Button(new Rect(80, 70, 250, 50), buttonText))
+        if (GUI.Button(new Rect(130, 150, 250, 50), buttonText))
         {
             if (!isPlaying)
             {
@@ -38,14 +38,14 @@ public class MotionCapturePlayback : MonoBehaviour
         }
         if (isPlaying)
         {
-            if (GUI.Button(new Rect(80, 130, 250, 50), pauseText))
+            if (GUI.Button(new Rect(130, 210, 250, 50), pauseText))
             {
                 if (!isPaused) PausePlayback();
                 else if (isPaused) ResumePlayback();
             }
             if (loopPlayBack)
             {
-                if (GUI.Button(new Rect(80, 190, 250, 50), "Next animation"))
+                if (GUI.Button(new Rect(130, 270, 250, 50), "Next animation"))
                 {
                     StartRecording(currentRecording + 1);
                 }
@@ -54,7 +54,7 @@ public class MotionCapturePlayback : MonoBehaviour
     }
     public void StartRecording(int number)
     {
-        Debug.Log("Starting recording " + number);
+        //        Debug.Log("Starting recording " + number);
         if (isPlaying == false) StartPlayback();
         transitioning = true;
         transitionIndex = 0;
