@@ -148,7 +148,7 @@ public class PreliminaryTestContext : MonoBehaviour
             AudioSource.PlayClipAtPoint(failSound, go.transform.position);
             //Expand();
         }
-        data += "Picked object: " + go.name + ", Target object: " + currentObject.name + "Correct to chosen distance: " + (go.transform.position - currentObject.transform.position).magnitude + ", Depth: " + depth + ", Object distance: " + objectDistance + ", HMD active: " + !useEyetracking + "\n";
+        data += "Picked object: " + go.name + ", Target object: " + currentObject.name + ", Correct to chosen distance: " + (go.transform.position - currentObject.transform.position).magnitude + ", Depth: " + depth + ", Object distance: " + objectDistance + ", HMD active: " + !useEyetracking + "\n";
         currentRoundObjects.Remove(currentObject.gameObject);
         Debug.Log("Objects left: " + currentRoundObjects.Count);
         if (currentRoundObjects.Count <= instantiatedObjects.Count - numOfObjectsInRound)

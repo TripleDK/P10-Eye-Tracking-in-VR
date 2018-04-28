@@ -120,9 +120,17 @@ public class CalibrationContext : MonoBehaviour
             {
                 eyeModel = 3;
             }
+            if (GUI.Button(new Rect(10, 200, 100, 30), "Hosting (0)"))
+            {
+                networkFunction = 0;
+            }
+            if (GUI.Button(new Rect(120, 200, 100, 30), "Client (1)"))
+            {
+                networkFunction = 1;
+            }
             GUI.color = Color.black;
-            GUI.Label(new Rect(10, 195, 300, 60), "Status:\nGender: " + gender + ", Style: " + style + " Rolee: " + role + " Eye Models: " + eyeModel);
-            if (GUI.Button(new Rect(10, 230, 100, 30), "Ready"))
+            GUI.Label(new Rect(10, 230, 300, 60), "Status:\nGender: " + gender + ", Style: " + style + " Rolee: " + role + " Eye Models: " + eyeModel + " Hosting: " + networkFunction);
+            if (GUI.Button(new Rect(10, 280, 100, 30), "Ready"))
             {
                 readyUp = true;
                 StartCoroutine(WaitForCalibrate());

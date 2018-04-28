@@ -1,0 +1,61 @@
+Wrong: Picked object: ML SP, Target object: MR SP, Correct to chosen distance: 1.151863, Depth: 4.395473, Object distance: 0.6042557, HMD active: True
+Correct: Picked object: UL SP, Target object: UL SP, Correct to chosen distance: 0, Depth: 4.425336, Object distance: 0.6042557, HMD active: True
+Correct: Picked object: MM SP, Target object: MM SP, Correct to chosen distance: 0, Depth: 4.405456, Object distance: 0.6042557, HMD active: True
+Correct: Picked object: UM SP, Target object: UM SP, Correct to chosen distance: 0, Depth: 4.411176, Object distance: 0.6042557, HMD active: True
+Wrong: Picked object: MM SP, Target object: UR SP, Correct to chosen distance: 0.7800924, Depth: 4.420368, Object distance: 0.6042557, HMD active: True
+Wrong: Picked object: LL SP, Target object: MM SP, Correct to chosen distance: 0.9253371, Depth: 4.404437, Object distance: 0.6042557, HMD active: False
+Wrong: Picked object: ML SP, Target object: LM SP, Correct to chosen distance: 0.9253369, Depth: 4.390872, Object distance: 0.6042557, HMD active: False
+Correct: Picked object: LL SP, Target object: LL SP, Correct to chosen distance: 0, Depth: 4.390546, Object distance: 0.6042557, HMD active: False
+Correct: Picked object: MR SP, Target object: MR SP, Correct to chosen distance: 0, Depth: 4.395603, Object distance: 0.6042557, HMD active: False
+Wrong: Picked object: UM SP, Target object: UR SP, Correct to chosen distance: 0.5476074, Depth: 4.418793, Object distance: 0.6042557, HMD active: False
+
+Correct: Picked object: LL SP, Target object: LL SP, Correct to chosen distance: 0, Depth: 4.36553, Object distance: 0.549324, HMD active: False
+Wrong: Picked object: MM SP, Target object: MR SP, Correct to chosen distance: 0.4978256, Depth: 4.373882, Object distance: 0.549324, HMD active: False
+Wrong: Picked object: UM SP, Target object: UR SP, Correct to chosen distance: 0.4978256, Depth: 4.361311, Object distance: 0.549324, HMD active: False
+Wrong: Picked object: ML SP, Target object: UM SP, Correct to chosen distance: 0.7462283, Depth: 4.396062, Object distance: 0.549324, HMD active: False
+Wrong: Picked object: LL SP, Target object: LM SP, Correct to chosen distance: 0.549324, Depth: 4.376333, Object distance: 0.549324, HMD active: False
+Correct: Picked object: LL SP, Target object: LL SP, Correct to chosen distance: 0, Depth: 4.364581, Object distance: 0.549324, HMD active: True
+Wrong: Picked object: ML SP, Target object: MM SP, Correct to chosen distance: 0.549324, Depth: 4.366455, Object distance: 0.549324, HMD active: True
+Correct: Picked object: MR SP, Target object: MR SP, Correct to chosen distance: 0, Depth: 4.37997, Object distance: 0.549324, HMD active: True
+Correct: Picked object: UM SP, Target object: UM SP, Correct to chosen distance: 0, Depth: 4.386251, Object distance: 0.549324, HMD active: True
+Wrong: Picked object: MM SP, Target object: LM SP, Correct to chosen distance: 0.6370928, Depth: 4.378377, Object distance: 0.549324, HMD active: True
+
+Wrong: Picked object: LM SP, Target object: MR SP, Correct to chosen distance: 0.7350249, Depth: 4.346042, Object distance: 0.4993858, HMD active: False
+Wrong: Picked object: LL SP, Target object: ML SP, Correct to chosen distance: 0.5791752, Depth: 4.343694, Object distance: 0.4993858, HMD active: False
+Correct: Picked object: MM SP, Target object: MM SP, Correct to chosen distance: 0, Depth: 4.343746, Object distance: 0.4993858, HMD active: False
+Correct: Picked object: LL SP, Target object: LL SP, Correct to chosen distance: 0, Depth: 4.339011, Object distance: 0.4993858, HMD active: False
+Wrong: Picked object: ML SP, Target object: UL SP, Correct to chosen distance: 0.4591579, Depth: 4.355756, Object distance: 0.4993858, HMD active: False
+Wrong: Picked object: MM SP, Target object: ML SP, Correct to chosen distance: 0.4993858, Depth: 4.344639, Object distance: 0.4993858, HMD active: True
+Wrong: Picked object: UM SP, Target object: MR SP, Correct to chosen distance: 0.6447046, Depth: 4.346229, Object distance: 0.4993858, HMD active: True
+Correct: Picked object: LL SP, Target object: LL SP, Correct to chosen distance: 0, Depth: 4.34135, Object distance: 0.4993858, HMD active: True
+Correct: Picked object: UL SP, Target object: UL SP, Correct to chosen distance: 0, Depth: 4.353744, Object distance: 0.4993858, HMD active: True
+Correct: Picked object: UR SP, Target object: UR SP, Correct to chosen distance: 0, Depth: 4.353289, Object distance: 0.4993858, HMD active: True
+
+Wrong: Picked object: LL SP, Target object: ML SP, Correct to chosen distance: 0.5265229, Depth: 4.342591, Object distance: 0.4539833, HMD active: False
+Wrong: Picked object: ML SP, Target object: LL SP, Correct to chosen distance: 0.5265229, Depth: 4.341292, Object distance: 0.4539833, HMD active: False
+Wrong: Picked object: ML SP, Target object: UL SP, Correct to chosen distance: 0.4174163, Depth: 4.324306, Object distance: 0.4539833, HMD active: False
+Wrong: Picked object: MM SP, Target object: LM SP, Correct to chosen distance: 0.5265228, Depth: 4.344845, Object distance: 0.4539833, HMD active: False
+Wrong: Picked object: UM SP, Target object: MM SP, Correct to chosen distance: 0.4174165, Depth: 4.347273, Object distance: 0.4539833, HMD active: False
+Correct: Picked object: MM SP, Target object: MM SP, Correct to chosen distance: 0, Depth: 4.34278, Object distance: 0.4539833, HMD active: True
+Correct: Picked object: UM SP, Target object: UM SP, Correct to chosen distance: 0, Depth: 4.347031, Object distance: 0.4539833, HMD active: True
+Correct: Picked object: LM SP, Target object: LM SP, Correct to chosen distance: 0, Depth: 4.343407, Object distance: 0.4539833, HMD active: True
+Wrong: Picked object: UL SP, Target object: ML SP, Correct to chosen distance: 0.4174163, Depth: 4.343903, Object distance: 0.4539833, HMD active: True
+Correct: Picked object: LL SP, Target object: LL SP, Correct to chosen distance: 0, Depth: 4.343487, Object distance: 0.4539833, HMD active: True
+
+Correct: Picked object: LL SP, Target object: LL SP, Correct to chosen distance: 0, Depth: 4.343045, Object distance: 0.4127159, HMD active: False
+Wrong: Picked object: UM SP, Target object: UR SP, Correct to chosen distance: 0.3740234, Depth: 4.360419, Object distance: 0.4127159, HMD active: False
+Wrong: Picked object: ML SP, Target object: UL SP, Correct to chosen distance: 0.3794694, Depth: 4.342099, Object distance: 0.4127159, HMD active: False
+Wrong: Picked object: MM SP, Target object: LM SP, Correct to chosen distance: 0.4786572, Depth: 4.33687, Object distance: 0.4127159, HMD active: False
+Wrong: Picked object: ML SP, Target object: UM SP, Correct to chosen distance: 0.5606528, Depth: 4.338245, Object distance: 0.4127159, HMD active: False
+Correct: Picked object: LL SP, Target object: LL SP, Correct to chosen distance: 0, Depth: 4.343668, Object distance: 0.4127159, HMD active: True
+Wrong: Picked object: UL SP, Target object: UM SP, Correct to chosen distance: 0.4127159, Depth: 4.33682, Object distance: 0.4127159, HMD active: True
+Correct: Picked object: MR SP, Target object: MR SP, Correct to chosen distance: 0, Depth: 4.332534, Object distance: 0.4127159, HMD active: True
+Correct: Picked object: UL SP, Target object: UL SP, Correct to chosen distance: 0, Depth: 4.341959, Object distance: 0.4127159, HMD active: True
+Wrong: Picked object: MM SP, Target object: LM SP, Correct to chosen distance: 0.4786572, Depth: 4.337645, Object distance: 0.4127159, HMD active: True
+
+Correct with eye tracking: 6, Correct without eye tracking: 16
+Scale level: 0, Correct with eye tracking: 2, Correct without eye tracking: 3
+Scale level: -1, Correct with eye tracking: 1, Correct without eye tracking: 3
+Scale level: -2, Correct with eye tracking: 2, Correct without eye tracking: 3
+Scale level: -3, Correct with eye tracking: 0, Correct without eye tracking: 4
+Scale level: -4, Correct with eye tracking: 1, Correct without eye tracking: 3
