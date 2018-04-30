@@ -5,57 +5,70 @@ using TMPro;
 
 public class FixerTutorialContext : MonoBehaviour
 {
-    [SerializeField] TextMeshPro textField;
-    [SerializeField] GazeDirection gaze;
-    [SerializeField] ObjectInteractions testObject;
-    [SerializeField] Transform testObjectStartPos;
-    [SerializeField] Transform testObjectPreviewPos;
-    [SerializeField] TextMeshPro previewText;
-    [SerializeField] BlackHole blackHole;
-    ObjectInteractions spawnedTestObject;
-    ObjectInteractions spawnedTestObjectPreview;
+	[SerializeField] TextMeshPro textField;
+	[SerializeField] GazeDirection gaze;
+	[SerializeField] ObjectInteractions testObject;
+	[SerializeField] Transform testObjectStartPos;
+	[SerializeField] Transform testObjectPreviewPos;
+	[SerializeField] TextMeshPro previewText;
+	[SerializeField] BlackHole blackHole;
+	[SerializeField] List<AudioClip> dialogue = new List<AudioClip>();
+	ObjectInteractions spawnedTestObject;
+	ObjectInteractions spawnedTestObjectPreview;
 
-    void Awake()
-    {
-        textField.text = "";
-    }
+	void Awake()
+	{
+		textField.text = "";
+	}
 
-    public void StartTutorial()
-    {
-        textField.text = "Welcome, your role is -Fixer-. You need to fix the black hole by throwing in the correct objects. To get the objects, you must look through the window and communicate to your partner which objects you need. To see what objects you need, you must look at the monitor slightly above you.";
-        spawnedTestObjectPreview = Instantiate(testObject, testObjectPreviewPos.position, testObjectPreviewPos.rotation);
-        previewText.text = "Test ball";
-        gaze.OnTVRealized.AddListener(GrabAnObject);
-    }
+	public void StartTutorial()
+	{
+		textField.text = "Welcome: -Fixer- \n\nOverall goal: \nClose the black hole \n\nImportant tool: \nCommuncating";
+		AudioSource.PlayClipAtPoint(dialogue[0], textField.transform.position);
+		StartCoroutine(LookAtMonitor());
+	}
 
-    public void GrabAnObject()
-    {
-        gaze.OnTVRealized.RemoveListener(GrabAnObject);
-        textField.text = "When you have communicated successfully with your partner and the object is transferred to you, it will appear in the machine behind you. Let me send you an example object. Once an object appears you can reach out with your hand and grab it by holding down the trigger on the back of the controller.";
-        spawnedTestObject = Instantiate(testObject, testObjectStartPos.position, testObjectStartPos.rotation);
-        spawnedTestObject.OnBallGrabbed.AddListener(ThrowInBlackHole);
-    }
+	IEnumerator LookAtMonitor()
+	{
+		yield return new WaitForSeconds(dialogue[0].length);
+		AudioSource.PlayClipAtPoint(dialogue[1], textField.transform.position);
+		textField.text = "Current goal: \nLocate monitor \n\nImportant tool: \nSpatial awareness";
+		gaze.OnTVRealized.AddListener(GrabAnObject);
+	}
 
-    void ThrowInBlackHole(GameObject sender)
-    {
-        spawnedTestObject.OnBallGrabbed.RemoveListener(ThrowInBlackHole);
-        textField.text = "Then to your right is the black hole where you must put the object. Throw the object by releasing the trigger.";
-        blackHole.OnEatObject.AddListener(FinishTutorial);
-    }
+	public void GrabAnObject()
+	{
+		gaze.OnTVRealized.RemoveListener(GrabAnObject);
+		spawnedTestObjectPreview = Instantiate(testObject, testObjectPreviewPos.position, testObjectPreviewPos.rotation);
+		previewText.text = "Test object";
+		AudioSource.PlayClipAtPoint(dialogue[2], textField.transform.position);
+		textField.text = "Current goal: \nLocate and pick up test object \n\nImportant tool: \nGaze movement";
+		spawnedTestObject = Instantiate(testObject, testObjectStartPos.position, testObjectStartPos.rotation);
+		spawnedTestObject.OnBallGrabbed.AddListener(ThrowInBlackHole);
+	}
 
-    void FinishTutorial()
-    {
-        blackHole.OnEatObject.RemoveListener(FinishTutorial);
-        previewText.text = "";
-        Destroy(spawnedTestObjectPreview);
-        textField.text = "Well done! Soon the window will open and you will be able to communicate with your partner. Remember to look at the monitor above you to check what object you need next.";
-        TaskContext.singleton.FixerTutDone();
-        StartCoroutine(TutorialFiveSecDelay());
-    }
+	void ThrowInBlackHole(GameObject sender)
+	{
+		spawnedTestObject.OnBallGrabbed.RemoveListener(ThrowInBlackHole);
+		AudioSource.PlayClipAtPoint(dialogue[3], textField.transform.position);
+		textField.text = "Current goal: \nThrow test object into black hole \n\nImportant tool: \nArm strength";
+		blackHole.OnEatObject.AddListener(FinishTutorial);
+	}
 
-    IEnumerator TutorialFiveSecDelay()
-    {
-        yield return new WaitForSeconds(5);
-        Destroy(textField.gameObject);
-    }
+	void FinishTutorial()
+	{
+		blackHole.OnEatObject.RemoveListener(FinishTutorial);
+		previewText.text = "";
+		AudioSource.PlayClipAtPoint(dialogue[4], textField.transform.position);
+		Destroy(spawnedTestObjectPreview);
+		textField.text = "Test complete \n\nCurrent goal: \nWait for partner to be ready \n\nImportant tool: \nPatience";
+		TaskContext.singleton.FixerTutDone();
+		StartCoroutine(TutorialFiveSecDelay());
+	}
+
+	IEnumerator TutorialFiveSecDelay()
+	{
+		yield return new WaitForSeconds(5);
+		Destroy(textField.gameObject);
+	}
 }
