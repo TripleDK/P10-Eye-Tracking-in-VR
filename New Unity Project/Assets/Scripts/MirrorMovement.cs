@@ -6,18 +6,18 @@ using System.Linq;
 public class MirrorMovement : MonoBehaviour
 {
 
-    [SerializeField] List<Transform> transformsToMirror = new List<Transform>();
+    public List<Transform> transformsToMirror = new List<Transform>();
     List<Transform> movingTransforms = new List<Transform>();
 
     // Use this for initialization
-    void Start()
+    public void Intialize()
     {
+        movingTransforms.Clear();
         List<Transform> myTransforms = gameObject.GetComponentsInChildren<Transform>().ToList();
         foreach (Transform tran in transformsToMirror)
         {
             movingTransforms.Add(myTransforms.Where(obj => obj.name == tran.name).SingleOrDefault());
         }
-        enabled = false;
     }
 
     // Update is called once per frame

@@ -6,10 +6,10 @@ using UnityEngine.Networking;
 public class DisembodiedAvatarScaling : NetworkBehaviour
 {
     [SerializeField] DisembodiedAvatarControls disembodiedControls;
-    [SerializeField] Transform rHandContainer;
-    [SerializeField] Transform lHandContainer;
-    [SerializeField] Transform torsoContainer;
-    [SerializeField] Transform headContainer;
+    public Transform rHandContainer;
+    public Transform lHandContainer;
+    public Transform torsoContainer;
+    public Transform headContainer;
     [SerializeField] bool requireCalibration = true;
 
     private Transform leftController, rightController;
@@ -22,25 +22,29 @@ public class DisembodiedAvatarScaling : NetworkBehaviour
 
     void Resize()
     {
-
         Transform cameraRig = GameObject.Find("[CameraRig]").transform;
         cameraRig.position = new Vector3(transform.position.x, 0, transform.position.z);
         cameraRig.eulerAngles = new Vector3(0, transform.rotation.y, 0);
         CalibrationContext.singleton.playerTransform = transform;
         leftController = GameObject.Find("Controller (left)").transform;
         rightController = GameObject.Find("Controller (right)").transform;
+
         HandSyncher hSyncher = GetComponent<HandSyncher>();
-
         leftController.GetComponent<VRGrab>().handAnim = hSyncher;
-
         rightController.GetComponent<VRGrab>().handAnim = hSyncher;
 
         float headHeight = mainCamera.transform.position.y;
         float yScale = headHeight / disembodiedControls.leftEye.position.y;
-        Debug.Log("yScale: " + yScale);
         float armLength = Vector2.Distance(new Vector2(leftController.position.x, leftController.position.z), new Vector2(rightController.position.x, rightController.position.z));
-        float xScale = armLength / Vector2.Distance(new Vector2(disembodiedControls.leftHand.position.x, disembodiedControls.leftHand.position.z), new Vector2(disembodiedControls.rightHand.position.x, disembodiedControls.rightHand.position.z)); ;
+        float avatarArmLength = Vector2.Distance(new Vector2(disembodiedControls.leftHand.position.x, disembodiedControls.leftHand.position.z),
+                                                           new Vector2(disembodiedControls.rightHand.position.x, disembodiedControls.rightHand.position.z));
+        float xScale = armLength / avatarArmLength;
+        //  Debug.Log("Parents scale: " + disembodiedControls.leftHand.parent.localScale + "Grandparent scale: " + disembodiedControls.leftHand.parent.parent.localScale);
+        //    Debug.Log("Left hand pos: " + disembodiedControls.leftHand.localPosition + ", rightHandPos: " + disembodiedControls.rightHand.localPosition + ", world pos Left: " + disembodiedControls.leftHand.position + ", world pos right: " + disembodiedControls.rightHand.position);
+        //      Debug.Log("yScale: " + yScale + ", xScale: " + xScale + ", armLength: " + armLength + ", avatarArmLength: " + avatarArmLength);
+
         Vector3 tempScale = Vector3.one;
+
         tempScale = new Vector3(tempScale.x * xScale, tempScale.y * yScale, tempScale.z);
         headContainer.localScale = new Vector3(tempScale.x, tempScale.y, tempScale.x);
         headContainer.localPosition = new Vector3(0, headContainer.localPosition.y * yScale, 0);

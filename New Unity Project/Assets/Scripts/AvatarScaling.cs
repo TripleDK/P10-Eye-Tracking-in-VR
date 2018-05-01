@@ -45,7 +45,7 @@ public class AvatarScaling : NetworkBehaviour
         float xScale = armLength / playerMesh.bounds.size.x;
         Vector3 tempScale = transform.localScale;
         tempScale = new Vector3(tempScale.x * xScale, tempScale.y * yScale, tempScale.z);
-        transform.localScale = tempScale;
+        //  transform.localScale = tempScale;
         transform.position = new Vector3(mainCamera.transform.position.x, 0, mainCamera.transform.position.z);
         transform.eulerAngles = new Vector3(0, mainCamera.transform.rotation.y, 0);
         ikControls.height = headHeight;

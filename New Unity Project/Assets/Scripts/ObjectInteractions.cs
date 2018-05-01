@@ -39,6 +39,7 @@ public class ObjectInteractions : VRButton
             OnBallGrabbed.Invoke(gameObject);
             attached = true;
             AudioSource.PlayClipAtPoint(grabSound, transform.position);
+            controller.Vibrate(Time.deltaTime, (ushort)1000);
             //  transform.position = controller.transform.position;
             tempJoint = gameObject.AddComponent<FixedJoint>();
             tempJoint.connectedBody = controller.GetComponent<Rigidbody>();
