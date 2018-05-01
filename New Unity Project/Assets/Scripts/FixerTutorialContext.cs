@@ -23,6 +23,7 @@ public class FixerTutorialContext : MonoBehaviour
 
     public void StartTutorial()
     {
+        previewText.text = "";
         textField.text = "Welcome: -Fixer- \n\nOverall goal: \nClose the black hole \n\nImportant tool: \nCommuncating";
         AudioSource.PlayClipAtPoint(dialogue[0], textField.transform.position);
         StartCoroutine(LookAtMonitor());
@@ -40,6 +41,7 @@ public class FixerTutorialContext : MonoBehaviour
     {
         gaze.OnTVRealized.RemoveListener(GrabAnObject);
         spawnedTestObjectPreview = Instantiate(testObject, testObjectPreviewPos.position, testObjectPreviewPos.rotation);
+        spawnedTestObjectPreview.GetComponent<Rigidbody>().isKinematic = true;
         previewText.text = "Test object";
         AudioSource.PlayClipAtPoint(dialogue[2], textField.transform.position);
         textField.text = "Current goal: \nLocate and pick up test object \n\nImportant tool: \nGaze movement";

@@ -27,7 +27,9 @@ public class TaskContext : NetworkBehaviour
     [SerializeField] float previewRotationSpeed = 180f;
     [SerializeField] TextMeshPro nameField;
     [SerializeField] TextMeshPro debugNameField;
+    [SerializeField] Animator[] windowAnimator = new Animator[2];
     [SerializeField] AudioClip winSound;
+    [SerializeField] AudioClip windowSound;
     [SyncVar] bool fetcherTutDone = false;
     [SyncVar] bool fixerTutDone = false;
     List<GameObject> spawnedObjects = new List<GameObject>();
@@ -105,6 +107,14 @@ public class TaskContext : NetworkBehaviour
             spawnedObjects.Add(go);
         }
         CmdNextObject();
+    }
+
+    [ClientRpc]
+    void RpcOpenWindow()
+    {
+        AudioSource.PlayClipAtPoint(windowSound, windowAnimator[0].transform.position);
+        windowAnimator[0].SetTrigger("Open");
+        windowAnimator[1].SetTrigger("Open");
     }
 
     [Command]

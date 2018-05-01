@@ -269,7 +269,7 @@ public class CalibrationContext : MonoBehaviour
 
     public IEnumerator ChooseRole(int role)
     {
-
+        yield return new WaitForSeconds(1);
         this.role = role;
         cameraRig = GameObject.Find("[CameraRig]").transform;
 
