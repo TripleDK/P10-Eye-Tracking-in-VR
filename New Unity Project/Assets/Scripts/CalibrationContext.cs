@@ -10,7 +10,7 @@ public class CalibrationContext : MonoBehaviour
     public Transform playerTransform;
     public int networkFunction = 0; //0 = Host, 1 = Client, 2 = Server
     public int gender = 0; //0 = Male, 1 = Female
-    public int style = 0; //0 = Realistic, 1 = Disembodied cartoon
+    public int style = 1; //0 = Realistic, 1 = Disembodied cartoon
     public int role = 0; //0 = Fetcher, 1 = Fixer
     public int eyeModel = 0; //0 = static, 1 = Hmd, 2 = modelled, 3 = eye tracking
     public int taskCondition = 0; //0 = Use monitor, 1 = Use terminator vision, 2 = monitor +hmd, 3 = terminator + hmd
@@ -128,24 +128,29 @@ public class CalibrationContext : MonoBehaviour
               if (GUI.Button(new Rect(360, 160, 100, 30), "Real tracking"))
               {
                   eyeModel = 3;
-              }*/
-            //Main experiment end
+              }
 
             if (GUI.Button(new Rect(480, 160, 100, 30), "Random"))
             {
                 eyeModel = Random.Range(0, 4);
             }
+            */
+            //Main experiment end
             if (GUI.Button(new Rect(10, 200, 100, 30), "Hosting (0)"))
             {
                 networkFunction = 0;
             }
+            if (GUI.Button(new Rect(120, 200, 100, 30), "Client (1)"))
+            {
+                networkFunction = 1;
+            }
 
             //Only for prelim!!!
-            if (GUI.Button(new Rect(120, 240, 100, 30), "Use monitor (0)"))
+            if (GUI.Button(new Rect(10, 160, 100, 30), "Use monitor (0)"))
             {
                 taskCondition = 0;
             }
-            if (GUI.Button(new Rect(120, 240, 100, 30), "Terminator vision (1)"))
+            if (GUI.Button(new Rect(120, 160, 100, 30), "Terminator vision (1)"))
             {
                 taskCondition = 1;
             }
@@ -160,8 +165,8 @@ public class CalibrationContext : MonoBehaviour
             //Prelim end
 
             if (steamVRActive == false) GUI.color = Color.black; else GUI.color = Color.green;
-            GUI.Label(new Rect(10, 270, 300, 60), "Status:\nGender: " + gender + ", Style: " + style + " Rolee: " + role + " Eye Models: " + eyeModel + " Hosting: " + networkFunction);
-            if (GUI.Button(new Rect(10, 310, 100, 30), "Ready"))
+            GUI.Label(new Rect(10, 240, 350, 60), "Status:\nGender: " + gender + ", Style: " + style + " Role: " + role + " Eye Models: " + eyeModel + " Hosting: " + networkFunction);
+            if (GUI.Button(new Rect(10, 290, 100, 30), "Ready"))
             {
                 readyUp = true;
                 StartCoroutine(WaitForCalibrate());
@@ -270,27 +275,34 @@ public class CalibrationContext : MonoBehaviour
 
         if (role == 1)
         {
+            yield return null;
             pupilManager.gameObject.SetActive(true);
-            cameraRig.position = pupilLabCalibratePos.position - pupilLabCalibratePos.rotation * positionalOffset;
             cameraRig.rotation = pupilLabCalibratePos.rotation;
+            cameraRig.position = pupilLabCalibratePos.position - pupilLabCalibratePos.rotation * positionalOffset;
+
             PupilTools.OnCalibrationEnded += PupilCalibrateDone;
-            //Give blackhole authority
-            blackHole.TakeAuthority();
+
         }
         yield return new WaitForSeconds(1);
         if (role == 0)
         {
-            cameraRig.position = mirrorPos[role].position - mirrorPos[role].rotation * positionalOffset;
             cameraRig.rotation = mirrorPos[role].rotation;
+            cameraRig.position = mirrorPos[role].position - mirrorPos[role].rotation * positionalOffset;
             StartCoroutine(WaitForMirroring());
         }
         playerTransform.position = cameraRig.position;
     }
     void PupilCalibrateDone()
     {
-        cameraRig.position = mirrorPos[role].position - mirrorPos[role].rotation * positionalOffset;
+        positionalOffset = head.localPosition;
+        offsetCenterPosition.localPosition = positionalOffset;
+        positionalOffset.y = 0;
+
         cameraRig.rotation = mirrorPos[role].rotation;
+        cameraRig.position = mirrorPos[role].position - mirrorPos[role].rotation * positionalOffset;
         playerTransform.position = cameraRig.position;
+
+        blackHole.TakeAuthority();
         StartCoroutine(WaitForMirroring());
     }
 
@@ -322,15 +334,17 @@ public class CalibrationContext : MonoBehaviour
             }
             yield return null;
         }
-        Debug.Log("Done mirroring!");
+        positionalOffset = head.localPosition;
+        offsetCenterPosition.localPosition = positionalOffset;
+        positionalOffset.y = 0;
         mirrorMovement[role].enabled = false;
         StartTutorials();
     }
 
     void StartTutorials()
     {
-        cameraRig.position = startPos[this.role].position - startPos[this.role].rotation * positionalOffset;
         cameraRig.rotation = startPos[this.role].rotation;
+        cameraRig.position = startPos[this.role].position - startPos[this.role].rotation * positionalOffset;
         playerTransform.position = cameraRig.position;
         if (role == 0)
         {
@@ -349,8 +363,8 @@ public class CalibrationContext : MonoBehaviour
 
     IEnumerator ResetToMirrorCo()
     {
-        cameraRig.position = mirrorPos[role].position - mirrorPos[role].rotation * positionalOffset;
         cameraRig.rotation = mirrorPos[role].rotation;
+        cameraRig.position = mirrorPos[role].position - mirrorPos[role].rotation * positionalOffset;
         playerTransform.position = cameraRig.position;
         mirrorMovement[role].Intialize();
         avatarScaling.disembodiedControls.LocalIKSetup();
@@ -367,8 +381,8 @@ public class CalibrationContext : MonoBehaviour
             }
             yield return null;
         }
-        cameraRig.position = startPos[this.role].position - startPos[this.role].rotation * positionalOffset;
         cameraRig.rotation = startPos[this.role].rotation;
+        cameraRig.position = startPos[this.role].position - startPos[this.role].rotation * positionalOffset;
         playerTransform.position = cameraRig.position;
         if (role == 0)
         {
