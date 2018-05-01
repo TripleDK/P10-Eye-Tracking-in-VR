@@ -7,7 +7,7 @@ Material:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: lambert2
-  m_Shader: {fileID: 4800000, guid: ac81d58b6baa3e34796a6a00615fe279, type: 3}
+  m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -69,7 +69,7 @@ Material:
     - _DissolveSize: 0
     - _DstBlend: 0
     - _GlossMapScale: 1
-    - _Glossiness: 0
+    - _Glossiness: 0.7
     - _GlossyReflections: 1
     - _LitOutlineThickness: 0.1
     - _Metallic: 0

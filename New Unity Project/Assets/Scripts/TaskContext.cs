@@ -16,6 +16,8 @@ public class TaskContext : NetworkBehaviour
     public int errorGrabs = 0;
     [SyncVar]
     public float timeGazeAtFace = 0;
+    [SyncVar]
+    public float highScoreTime = 0;
     public GameObject previewObject;
     public List<GameObject> objects = new List<GameObject>();
     public Transform realEyeTarget;
@@ -35,6 +37,9 @@ public class TaskContext : NetworkBehaviour
     [SerializeField] SyncListInt SyncListShuffledObjects = new SyncListInt();
     [SyncVar] public string previewObjectName = "Namerino";
     float timeStart;
+    List<int> conditionsCompleted = new List<int>();
+    string data = "";
+
 
     UnityEvent OnHasAuthority = new UnityEvent();
 
@@ -107,7 +112,44 @@ public class TaskContext : NetworkBehaviour
     {
         if (SyncListShuffledObjects.Count == 0)
         {
-            RpcWin();
+            conditionsCompleted.Add(CalibrationContext.singleton.eyeModel);
+            if (conditionsCompleted.Count == 4)
+            {
+                RpcWin();
+            }
+            else
+            {
+                if (File.Exists("Assets/Resources/Logs/Prelim3Test/Highscores.txt"))
+                {
+                    File.AppendAllText("Assets/Resources/Logs/Prelim3Test/Averages.txt", "Condition: " + CalibrationContext.singleton.taskCondition + ", Time: " + ((Time.time - timeStart) + errorGrabs * 10).ToString("0.000") + "\n");
+                }
+                else
+                {
+                    File.WriteAllText("Assets/Resources/Logs/AccuracyTest/Averages.txt", "High scores: \n" + "Condition: " + CalibrationContext.singleton.taskCondition + ", Time: " + ((Time.time - timeStart) + errorGrabs * 10).ToString("0.000") + "\n");
+                }
+                data += "\nCondition: " + CalibrationContext.singleton.taskCondition + "\nErrors: " + errorGrabs.ToString("0") + "\nTime stared at a face: " + timeGazeAtFace +
+                           "\nTime taken: " + (Time.time - timeStart).ToString("0.00") + "\nAverage FPS: " + (Time.frameCount / Time.time);
+
+
+
+                int newCondition = UnityEngine.Random.Range(0, 4);
+                while (conditionsCompleted.Contains(newCondition))
+                {
+                    newCondition++;
+                    if (newCondition > 3) newCondition = 0;
+                }
+
+
+                //Prelim experiment only:
+                CalibrationContext.singleton.taskCondition = newCondition;
+
+                //Main experiment only:
+                //  CalibrationContext.singleton.eyeModel = newCondition;
+
+                fetcherTutDone = false;
+                fixerTutDone = false;
+                CalibrationContext.singleton.ResetToMirror();
+            }
             return;
         }
         GameObject tempObject = previewObject;
@@ -143,9 +185,11 @@ public class TaskContext : NetworkBehaviour
         nameField.text = "You did it! gz mang";
         Debug.Log("Chicken dinner!");
         AudioSource.PlayClipAtPoint(winSound, transform.position);
+        string role = CalibrationContext.singleton.role == 0 ? "Fetcher" : "Fixer";
         File.WriteAllText("Assets/Resources/Logs/" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".txt",
-            "Scene: " + SceneManager.GetActiveScene().name + "\nErrors: " + errorGrabs.ToString("0") + "\nTime stared at a face: " + timeGazeAtFace +
-            "\nTime taken: " + (Time.time - timeStart).ToString("0.00") + "\nAverage FPS: " + (Time.frameCount / Time.time));
+            "Scene: " + SceneManager.GetActiveScene().name + "\nRole: " + role + data);
+        File.AppendAllText("Assets/Resources/Logs/Prelim3Test/Averages.txt", "Condition: " + CalibrationContext.singleton.taskCondition + ", Time: " + ((Time.time - timeStart) + errorGrabs * 10).ToString("0.000") + "\n\n");
+
     }
 
     public void FetcherTutDone()

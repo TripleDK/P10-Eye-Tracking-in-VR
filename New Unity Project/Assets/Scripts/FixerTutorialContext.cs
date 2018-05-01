@@ -24,14 +24,14 @@ public class FixerTutorialContext : MonoBehaviour
     public void StartTutorial()
     {
         textField.text = "Welcome: -Fixer- \n\nOverall goal: \nClose the black hole \n\nImportant tool: \nCommuncating";
-        //AudioSource.PlayClipAtPoint(dialogue[0], textField.transform.position);
+        AudioSource.PlayClipAtPoint(dialogue[0], textField.transform.position);
         StartCoroutine(LookAtMonitor());
     }
 
     IEnumerator LookAtMonitor()
     {
-        yield return new WaitForSeconds(dialogue[0].length);
-        //AudioSource.PlayClipAtPoint(dialogue[1], textField.transform.position);
+        yield return new WaitForSeconds(dialogue[0].length + 1);
+        AudioSource.PlayClipAtPoint(dialogue[1], textField.transform.position);
         textField.text = "Current goal: \nLocate monitor \n\nImportant tool: \nSpatial awareness";
         gaze.OnTVRealized.AddListener(GrabAnObject);
     }
@@ -41,7 +41,7 @@ public class FixerTutorialContext : MonoBehaviour
         gaze.OnTVRealized.RemoveListener(GrabAnObject);
         spawnedTestObjectPreview = Instantiate(testObject, testObjectPreviewPos.position, testObjectPreviewPos.rotation);
         previewText.text = "Test object";
-        //AudioSource.PlayClipAtPoint(dialogue[2], textField.transform.position);
+        AudioSource.PlayClipAtPoint(dialogue[2], textField.transform.position);
         textField.text = "Current goal: \nLocate and pick up test object \n\nImportant tool: \nGaze movement";
         spawnedTestObject = Instantiate(testObject, testObjectStartPos.position, testObjectStartPos.rotation);
         spawnedTestObject.OnBallGrabbed.AddListener(ThrowInBlackHole);
@@ -50,7 +50,7 @@ public class FixerTutorialContext : MonoBehaviour
     void ThrowInBlackHole(GameObject sender)
     {
         spawnedTestObject.OnBallGrabbed.RemoveListener(ThrowInBlackHole);
-        //AudioSource.PlayClipAtPoint(dialogue[3], textField.transform.position);
+        AudioSource.PlayClipAtPoint(dialogue[3], textField.transform.position);
         textField.text = "Current goal: \nThrow test object into black hole \n\nImportant tool: \nArm strength";
         blackHole.OnEatObject.AddListener(FinishTutorial);
     }
@@ -59,7 +59,7 @@ public class FixerTutorialContext : MonoBehaviour
     {
         blackHole.OnEatObject.RemoveListener(FinishTutorial);
         previewText.text = "";
-        //AudioSource.PlayClipAtPoint(dialogue[4], textField.transform.position);
+        AudioSource.PlayClipAtPoint(dialogue[4], textField.transform.position);
         Destroy(spawnedTestObjectPreview);
         textField.text = "Test complete \n\nCurrent goal: \nWait for partner to be ready \n\nImportant tool: \nPatience";
         TaskContext.singleton.FixerTutDone();
@@ -68,7 +68,7 @@ public class FixerTutorialContext : MonoBehaviour
 
     IEnumerator TutorialFiveSecDelay()
     {
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(dialogue[4].length + 1);
         Destroy(textField.gameObject);
     }
 }

@@ -20,14 +20,15 @@ public class FetcherTutorialContext : MonoBehaviour
     public void StartTutorial()
     {
         textField.text = "Welcome \n-Fetcher- \n\nOverall goal: \nClose the black hole \n\nImportant tool: \nCommunicating";
-        //AudioSource.PlayClipAtPoint(dialog[0], textField.transform.position);
+        AudioSource.PlayClipAtPoint(dialog[0], textField.transform.position);
+        StartCoroutine(GrabObject());
     }
 
     IEnumerator GrabObject()
     {
-        yield return new WaitForSeconds(dialog[0].length);
+        yield return new WaitForSeconds(dialog[0].length + 1);
         textField.text = "Current goal: \nGrab red object \n\nImportant tool: \nOpposable thumb";
-        //AudioSource.PlayClipAtPoint(dialog[1], textField.transform.position);
+        AudioSource.PlayClipAtPoint(dialog[1], textField.transform.position);
         spawnedTestObject = Instantiate(testObject, testObjectStartPos.position, testObjectStartPos.rotation);
         spawnedTestObject.transform.GetComponent<MeshRenderer>().material.color = Color.red;
         spawnedTestObject.OnBallGrabbed.AddListener(MoveObjectToTeleporter);
@@ -37,7 +38,7 @@ public class FetcherTutorialContext : MonoBehaviour
     {
         spawnedTestObject.OnBallGrabbed.RemoveListener(MoveObjectToTeleporter);
         textField.text = "Current goal: \nPlace object in teleporter \n\nImportant tool: \nStrong throwing arm and good aim";
-        //AudioSource.PlayClipAtPoint(dialog[2], textField.transform.position);
+        AudioSource.PlayClipAtPoint(dialog[2], textField.transform.position);
         teleporter.OnAcceptItem.AddListener(StartTheTeleporter);
     }
 
@@ -45,14 +46,14 @@ public class FetcherTutorialContext : MonoBehaviour
     {
         teleporter.OnAcceptItem.RemoveListener(StartTheTeleporter);
         textField.text = "Current goal: \nActivate teleporter \n\nImportant tool: \nCuriosity of big red buttons";
-        //AudioSource.PlayClipAtPoint(dialog[3], textField.transform.position);
+        AudioSource.PlayClipAtPoint(dialog[3], textField.transform.position);
         teleporter.OnTeleportItem.AddListener(CompleteTutorial);
     }
 
     void CompleteTutorial()
     {
         teleporter.OnTeleportItem.RemoveListener(CompleteTutorial);
-        //AudioSource.PlayClipAtPoint(dialog[4], textField.transform.position);
+        AudioSource.PlayClipAtPoint(dialog[4], textField.transform.position);
         textField.text = "Test complete \n\nCurrent goal: \nWait for partner to be ready \n\nImportant tool: \nPatience";
         TaskContext.singleton.FetcherTutDone();
         StartCoroutine(TutorialFiveSecDelay());
@@ -60,7 +61,7 @@ public class FetcherTutorialContext : MonoBehaviour
 
     IEnumerator TutorialFiveSecDelay()
     {
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(dialog[4].length + 1);
         Destroy(textField.gameObject);
     }
 }

@@ -48,14 +48,48 @@ public class DisembodiedAvatarControls : MonoBehaviour
         {
             Debug.Log("No looktarget controller on player!");
         }
+
+        //For main experiment!!
+        //        eyeGazeModel = (EyeGazeModel)CalibrationContext.singleton.eyeModel;
+        //Main experiment end
+
+        //For prelim experiment!!
+        if (CalibrationContext.singleton.taskCondition < 2)
+        {
+            eyeGazeModel = EyeGazeModel.Eyetracking;
+        }
+        else
+        {
+            eyeGazeModel = EyeGazeModel.Hmd;
+        }
+        //Prelim experiment end
+
+
         if (eyeGazeModel == EyeGazeModel.Eyetracking)
         {
             lookAtTarget = headTarget.gameObject.transform.Find("GazeDirection").GetComponent<GazeDirection>().calculatedLookAt;
         }
-        else if (eyeGazeModel == EyeGazeModel.Modelled)
+        else
+        {
+            lookAtTarget = null;
+        }
+        if (eyeGazeModel == EyeGazeModel.Modelled)
         {
             eyeModel = GetComponent<EyeAndHeadAnimator>();
             eyeModel.enabled = true;
+        }
+        else
+        {
+            eyeModel = GetComponent<EyeAndHeadAnimator>();
+            eyeModel.enabled = false;
+        }
+        if (eyeGazeModel == EyeGazeModel.Hmd)
+        {
+            hmdObject.SetActive(true);
+        }
+        else
+        {
+            hmdObject.SetActive(false);
         }
 
     }
@@ -89,7 +123,7 @@ public class DisembodiedAvatarControls : MonoBehaviour
                     lookAtPos.position = lookAtTarget.position;
                     break;
                 case (EyeGazeModel.Hmd):
-                    hmdObject.SetActive(true);
+
                     break;
                 default:
                     Debug.LogWarning("Eye model makes no sense :(");

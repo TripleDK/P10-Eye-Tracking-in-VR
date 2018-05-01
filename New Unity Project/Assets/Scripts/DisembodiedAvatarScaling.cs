@@ -5,7 +5,7 @@ using UnityEngine.Networking;
 
 public class DisembodiedAvatarScaling : NetworkBehaviour
 {
-    [SerializeField] DisembodiedAvatarControls disembodiedControls;
+    public DisembodiedAvatarControls disembodiedControls;
     public Transform rHandContainer;
     public Transform lHandContainer;
     public Transform torsoContainer;
