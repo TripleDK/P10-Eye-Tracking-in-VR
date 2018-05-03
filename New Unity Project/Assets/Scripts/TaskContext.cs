@@ -40,7 +40,7 @@ public class TaskContext : NetworkBehaviour
     List<GameObject> spawnedObjects = new List<GameObject>();
     float averageFPS;
 
-    GameObject objectToFind = null;
+    public GameObject objectToFind = null;
     [SerializeField] SyncListInt SyncListShuffledObjects = new SyncListInt();
     [SyncVar] public string previewObjectName = "Namerino";
     float timeStart;
@@ -215,7 +215,8 @@ public class TaskContext : NetworkBehaviour
     [ClientRpc]
     void RpcNameChange(string name, NetworkIdentity target)
     {
-        //        Debug.Log("Changing name!");
+        Debug.Log("Changing name: " + name + ", targetName: " + target.name, target);
+        objectToFind = target.gameObject;
         lookTargetController.pointsOfInterest[0] = target.transform;
         terminatorVision.target = target.transform;
         nameField.text = name;

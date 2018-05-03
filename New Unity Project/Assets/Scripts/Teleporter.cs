@@ -86,7 +86,7 @@ public class Teleporter : NetworkBehaviour
         Debug.Log("Trying to activate teleporter!");
         if (objectToTeleport != null)
         {
-            if (objectToTeleport.gameObject.name == TaskContext.singleton.previewObjectName)
+            if (objectToTeleport.gameObject.GetComponent<NetworkIdentity>() == TaskContext.singleton.objectToFind)
             {
                 CmdActivate(objectToTeleport.gameObject);
                 //  objectToTeleport.startPos = teleportTarget.position;

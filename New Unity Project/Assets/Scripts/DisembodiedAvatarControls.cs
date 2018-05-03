@@ -56,7 +56,23 @@ public class DisembodiedAvatarControls : MonoBehaviour
 
     public void SetEyeModel()
     {
-        if (CalibrationContext.singleton.role == 1) //Fixer
+        int role; if (isLocalPlayer)
+        {
+            role = CalibrationContext.singleton.role;
+        }
+        else
+        {
+            if (CalibrationContext.singleton.role == 0)
+            {
+                role = 0;
+            }
+            else
+            {
+                role = 1;
+            }
+        }
+
+        if (role == 1) //Fixer
         {
             Debug.Log("Setting eyeGazeModel...");
             eyeGazeModel = (EyeGazeModel)TaskContext.singleton.taskCondition;
@@ -70,7 +86,7 @@ public class DisembodiedAvatarControls : MonoBehaviour
                    eyeGazeModel = EyeGazeModel.Hmd;
                }*/
         }
-        else if (CalibrationContext.singleton.role == 0)
+        else if (role == 0)
         { //Fetcher
             eyeGazeModel = EyeGazeModel.Static;
         }
