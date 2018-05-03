@@ -12,6 +12,7 @@ public class FixerTutorialContext : MonoBehaviour
     [SerializeField] Transform testObjectPreviewPos;
     [SerializeField] TextMeshPro previewText;
     [SerializeField] BlackHole blackHole;
+    [SerializeField] TerminatorVision terminator;
     [SerializeField] List<AudioClip> dialogue = new List<AudioClip>();
     ObjectInteractions spawnedTestObject;
     ObjectInteractions spawnedTestObjectPreview;
@@ -65,6 +66,8 @@ public class FixerTutorialContext : MonoBehaviour
         dialogueStartTime2 = Time.time;
         textField.text = "Current goal: \nLocate and pick up test object \n\nImportant tool: \nGaze movement";
         spawnedTestObject = Instantiate(testObject, testObjectStartPos.position, testObjectStartPos.rotation);
+        terminator.enabled = true;
+        terminator.target = spawnedTestObject.transform;
         spawnedTestObject.OnBallGrabbed.AddListener(ThrowInBlackHole);
         blackHole.OnEatObject.AddListener(FinishTutorial);
     }

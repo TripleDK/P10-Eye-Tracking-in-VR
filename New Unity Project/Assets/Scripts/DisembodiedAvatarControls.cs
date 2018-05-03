@@ -21,7 +21,7 @@ public class DisembodiedAvatarControls : MonoBehaviour
     EyeAndHeadAnimator eyeModel;
     LookTargetController lookTargetController;
 
-    enum EyeGazeModel { Static, Modelled, Eyetracking, Hmd };
+    enum EyeGazeModel { Hmd, Static, Modelled, Eyetracking };
 
     public void LocalIKSetup()
     {
@@ -52,16 +52,15 @@ public class DisembodiedAvatarControls : MonoBehaviour
         //For main experiment!!
         //        eyeGazeModel = (EyeGazeModel)CalibrationContext.singleton.eyeModel;
         //Main experiment end
-
-        SetEyeModel();
-
     }
 
     public void SetEyeModel()
     {
         if (CalibrationContext.singleton.role == 1) //Fixer
         {
-            eyeGazeModel = (EyeGazeModel)CalibrationContext.singleton.taskCondition;
+            Debug.Log("Setting eyeGazeModel...");
+            eyeGazeModel = (EyeGazeModel)TaskContext.singleton.taskCondition;
+            Debug.Log("Eyegazemodel now: " + eyeGazeModel + ", in ints: " + TaskContext.singleton.taskCondition);
             /*   if (CalibrationContext.singleton.taskCondition < 2)
                {
                    eyeGazeModel = EyeGazeModel.Eyetracking;
@@ -80,7 +79,7 @@ public class DisembodiedAvatarControls : MonoBehaviour
 
         if (eyeGazeModel == EyeGazeModel.Eyetracking)
         {
-            lookAtTarget = headTarget.gameObject.transform.Find("GazeDirection").GetComponent<GazeDirection>().calculatedLookAt;
+            if (headTarget != null) lookAtTarget = headTarget.gameObject.transform.Find("GazeDirection").GetComponent<GazeDirection>().calculatedLookAt;
         }
         else
         {

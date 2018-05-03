@@ -32,7 +32,7 @@ public class TerminatorVision : MonoBehaviour
         }
         else
         {
-            targetMarker.rectTransform.localPosition = new Vector2(-10, -10);
+            targetMarker.rectTransform.localPosition = new Vector2(-10000, -10000);
         }
     }
 }

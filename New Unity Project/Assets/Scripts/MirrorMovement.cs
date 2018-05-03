@@ -7,7 +7,10 @@ public class MirrorMovement : MonoBehaviour
 {
 
     public List<Transform> transformsToMirror = new List<Transform>();
+    [SerializeField] Transform mirroredSpot;
+    [SerializeField] GameObject hmd;
     List<Transform> movingTransforms = new List<Transform>();
+    Vector3 mirrorOffset;
 
     // Use this for initialization
     public void Intialize()
@@ -17,6 +20,19 @@ public class MirrorMovement : MonoBehaviour
         foreach (Transform tran in transformsToMirror)
         {
             movingTransforms.Add(myTransforms.Where(obj => obj.name == tran.name).SingleOrDefault());
+            movingTransforms[movingTransforms.Count - 1].localScale = tran.localScale;
+        }
+        mirrorOffset = mirroredSpot.position - transform.parent.position;
+
+
+
+        if (TaskContext.singleton.taskCondition == 0)
+        {
+            hmd.SetActive(true);
+        }
+        else
+        {
+            hmd.SetActive(false);
         }
     }
 
@@ -27,6 +43,8 @@ public class MirrorMovement : MonoBehaviour
         {
             movingTransforms[i].localPosition = transformsToMirror[i].localPosition;
             movingTransforms[i].localRotation = transformsToMirror[i].localRotation;
+            // movingTransforms[i].position = transformsToMirror[i].position - mirrorOffset;
+            // movingTransforms[i].rotation = Quaternion.Euler(transformsToMirror[i].eulerAngles + Vector3.up * 180);
         }
     }
 }

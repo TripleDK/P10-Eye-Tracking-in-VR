@@ -18,6 +18,8 @@ public class TaskContext : NetworkBehaviour
     public float timeGazeAtFace = 0;
     [SyncVar]
     public float highScoreTime = 0;
+    [SyncVar]
+    public int taskCondition = -1;
     public GameObject previewObject;
     public List<GameObject> objects = new List<GameObject>();
     public Transform realEyeTarget;
@@ -163,11 +165,11 @@ public class TaskContext : NetworkBehaviour
         NetworkServer.Spawn(previewObject);
         NetworkServer.Destroy(tempObject);
         objectToFind = spawnedObjects[SyncListShuffledObjects[0]];
-        Debug.Log("Objects left: " + (objects.Count - SyncListShuffledObjects.Count - numOfObjects) + ", new object: " + previewObject.name);
+        Debug.Log("Objects left: " + (SyncListShuffledObjects.Count - objects.Count + numOfObjects) + ", new object: " + previewObject.name);
         SyncListShuffledObjects.Remove(SyncListShuffledObjects[0]);
         previewObject.name = previewObject.name.Replace("(Clone)", string.Empty);
 
-        RpcNameChange(previewObject.name, objectToFind.transform);
+        RpcNameChange(previewObject.name, objectToFind.GetComponent<NetworkIdentity>());
 
     }
 
@@ -211,11 +213,11 @@ public class TaskContext : NetworkBehaviour
     }
 
     [ClientRpc]
-    void RpcNameChange(string name, Transform target)
+    void RpcNameChange(string name, NetworkIdentity target)
     {
         //        Debug.Log("Changing name!");
-        lookTargetController.pointsOfInterest[0] = objectToFind.transform;
-        terminatorVision.target = objectToFind.transform;
+        lookTargetController.pointsOfInterest[0] = target.transform;
+        terminatorVision.target = target.transform;
         nameField.text = name;
         debugNameField.text = name;
     }
@@ -238,6 +240,7 @@ public class TaskContext : NetworkBehaviour
 
     }
 
+    #region FetcherTutDone
     public void FetcherTutDone()
     {
         OnHasAuthority.AddListener(FetcherTutDoneCall);
@@ -267,12 +270,19 @@ public class TaskContext : NetworkBehaviour
             CmdSetup();
         }
     }
+    #endregion
 
 
+    #region FixerTutDoneRegion
     public void FixerTutDone()
     {
-        OnHasAuthority.AddListener(CmdFixerTutDone);
+        OnHasAuthority.AddListener(FixerTutDoneCall);
         StartCoroutine(WaitForAuthority());
+    }
+
+    void FixerTutDoneCall()
+    {
+        CmdFixerTutDone();
     }
 
     [Command]
@@ -290,6 +300,28 @@ public class TaskContext : NetworkBehaviour
         {
             CmdSetup();
         }
+    }
+    #endregion
+
+
+
+    public void SetTaskCondition()
+    {
+        if (isServer)
+        {
+            Debug.Log("You decide taskcondition!");
+            CmdSetTaskCondition();
+        }
+        else
+        {
+            Debug.Log("You are not worthy!");
+        }
+    }
+
+    [Command]
+    void CmdSetTaskCondition()
+    {
+        taskCondition = CalibrationContext.singleton.taskCondition;
     }
 
     IEnumerator WaitForAuthority()
