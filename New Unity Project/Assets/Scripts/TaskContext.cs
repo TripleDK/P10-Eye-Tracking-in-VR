@@ -79,6 +79,11 @@ public class TaskContext : NetworkBehaviour
     void CmdSetup()
     {
         Debug.Log("Starting game!");
+        if (conditionsCompleted.Count >= 4)
+        {
+            RpcWin();
+            return;
+        }
         SyncListShuffledObjects.Clear();
         timeStart = Time.time;
         int objectCount = objects.Count;
@@ -124,42 +129,22 @@ public class TaskContext : NetworkBehaviour
         if (SyncListShuffledObjects.Count == 0)
         {
             conditionsCompleted.Add(CalibrationContext.singleton.eyeModel);
-            if (conditionsCompleted.Count == 4)
+
+            /*      if (conditionsCompleted.Count == 4)
+                  {
+                      RpcWin();
+                  }
+                  else
+                  {*/
+
+            int newCondition = UnityEngine.Random.Range(0, 4);
+            while (conditionsCompleted.Contains(newCondition))
             {
-                RpcWin();
+                newCondition++;
+                if (newCondition > 3) newCondition = 0;
             }
-            else
-            {
-                if (File.Exists("Assets/Resources/Logs/Prelim3Test/Highscores.txt"))
-                {
-                    File.AppendAllText("Assets/Resources/Logs/Prelim3Test/Averages.txt", "Condition: " + CalibrationContext.singleton.taskCondition + ", Time: " + ((Time.time - timeStart) + errorGrabs * 10).ToString("0.000") + "\n");
-                }
-                else
-                {
-                    File.WriteAllText("Assets/Resources/Logs/AccuracyTest/Averages.txt", "High scores: \n" + "Condition: " + CalibrationContext.singleton.taskCondition + ", Time: " + ((Time.time - timeStart) + errorGrabs * 10).ToString("0.000") + "\n");
-                }
-                data += "\nCondition: " + CalibrationContext.singleton.taskCondition + "\nErrors: " + errorGrabs.ToString("0") + "\nTime stared at a face: " + timeGazeAtFace +
-                           "\nTime taken: " + (Time.time - timeStart).ToString("0.00") + "\nAverage FPS: " + (Time.frameCount / Time.time);
-
-
-                CalibrationContext.singleton.ResetToMirror();
-
-                int newCondition = UnityEngine.Random.Range(0, 4);
-                while (conditionsCompleted.Contains(newCondition))
-                {
-                    newCondition++;
-                    if (newCondition > 3) newCondition = 0;
-                }
-
-                //Prelim experiment only:
-                CalibrationContext.singleton.taskCondition = newCondition;
-
-                //Main experiment only:
-                //  CalibrationContext.singleton.eyeModel = newCondition;
-
-                fetcherTutDone = false;
-                fixerTutDone = false;
-            }
+            RpcConditionDone(newCondition);
+            //  }
             return;
         }
         GameObject tempObject = previewObject;
@@ -175,6 +160,38 @@ public class TaskContext : NetworkBehaviour
         spawnedObjects.RemoveAt(0);
     }
 
+
+    [ClientRpc]
+    void RpcConditionDone(int value)
+    {
+        CalibrationContext.singleton.likertManager.gameObject.SetActive(true);
+        CalibrationContext.singleton.likertManager.Initialize(CalibrationContext.singleton.taskCondition);
+        if (File.Exists("Assets/Resources/Logs/Prelim3Test/Highscores.txt"))
+        {
+            File.AppendAllText("Assets/Resources/Logs/Prelim3Test/Highscores.txt", "Condition: " + CalibrationContext.singleton.taskCondition + ", Time: " + ((Time.time - timeStart) + errorGrabs * 10).ToString("0.000") + "\n");
+        }
+        else
+        {
+            File.WriteAllText("Assets/Resources/Logs/Prelim3Test/Highscores.txt", "High scores: \n" + "Condition: " + CalibrationContext.singleton.taskCondition + ", Time: " + ((Time.time - timeStart) + errorGrabs * 10).ToString("0.000") + "\n");
+        }
+        data += "\nCondition: " + CalibrationContext.singleton.taskCondition + "\nErrors: " + errorGrabs.ToString("0") + "\nTime stared at a face: " + timeGazeAtFace +
+                   "\nTime taken: " + (Time.time - timeStart).ToString("0.00") + "\nAverage FPS: " + (Time.frameCount / Time.time);
+
+
+        CalibrationContext.singleton.ResetToMirror();
+
+
+
+        //Prelim experiment only:
+        CalibrationContext.singleton.taskCondition = value;
+
+        //Main experiment only:
+        //  CalibrationContext.singleton.eyeModel = value;
+        errorGrabs = 0;
+        timeGazeAtFace = 0;
+        fetcherTutDone = false;
+        fixerTutDone = false;
+    }
 
     [ClientRpc]
     void RpcNameChange(string name)

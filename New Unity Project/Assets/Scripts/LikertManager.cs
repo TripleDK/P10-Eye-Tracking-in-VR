@@ -21,6 +21,7 @@ public class LikertManager : MonoBehaviour
             butt.OnSelected.AddListener(Reply);
         }
         continueButton.OnSelected.AddListener(Continue);
+        questionTextField.text = "";
     }
 
     public void Initialize(int condition)
@@ -55,6 +56,7 @@ public class LikertManager : MonoBehaviour
     void FinishQuestions()
     {
         continueButton.gameObject.SetActive(true);
+        questionTextField.text = "";
         foreach (LikertButton butt in buttons)
         {
             butt.gameObject.SetActive(false);

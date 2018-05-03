@@ -12,7 +12,7 @@ public class LikertButton : VRButton
     public int likertValue = 0;
     public UnityIntEvent OnSelected = new UnityIntEvent();
 
-    public override void ActionUp(Controller side)
+    public override void Action(Controller side)
     {
         OnSelected.Invoke(likertValue);
     }

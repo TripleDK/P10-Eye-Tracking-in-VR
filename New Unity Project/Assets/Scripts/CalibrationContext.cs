@@ -15,6 +15,7 @@ public class CalibrationContext : MonoBehaviour
     public int eyeModel = 0; //0 = static, 1 = Hmd, 2 = modelled, 3 = eye tracking
     public int taskCondition = 0; //0 = Use monitor, 1 = Use terminator vision, 2 = monitor +hmd, 3 = terminator + hmd
     public int calibrationProgress = 0;
+    public LikertManager likertManager;
 
     [SerializeField] PupilManager pupilManager;
     [SerializeField] NetworkManager networkManager;
@@ -30,7 +31,6 @@ public class CalibrationContext : MonoBehaviour
     [SerializeField] FetcherTutorialContext fetcherTutorial;
     [SerializeField] FixerTutorialContext fixerTutorial;
     [SerializeField] Transform offsetCenterPosition;
-    [SerializeField] LikertManager likertManager;
     Transform fixerPos, fetcherPos;
     Vector3 positionalOffset;
     Transform leftHand, rightHand, head;
@@ -264,6 +264,7 @@ public class CalibrationContext : MonoBehaviour
         positionalOffset = head.localPosition;
         offsetCenterPosition.localPosition = positionalOffset;
         positionalOffset.y = 0;
+        likertManager.transform.localPosition += positionalOffset;
         StartCoroutine(ChooseRole(role));
         //        roleSelect.SetActive(true);
     }
@@ -364,8 +365,7 @@ public class CalibrationContext : MonoBehaviour
 
     public void ResetToMirror()
     {
-        likertManager.gameObject.SetActive(true);
-        likertManager.Initialize(taskCondition);
+
         StartCoroutine(ResetToMirrorCo());
     }
 
