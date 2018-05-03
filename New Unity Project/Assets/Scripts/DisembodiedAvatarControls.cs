@@ -56,7 +56,8 @@ public class DisembodiedAvatarControls : MonoBehaviour
 
     public void SetEyeModel()
     {
-        int role; if (isLocalPlayer)
+        int role;
+        if (isLocalPlayer)
         {
             role = CalibrationContext.singleton.role;
         }
@@ -64,11 +65,11 @@ public class DisembodiedAvatarControls : MonoBehaviour
         {
             if (CalibrationContext.singleton.role == 0)
             {
-                role = 0;
+                role = 1;
             }
             else
             {
-                role = 1;
+                role = 0;
             }
         }
 
@@ -111,6 +112,7 @@ public class DisembodiedAvatarControls : MonoBehaviour
             eyeModel = GetComponent<EyeAndHeadAnimator>();
             eyeModel.enabled = false;
         }
+
         if (eyeGazeModel == EyeGazeModel.Hmd)
         {
             hmdObject.SetActive(true);

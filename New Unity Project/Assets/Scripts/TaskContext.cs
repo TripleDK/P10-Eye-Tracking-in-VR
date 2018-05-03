@@ -93,6 +93,7 @@ public class TaskContext : NetworkBehaviour
             RpcWin();
             return;
         }
+
         SyncListShuffledObjects.Clear();
         timeStart = Time.time;
         int objectCount = objects.Count;
@@ -164,9 +165,10 @@ public class TaskContext : NetworkBehaviour
         previewObjectName = previewObject.name;
         NetworkServer.Spawn(previewObject);
         NetworkServer.Destroy(tempObject);
-        objectToFind = spawnedObjects[SyncListShuffledObjects[0]];
+        objectToFind = spawnedObjects[0];
         Debug.Log("Objects left: " + (SyncListShuffledObjects.Count - objects.Count + numOfObjects) + ", new object: " + previewObject.name);
         SyncListShuffledObjects.Remove(SyncListShuffledObjects[0]);
+        spawnedObjects.Remove(spawnedObjects[0]);
         previewObject.name = previewObject.name.Replace("(Clone)", string.Empty);
 
         RpcNameChange(previewObject.name, objectToFind.GetComponent<NetworkIdentity>());
@@ -177,6 +179,7 @@ public class TaskContext : NetworkBehaviour
     [ClientRpc]
     void RpcConditionDone(int value)
     {
+        Debug.Log("One condition is done!! Good job!");
         CalibrationContext.singleton.likertManager.gameObject.SetActive(true);
         CalibrationContext.singleton.likertManager.Initialize(CalibrationContext.singleton.taskCondition);
         if (File.Exists("Assets/Resources/Logs/Prelim3Test/Highscores.txt"))
@@ -197,6 +200,7 @@ public class TaskContext : NetworkBehaviour
 
         //Prelim experiment only:
         CalibrationContext.singleton.taskCondition = value;
+        TaskContext.singleton.taskCondition = value;
 
         //Main experiment only:
         //  CalibrationContext.singleton.eyeModel = value;

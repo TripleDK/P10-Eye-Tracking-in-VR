@@ -26,7 +26,7 @@ public class MirrorMovement : MonoBehaviour
 
 
 
-        if (TaskContext.singleton.taskCondition == 0)
+        if (TaskContext.singleton.taskCondition == 0 && CalibrationContext.singleton.role == 1)
         {
             hmd.SetActive(true);
         }

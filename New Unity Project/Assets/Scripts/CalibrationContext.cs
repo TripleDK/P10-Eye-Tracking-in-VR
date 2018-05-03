@@ -384,22 +384,6 @@ public class CalibrationContext : MonoBehaviour
         playerTransform.position = cameraRig.position;
         mirrorMovement[role].Intialize();
         avatarScaling.disembodiedControls.LocalIKSetup();
-        bool waiting = true;
-        while (waiting)
-        {
-            if (Input.GetKeyDown("joystick button 14"))
-            {
-                waiting = false;
-            }
-            if (Input.GetKeyDown("joystick button 15")) //Trigger right
-            {
-                waiting = false;
-            }
-            yield return null;
-        }
-        cameraRig.rotation = startPos[this.role].rotation;
-        cameraRig.position = startPos[this.role].position - startPos[this.role].rotation * positionalOffset;
-        playerTransform.position = cameraRig.position;
-
+        yield return null;
     }
 }

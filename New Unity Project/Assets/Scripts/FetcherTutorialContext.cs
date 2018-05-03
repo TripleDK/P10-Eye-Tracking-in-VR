@@ -11,7 +11,9 @@ public class FetcherTutorialContext : MonoBehaviour
     [SerializeField] Teleporter teleporter;
     [SerializeField] List<AudioClip> dialog = new List<AudioClip>();
     ObjectInteractions spawnedTestObject;
-    float dialogueStartTime1, dialogueStartTime2, dialogueStartTime3 = 0.0f;
+    float dialogueStartTime1 = 999999f,
+     dialogueStartTime2 = 999999f,
+      dialogueStartTime3 = 999999f;
 
 
     void Awake()

@@ -86,7 +86,7 @@ public class Teleporter : NetworkBehaviour
         Debug.Log("Trying to activate teleporter!");
         if (objectToTeleport != null)
         {
-            if (objectToTeleport.gameObject.GetComponent<NetworkIdentity>() == TaskContext.singleton.objectToFind)
+            if (objectToTeleport.gameObject == TaskContext.singleton.objectToFind)
             {
                 CmdActivate(objectToTeleport.gameObject);
                 //  objectToTeleport.startPos = teleportTarget.position;
@@ -119,7 +119,7 @@ public class Teleporter : NetworkBehaviour
     [ClientRpc]
     public void RpcActivate(GameObject go)
     {
-        Debug.Log("RPC ACTIVAtea!");
+        //     Debug.Log("RPC ACTIVAtea!");
         AudioSource.PlayClipAtPoint(beep, transform.position);
         Rigidbody teleportRigid = go.GetComponent<Rigidbody>();
         teleportRigid.velocity = Vector3.zero;
