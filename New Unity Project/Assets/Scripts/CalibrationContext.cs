@@ -324,21 +324,6 @@ public class CalibrationContext : MonoBehaviour
         mirrorMovement[role].transformsToMirror.Add(avatarScaling.torsoContainer);
         mirrorMovement[role].Intialize();
         mirrorMovement[role].transform.localPosition = Vector3.zero - mirrorPos[role].rotation * positionalOffset;
-        yield return null;
-        /*   bool waiting = true;
-           while (waiting)
-           {
-               if (Input.GetKeyDown("joystick button 14"))
-               {
-                   waiting = false;
-               }
-               if (Input.GetKeyDown("joystick button 15")) //Trigger right
-               {
-                   waiting = false;
-               }
-               yield return null;
-           }
-           EndMirroring();*/
     }
 
     public void EndMirroring()

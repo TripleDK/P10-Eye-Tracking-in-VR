@@ -160,4 +160,9 @@ public class ObjectInteractions : VRButton
         transform.position = startPos;
         rigid.velocity = Vector3.zero;
     }
+
+    void OnCollisionStay(Collision collision)
+    {
+        rigid.velocity *= 1 - 0.8f * Time.deltaTime;
+    }
 }

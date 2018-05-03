@@ -112,6 +112,7 @@ public class TaskContext : NetworkBehaviour
             NetworkServer.SpawnWithClientAuthority(go, playerId.connectionToClient);
             spawnedObjects.Add(go);
         }
+        RpcOpenWindow();
         CmdNextObject();
     }
 

@@ -89,6 +89,7 @@ public class FixerTutorialContext : MonoBehaviour
     {
         blackHole.OnEatObject.RemoveListener(FinishTutorial);
         previewText.text = "";
+        Destroy(spawnedTestObjectPreview);
         StartCoroutine(FinishTutorialCo());
     }
 
@@ -99,15 +100,16 @@ public class FixerTutorialContext : MonoBehaviour
             yield return null;
         }
         AudioSource.PlayClipAtPoint(dialogue[4], textField.transform.position);
-        Destroy(spawnedTestObjectPreview);
+
         textField.text = "Test complete \n\nCurrent goal: \nWait for partner to be ready \n\nImportant tool: \nPatience";
-        TaskContext.singleton.FixerTutDone();
+
         StartCoroutine(TutorialFiveSecDelay());
     }
 
     IEnumerator TutorialFiveSecDelay()
     {
         yield return new WaitForSeconds(dialogue[4].length + 1);
+        TaskContext.singleton.FixerTutDone();
         Destroy(textField.gameObject);
     }
 }

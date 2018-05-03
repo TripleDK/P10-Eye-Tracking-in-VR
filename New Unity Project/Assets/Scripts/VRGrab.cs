@@ -10,6 +10,7 @@ public class VRGrab : MonoBehaviour
     Controller side;
     public List<VRButton> grabbedObject = new List<VRButton>();
     int controllerIndex;
+    SteamVR_TrackedObject trackedObject;
 
     void Awake()
     {
@@ -20,6 +21,7 @@ public class VRGrab : MonoBehaviour
     void Start()
     {
         controllerIndex = (int)GetComponent<SteamVR_TrackedObject>().index;
+        trackedObject = GetComponent<SteamVR_TrackedObject>();
     }
 
     void Update()
@@ -99,7 +101,7 @@ public class VRGrab : MonoBehaviour
         float timer = 0.0f;
         while (timer < duration)
         {
-            SteamVR_Controller.Input(controllerIndex).TriggerHapticPulse(intensity);
+            SteamVR_Controller.Input((int)trackedObject.index).TriggerHapticPulse(intensity);
             yield return null;
             timer += Time.deltaTime;
         }

@@ -54,13 +54,20 @@ public class DisembodiedAvatarControls : MonoBehaviour
         //Main experiment end
 
         //For prelim experiment!!
-        if (CalibrationContext.singleton.taskCondition < 2)
+        if (CalibrationContext.singleton.role == 1) //Fixer
         {
-            eyeGazeModel = EyeGazeModel.Eyetracking;
+            if (CalibrationContext.singleton.taskCondition < 2)
+            {
+                eyeGazeModel = EyeGazeModel.Eyetracking;
+            }
+            else
+            {
+                eyeGazeModel = EyeGazeModel.Hmd;
+            }
         }
-        else
-        {
-            eyeGazeModel = EyeGazeModel.Hmd;
+        else if (CalibrationContext.singleton.role == 0)
+        { //Fetcher
+            eyeGazeModel = EyeGazeModel.Static;
         }
         //Prelim experiment end
 

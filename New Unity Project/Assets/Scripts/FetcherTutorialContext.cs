@@ -89,13 +89,14 @@ public class FetcherTutorialContext : MonoBehaviour
         }
         AudioSource.PlayClipAtPoint(dialog[4], textField.transform.position);
         textField.text = "Test complete \n\nCurrent goal: \nWait for partner to be ready \n\nImportant tool: \nPatience";
-        TaskContext.singleton.FetcherTutDone();
+
         StartCoroutine(TutorialFiveSecDelay());
     }
 
     IEnumerator TutorialFiveSecDelay()
     {
         yield return new WaitForSeconds(dialog[4].length + 1);
+        TaskContext.singleton.FetcherTutDone();
         Destroy(textField.gameObject);
     }
 }
