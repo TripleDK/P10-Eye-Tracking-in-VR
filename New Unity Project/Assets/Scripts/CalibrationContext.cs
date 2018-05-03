@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using RealisticEyeMovements;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -320,7 +321,7 @@ public class CalibrationContext : MonoBehaviour
         mirrorMovement[role].enabled = true;
         mirrorMovement[role].transformsToMirror.Clear();
         avatarScaling = playerTransform.GetComponent<DisembodiedAvatarScaling>();
-
+        mirrorMovement[role].lookTargetController = playerTransform.GetComponent<DisembodiedAvatarScaling>().disembodiedControls.gameObject.GetComponent<LookTargetController>();
         mirrorMovement[role].transformsToMirror.Add(avatarScaling.lHandContainer);
         mirrorMovement[role].transformsToMirror.Add(avatarScaling.rHandContainer);
         mirrorMovement[role].transformsToMirror.Add(avatarScaling.headContainer);

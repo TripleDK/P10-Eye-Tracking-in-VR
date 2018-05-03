@@ -239,6 +239,7 @@ public class TaskContext : NetworkBehaviour
         Debug.Log("Changing name: " + name + ", targetName: " + target.name, target);
         objectToFind = target.gameObject;
         lookTargetController.pointsOfInterest[0] = target.transform;
+        lookTargetController.pointsOfInterest[1] = target.transform;
         terminatorVision.target = target.transform;
         nameField.text = name;
         debugNameField.text = name;

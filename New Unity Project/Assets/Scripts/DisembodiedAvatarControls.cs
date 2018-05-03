@@ -41,7 +41,7 @@ public class DisembodiedAvatarControls : MonoBehaviour
         lookTargetController = GetComponent<LookTargetController>();
         if (lookTargetController != null)
         {
-            lookTargetController.pointsOfInterest = new Transform[1];
+            lookTargetController.pointsOfInterest = new Transform[2];
             TaskContext.singleton.lookTargetController = this.lookTargetController;
         }
         else
