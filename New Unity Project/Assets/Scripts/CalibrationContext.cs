@@ -290,6 +290,7 @@ public class CalibrationContext : MonoBehaviour
         {
             cameraRig.rotation = mirrorPos[role].rotation;
             cameraRig.position = mirrorPos[role].position - mirrorPos[role].rotation * positionalOffset;
+            likertManager.EnableContinueButton();
             StartCoroutine(WaitForMirroring());
         }
         playerTransform.position = cameraRig.position;
@@ -305,6 +306,7 @@ public class CalibrationContext : MonoBehaviour
         playerTransform.position = cameraRig.position;
 
         blackHole.TakeAuthority();
+        likertManager.EnableContinueButton();
         StartCoroutine(WaitForMirroring());
     }
 

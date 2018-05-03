@@ -19,10 +19,17 @@ public class LikertManager : MonoBehaviour
         foreach (LikertButton butt in buttons)
         {
             butt.OnSelected.AddListener(Reply);
+            butt.gameObject.SetActive(false);
         }
         continueButton.OnSelected.AddListener(Continue);
         questionTextField.text = "";
     }
+
+    public void EnableContinueButton()
+    {
+        continueButton.gameObject.SetActive(true);
+    }
+
 
     public void Initialize(int condition)
     {

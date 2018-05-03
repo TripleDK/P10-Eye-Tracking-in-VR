@@ -233,12 +233,8 @@ public class TaskContext : NetworkBehaviour
     [Command]
     void CmdFetcherTutDone()
     {
-        Debug.Log("Fetcher tut is done!");
         fetcherTutDone = true;
-        if (fixerTutDone)
-        {
-            CmdSetup();
-        }
+
         RpcFetcherTutDone();
     }
 
