@@ -22,6 +22,7 @@ public class TaskContext : NetworkBehaviour
     public List<GameObject> objects = new List<GameObject>();
     public Transform realEyeTarget;
     public LookTargetController lookTargetController;
+    [HideInInspector] public string likertAnswers;
 
     [SerializeField] List<Transform> spawnPos = new List<Transform>();
     [SerializeField] float previewRotationSpeed = 180f;
@@ -141,6 +142,7 @@ public class TaskContext : NetworkBehaviour
                            "\nTime taken: " + (Time.time - timeStart).ToString("0.00") + "\nAverage FPS: " + (Time.frameCount / Time.time);
 
 
+                CalibrationContext.singleton.ResetToMirror();
 
                 int newCondition = UnityEngine.Random.Range(0, 4);
                 while (conditionsCompleted.Contains(newCondition))
@@ -148,7 +150,6 @@ public class TaskContext : NetworkBehaviour
                     newCondition++;
                     if (newCondition > 3) newCondition = 0;
                 }
-
 
                 //Prelim experiment only:
                 CalibrationContext.singleton.taskCondition = newCondition;
@@ -158,7 +159,6 @@ public class TaskContext : NetworkBehaviour
 
                 fetcherTutDone = false;
                 fixerTutDone = false;
-                CalibrationContext.singleton.ResetToMirror();
             }
             return;
         }
@@ -192,13 +192,13 @@ public class TaskContext : NetworkBehaviour
     [ClientRpc]
     void RpcWin()
     {
-        nameField.text = "You did it! gz mang";
+        nameField.text = "Thank you for participating!";
         Debug.Log("Chicken dinner!");
         AudioSource.PlayClipAtPoint(winSound, transform.position);
         string role = CalibrationContext.singleton.role == 0 ? "Fetcher" : "Fixer";
         File.WriteAllText("Assets/Resources/Logs/" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".txt",
             "Scene: " + SceneManager.GetActiveScene().name + "\nRole: " + role + data);
-        File.AppendAllText("Assets/Resources/Logs/Prelim3Test/Averages.txt", "Condition: " + CalibrationContext.singleton.taskCondition + ", Time: " + ((Time.time - timeStart) + errorGrabs * 10).ToString("0.000") + "\n\n");
+        File.AppendAllText("Assets/Resources/Logs/Prelim3Test/Averages.txt", "Condition: " + CalibrationContext.singleton.taskCondition + ", Time: " + ((Time.time - timeStart) + errorGrabs * 10).ToString("0.000") + "\n\n" + likertAnswers);
 
     }
 

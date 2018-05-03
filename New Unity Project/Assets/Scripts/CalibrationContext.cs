@@ -30,6 +30,7 @@ public class CalibrationContext : MonoBehaviour
     [SerializeField] FetcherTutorialContext fetcherTutorial;
     [SerializeField] FixerTutorialContext fixerTutorial;
     [SerializeField] Transform offsetCenterPosition;
+    [SerializeField] LikertManager likertManager;
     Transform fixerPos, fetcherPos;
     Vector3 positionalOffset;
     Transform leftHand, rightHand, head;
@@ -321,19 +322,24 @@ public class CalibrationContext : MonoBehaviour
         mirrorMovement[role].Intialize();
         mirrorMovement[role].transform.localPosition = Vector3.zero - mirrorPos[role].rotation * positionalOffset;
         yield return null;
-        bool waiting = true;
-        while (waiting)
-        {
-            if (Input.GetKeyDown("joystick button 14"))
-            {
-                waiting = false;
-            }
-            if (Input.GetKeyDown("joystick button 15")) //Trigger right
-            {
-                waiting = false;
-            }
-            yield return null;
-        }
+        /*   bool waiting = true;
+           while (waiting)
+           {
+               if (Input.GetKeyDown("joystick button 14"))
+               {
+                   waiting = false;
+               }
+               if (Input.GetKeyDown("joystick button 15")) //Trigger right
+               {
+                   waiting = false;
+               }
+               yield return null;
+           }
+           EndMirroring();*/
+    }
+
+    public void EndMirroring()
+    {
         positionalOffset = head.localPosition;
         offsetCenterPosition.localPosition = positionalOffset;
         positionalOffset.y = 0;
@@ -358,6 +364,8 @@ public class CalibrationContext : MonoBehaviour
 
     public void ResetToMirror()
     {
+        likertManager.gameObject.SetActive(true);
+        likertManager.Initialize(taskCondition);
         StartCoroutine(ResetToMirrorCo());
     }
 
