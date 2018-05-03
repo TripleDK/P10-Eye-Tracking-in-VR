@@ -10,6 +10,8 @@ public class DisembodiedAvatarScaling : NetworkBehaviour
     public Transform lHandContainer;
     public Transform torsoContainer;
     public Transform headContainer;
+    public Transform lEyeContainer;
+    public Transform rEyeContainer;
     [SerializeField] bool requireCalibration = true;
 
     private Transform leftController, rightController;

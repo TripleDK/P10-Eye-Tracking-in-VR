@@ -322,7 +322,10 @@ public class CalibrationContext : MonoBehaviour
         mirrorMovement[role].transformsToMirror.Add(avatarScaling.rHandContainer);
         mirrorMovement[role].transformsToMirror.Add(avatarScaling.headContainer);
         mirrorMovement[role].transformsToMirror.Add(avatarScaling.torsoContainer);
+        mirrorMovement[role].transformsToMirror.Add(avatarScaling.lEyeContainer);
+        mirrorMovement[role].transformsToMirror.Add(avatarScaling.rEyeContainer);
         mirrorMovement[role].Intialize();
+        mirrorMovement[role].transform.eulerAngles = new Vector3(0, -90, 0);
         mirrorMovement[role].transform.localPosition = Vector3.zero - mirrorPos[role].rotation * positionalOffset;
     }
 

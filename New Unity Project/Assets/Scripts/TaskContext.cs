@@ -28,6 +28,7 @@ public class TaskContext : NetworkBehaviour
     [SerializeField] float previewRotationSpeed = 180f;
     [SerializeField] TextMeshPro nameField;
     [SerializeField] TextMeshPro debugNameField;
+    [SerializeField] TerminatorVision terminatorVision;
     [SerializeField] Animator[] windowAnimator = new Animator[2];
     [SerializeField] AudioClip winSound;
     [SerializeField] AudioClip windowSound;
@@ -119,6 +120,10 @@ public class TaskContext : NetworkBehaviour
     [ClientRpc]
     void RpcOpenWindow()
     {
+        if ((CalibrationContext.singleton.taskCondition == 1 || CalibrationContext.singleton.taskCondition == 3) && CalibrationContext.singleton.role == 1)
+        {
+            terminatorVision.enabled = true;
+        }
         AudioSource.PlayClipAtPoint(windowSound, windowAnimator[0].transform.position);
         windowAnimator[0].SetTrigger("Open");
         windowAnimator[1].SetTrigger("Open");
@@ -157,6 +162,7 @@ public class TaskContext : NetworkBehaviour
         SyncListShuffledObjects.Remove(SyncListShuffledObjects[0]);
         previewObject.name = previewObject.name.Replace("(Clone)", string.Empty);
         lookTargetController.pointsOfInterest[0] = spawnedObjects[0].transform; //Array index out of range!!
+        terminatorVision.target = spawnedObjects[0].transform;
         RpcNameChange(previewObject.name);
         spawnedObjects.RemoveAt(0);
     }

@@ -39,6 +39,7 @@ public class FixerTutorialContext : MonoBehaviour
         yield return new WaitForSeconds(dialogue[0].length + 1);
         AudioSource.PlayClipAtPoint(dialogue[1], textField.transform.position);
         dialogueStartTime1 = Time.time;
+        previewText.text = "Look here";
         textField.text = "Current goal: \nLocate monitor \n\nImportant tool: \nSpatial awareness";
         gaze.OnTVRealized.AddListener(GrabAnObject);
     }
@@ -57,6 +58,7 @@ public class FixerTutorialContext : MonoBehaviour
             yield return null;
         }
         spawnedTestObjectPreview = Instantiate(testObject, testObjectPreviewPos.position, testObjectPreviewPos.rotation);
+        spawnedTestObjectPreview.name = "Testing preview object";
         spawnedTestObjectPreview.GetComponent<Rigidbody>().isKinematic = true;
         previewText.text = "Test object";
         AudioSource.PlayClipAtPoint(dialogue[2], textField.transform.position);
@@ -89,7 +91,9 @@ public class FixerTutorialContext : MonoBehaviour
     {
         blackHole.OnEatObject.RemoveListener(FinishTutorial);
         previewText.text = "";
+        Debug.Log("Bout to destroy: " + spawnedTestObjectPreview.name, spawnedTestObjectPreview);
         Destroy(spawnedTestObjectPreview);
+        spawnedTestObjectPreview.transform.position = new Vector3(1000, 1000, 1000);
         StartCoroutine(FinishTutorialCo());
     }
 
