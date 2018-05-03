@@ -44,10 +44,10 @@ public class TaskContext : NetworkBehaviour
     [SerializeField] SyncListInt SyncListShuffledObjects = new SyncListInt();
     [SyncVar] public string previewObjectName = "Namerino";
     float timeStart;
-    public static List<int> conditionsCompleted = new List<int>();
+    public SyncListInt conditionsCompleted = new SyncListInt();
     string data = "";
 
-
+    public UnityEvent OnWindowOpen = new UnityEvent();
     UnityEvent OnHasAuthority = new UnityEvent();
 
     void Awake()
@@ -85,7 +85,7 @@ public class TaskContext : NetworkBehaviour
         string conditionsCompletedString = "";
         foreach (int cond in conditionsCompleted)
         {
-            conditionsCompletedString += cond.ToString() + " ";
+            conditionsCompletedString += cond.ToString("0") + " ";
         }
         Debug.Log("Starting game! Current condition: " + CalibrationContext.singleton.taskCondition + ", Conditions completed: " + conditionsCompletedString);
         if (conditionsCompleted.Count >= 4)
@@ -133,6 +133,15 @@ public class TaskContext : NetworkBehaviour
         AudioSource.PlayClipAtPoint(windowSound, windowAnimator[0].transform.position);
         windowAnimator[0].SetTrigger("Open");
         windowAnimator[1].SetTrigger("Open");
+        OnWindowOpen.Invoke();
+
+    }
+
+    [ClientRpc]
+    void RpcCloseWindow()
+    {
+        windowAnimator[0].SetTrigger("Close");
+        windowAnimator[1].SetTrigger("Close");
     }
 
     [Command]
@@ -140,7 +149,7 @@ public class TaskContext : NetworkBehaviour
     {
         if (objects.Count - SyncListShuffledObjects.Count >= numOfObjects)
         {
-            conditionsCompleted.Add(CalibrationContext.singleton.eyeModel);
+            conditionsCompleted.Add(CalibrationContext.singleton.taskCondition);
 
             /*      if (conditionsCompleted.Count == 4)
                   {
@@ -155,7 +164,15 @@ public class TaskContext : NetworkBehaviour
                 newCondition++;
                 if (newCondition > 3) newCondition = 0;
             }
+
+            foreach (GameObject ob in spawnedObjects)
+            {
+                NetworkServer.Destroy(ob);
+            }
+            spawnedObjects.Clear();
+
             RpcConditionDone(newCondition);
+            RpcCloseWindow();
             //  }
             return;
         }
@@ -166,7 +183,7 @@ public class TaskContext : NetworkBehaviour
         NetworkServer.Spawn(previewObject);
         NetworkServer.Destroy(tempObject);
         objectToFind = spawnedObjects[0];
-        Debug.Log("Objects left: " + (SyncListShuffledObjects.Count - objects.Count + numOfObjects) + ", new object: " + previewObject.name);
+        //        Debug.Log("Objects left: " + (SyncListShuffledObjects.Count - objects.Count + numOfObjects) + ", new object: " + previewObject.name);
         SyncListShuffledObjects.Remove(SyncListShuffledObjects[0]);
         spawnedObjects.Remove(spawnedObjects[0]);
         previewObject.name = previewObject.name.Replace("(Clone)", string.Empty);
@@ -190,13 +207,13 @@ public class TaskContext : NetworkBehaviour
         {
             File.WriteAllText("Assets/Resources/Logs/Prelim3Test/Highscores.txt", "High scores: \n" + "Condition: " + CalibrationContext.singleton.taskCondition + ", Time: " + ((Time.time - timeStart) + errorGrabs * 10).ToString("0.000") + "\n");
         }
-        data += "\nCondition: " + CalibrationContext.singleton.taskCondition + "\nErrors: " + errorGrabs.ToString("0") + "\nTime stared at a face: " + timeGazeAtFace +
-                   "\nTime taken: " + (Time.time - timeStart).ToString("0.00") + "\nAverage FPS: " + (Time.frameCount / Time.time);
+        data += "\n\nCondition: " + CalibrationContext.singleton.taskCondition + ", Errors: " + errorGrabs.ToString("0") + ", Time stared at a face: " + timeGazeAtFace +
+                   ", Time taken: " + (Time.time - timeStart).ToString("0.00") + ", Average FPS: " + (Time.frameCount / Time.realtimeSinceStartup);
 
 
         CalibrationContext.singleton.ResetToMirror();
 
-
+        AudioSource.PlayClipAtPoint(winSound, Camera.main.transform.position);
 
         //Prelim experiment only:
         CalibrationContext.singleton.taskCondition = value;
@@ -239,9 +256,10 @@ public class TaskContext : NetworkBehaviour
         Debug.Log("Chicken dinner!");
         AudioSource.PlayClipAtPoint(winSound, transform.position);
         string role = CalibrationContext.singleton.role == 0 ? "Fetcher" : "Fixer";
-        File.WriteAllText("Assets/Resources/Logs/" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".txt",
-            "Scene: " + SceneManager.GetActiveScene().name + "\nRole: " + role + data);
-        File.AppendAllText("Assets/Resources/Logs/Prelim3Test/Averages.txt", "Condition: " + CalibrationContext.singleton.taskCondition + ", Time: " + ((Time.time - timeStart) + errorGrabs * 10).ToString("0.000") + "\n\n" + likertAnswers);
+        File.WriteAllText("Assets/Resources/Logs/Prelim3Test" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".txt",
+            "Scene: " + SceneManager.GetActiveScene().name + "\nRole: " + role + data +
+            "Condition: " + CalibrationContext.singleton.taskCondition + ", Time: " + ((Time.time - timeStart) + errorGrabs * 10).ToString("0.000") + "\n\n" + likertAnswers);
+        File.AppendAllText("Assets/Resources/Logs/Prelim3Test/Highscores.txt", "Condition: " + CalibrationContext.singleton.taskCondition + ", Time: " + ((Time.time - timeStart) + errorGrabs * 10).ToString("0.000") + "\n\n");
 
     }
 

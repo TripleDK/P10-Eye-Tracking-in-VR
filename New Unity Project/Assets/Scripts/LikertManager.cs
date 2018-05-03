@@ -39,13 +39,13 @@ public class LikertManager : MonoBehaviour
         }
         questionIndex = -1;
         TaskContext.singleton.likertAnswers += "\n";
-
+        currentCondition = condition;
         NextQuestion();
     }
 
     public void Reply(int value)
     {
-        Debug.Log("Likert reply with value: " + value);
+        //        Debug.Log("Likert reply with value: " + value);
         if (value == -1)
         {
             Continue(-1);
@@ -78,7 +78,7 @@ public class LikertManager : MonoBehaviour
 
     void Continue(int value)
     {
-        Debug.Log("Continue with value: " + value);
+        //      Debug.Log("Continue with value: " + value);
         continueButton.gameObject.SetActive(false);
         CalibrationContext.singleton.EndMirroring();
 

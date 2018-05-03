@@ -1,14 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using RealisticEyeMovements;
 using System.Linq;
 
 public class MirrorMovement : MonoBehaviour
 {
 
     public List<Transform> transformsToMirror = new List<Transform>();
+    public LookTargetController lookTargetController;
     [SerializeField] Transform mirroredSpot;
     [SerializeField] GameObject hmd;
+
     List<Transform> movingTransforms = new List<Transform>();
     Vector3 mirrorOffset;
 
@@ -34,6 +37,12 @@ public class MirrorMovement : MonoBehaviour
         {
             hmd.SetActive(false);
         }
+
+        if (TaskContext.singleton.taskCondition == 2 && CalibrationContext.singleton.role == 1)
+        {
+            lookTargetController.thirdPersonPlayerEyeCenter = myTransforms.Where(obj => obj.name.Contains("Head")).SingleOrDefault();
+        }
+
     }
 
     // Update is called once per frame

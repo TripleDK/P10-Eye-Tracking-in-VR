@@ -106,6 +106,7 @@ public class DisembodiedAvatarControls : MonoBehaviour
         {
             eyeModel = GetComponent<EyeAndHeadAnimator>();
             eyeModel.enabled = true;
+            TaskContext.singleton.OnWindowOpen.AddListener(SetOtherPlayerForEyeModel);
         }
         else
         {
@@ -123,6 +124,10 @@ public class DisembodiedAvatarControls : MonoBehaviour
         }
     }
 
+    void SetOtherPlayerForEyeModel()
+    {
+        lookTargetController.thirdPersonPlayerEyeCenter = GameObject.Find("Player(Clone)").GetComponent<DisembodiedAvatarScaling>().headContainer;
+    }
 
     public void ResetTorsoPosition()
     {
@@ -166,8 +171,12 @@ public class DisembodiedAvatarControls : MonoBehaviour
         leftHand.rotation = leftHandPos.rotation;
         rightHand.position = rightHandPos.position;
         rightHand.rotation = rightHandPos.rotation;
-        leftEye.LookAt(lookAtPos);
-        rightEye.LookAt(lookAtPos);
+        if (eyeGazeModel != EyeGazeModel.Modelled)
+        {
+            leftEye.LookAt(lookAtPos);
+            rightEye.LookAt(lookAtPos);
+        }
+        else { }
 
         //Torso Movement
         int upSideDown = 1;

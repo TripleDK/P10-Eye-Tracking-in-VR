@@ -5,3 +5,11 @@ Condition: 0, Time: 95.397
 Condition: 3, Time: 66.832
 Condition: 0, Time: 249.955
 Condition: 0, Time: 174.949
+Condition: 0, Time: 98.745
+Condition: 0, Time: 47.037
+Condition: 1, Time: 47.118
+Condition: 1, Time: 255.607
+Condition: 0, Time: 133.057
+Condition: 2, Time: 248.030
+Condition: 3, Time: 130.052
+Condition: 1, Time: 71.651

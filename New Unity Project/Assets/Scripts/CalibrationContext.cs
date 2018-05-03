@@ -341,7 +341,7 @@ public class CalibrationContext : MonoBehaviour
         cameraRig.rotation = startPos[this.role].rotation;
         cameraRig.position = startPos[this.role].position - startPos[this.role].rotation * positionalOffset;
         playerTransform.position = cameraRig.position;
-        if (TaskContext.conditionsCompleted.Count == 0)
+        if (TaskContext.singleton.conditionsCompleted.Count == 0)
         {
             StartTutorials();
         }
@@ -379,6 +379,7 @@ public class CalibrationContext : MonoBehaviour
 
     IEnumerator ResetToMirrorCo()
     {
+        mirrorMovement[role].enabled = true;
         cameraRig.rotation = mirrorPos[role].rotation;
         cameraRig.position = mirrorPos[role].position - mirrorPos[role].rotation * positionalOffset;
         playerTransform.position = cameraRig.position;
