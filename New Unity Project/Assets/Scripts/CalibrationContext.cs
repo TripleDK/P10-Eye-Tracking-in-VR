@@ -297,6 +297,7 @@ public class CalibrationContext : MonoBehaviour
     }
     void PupilCalibrateDone()
     {
+        PupilTools.OnCalibrationEnded -= PupilCalibrateDone;
         positionalOffset = head.localPosition;
         offsetCenterPosition.localPosition = positionalOffset;
         positionalOffset.y = 0;
@@ -335,14 +336,29 @@ public class CalibrationContext : MonoBehaviour
         offsetCenterPosition.localPosition = positionalOffset;
         positionalOffset.y = 0;
         mirrorMovement[role].enabled = false;
-        StartTutorials();
+        cameraRig.rotation = startPos[this.role].rotation;
+        cameraRig.position = startPos[this.role].position - startPos[this.role].rotation * positionalOffset;
+        playerTransform.position = cameraRig.position;
+        if (TaskContext.conditionsCompleted.Count == 0)
+        {
+            StartTutorials();
+        }
+        else
+        {
+            if (role == 0)
+            {
+                TaskContext.singleton.FetcherTutDone();
+            }
+            else if (role == 1)
+            {
+                TaskContext.singleton.FixerTutDone();
+            }
+        }
     }
 
     void StartTutorials()
     {
-        cameraRig.rotation = startPos[this.role].rotation;
-        cameraRig.position = startPos[this.role].position - startPos[this.role].rotation * positionalOffset;
-        playerTransform.position = cameraRig.position;
+
         if (role == 0)
         {
             fetcherTutorial.StartTutorial();
@@ -382,13 +398,6 @@ public class CalibrationContext : MonoBehaviour
         cameraRig.rotation = startPos[this.role].rotation;
         cameraRig.position = startPos[this.role].position - startPos[this.role].rotation * positionalOffset;
         playerTransform.position = cameraRig.position;
-        if (role == 0)
-        {
-            TaskContext.singleton.FetcherTutDone();
-        }
-        else if (role == 1)
-        {
-            TaskContext.singleton.FixerTutDone();
-        }
+
     }
 }

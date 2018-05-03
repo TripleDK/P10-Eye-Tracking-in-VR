@@ -91,7 +91,6 @@ public class FixerTutorialContext : MonoBehaviour
     {
         blackHole.OnEatObject.RemoveListener(FinishTutorial);
         previewText.text = "";
-        Debug.Log("Bout to destroy: " + spawnedTestObjectPreview.name, spawnedTestObjectPreview);
         Destroy(spawnedTestObjectPreview);
         spawnedTestObjectPreview.transform.position = new Vector3(1000, 1000, 1000);
         StartCoroutine(FinishTutorialCo());

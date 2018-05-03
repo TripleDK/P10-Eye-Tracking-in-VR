@@ -45,6 +45,12 @@ public class LikertManager : MonoBehaviour
 
     public void Reply(int value)
     {
+        Debug.Log("Likert reply with value: " + value);
+        if (value == -1)
+        {
+            Continue(-1);
+            return;
+        }
         TaskContext.singleton.likertAnswers += "\nCondition: " + currentCondition + ", question: " + questionIndex + ", answer: " + value;
         NextQuestion();
     }
@@ -72,6 +78,7 @@ public class LikertManager : MonoBehaviour
 
     void Continue(int value)
     {
+        Debug.Log("Continue with value: " + value);
         continueButton.gameObject.SetActive(false);
         CalibrationContext.singleton.EndMirroring();
 

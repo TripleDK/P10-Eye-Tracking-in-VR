@@ -53,23 +53,29 @@ public class DisembodiedAvatarControls : MonoBehaviour
         //        eyeGazeModel = (EyeGazeModel)CalibrationContext.singleton.eyeModel;
         //Main experiment end
 
-        //For prelim experiment!!
+        SetEyeModel();
+
+    }
+
+    public void SetEyeModel()
+    {
         if (CalibrationContext.singleton.role == 1) //Fixer
         {
-            if (CalibrationContext.singleton.taskCondition < 2)
-            {
-                eyeGazeModel = EyeGazeModel.Eyetracking;
-            }
-            else
-            {
-                eyeGazeModel = EyeGazeModel.Hmd;
-            }
+            eyeGazeModel = (EyeGazeModel)CalibrationContext.singleton.taskCondition;
+            /*   if (CalibrationContext.singleton.taskCondition < 2)
+               {
+                   eyeGazeModel = EyeGazeModel.Eyetracking;
+               }
+               else
+               {
+                   eyeGazeModel = EyeGazeModel.Hmd;
+               }*/
         }
         else if (CalibrationContext.singleton.role == 0)
         { //Fetcher
             eyeGazeModel = EyeGazeModel.Static;
         }
-        //Prelim experiment end
+
 
 
         if (eyeGazeModel == EyeGazeModel.Eyetracking)
@@ -98,8 +104,8 @@ public class DisembodiedAvatarControls : MonoBehaviour
         {
             hmdObject.SetActive(false);
         }
-
     }
+
 
     public void ResetTorsoPosition()
     {

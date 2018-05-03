@@ -22,13 +22,14 @@ public class TaskContext : NetworkBehaviour
     public List<GameObject> objects = new List<GameObject>();
     public Transform realEyeTarget;
     public LookTargetController lookTargetController;
+    public TerminatorVision terminatorVision;
     [HideInInspector] public string likertAnswers;
 
     [SerializeField] List<Transform> spawnPos = new List<Transform>();
+    [SerializeField] int numOfObjects = 5;
     [SerializeField] float previewRotationSpeed = 180f;
     [SerializeField] TextMeshPro nameField;
     [SerializeField] TextMeshPro debugNameField;
-    [SerializeField] TerminatorVision terminatorVision;
     [SerializeField] Animator[] windowAnimator = new Animator[2];
     [SerializeField] AudioClip winSound;
     [SerializeField] AudioClip windowSound;
@@ -37,11 +38,11 @@ public class TaskContext : NetworkBehaviour
     List<GameObject> spawnedObjects = new List<GameObject>();
     float averageFPS;
 
-
+    GameObject objectToFind = null;
     [SerializeField] SyncListInt SyncListShuffledObjects = new SyncListInt();
     [SyncVar] public string previewObjectName = "Namerino";
     float timeStart;
-    List<int> conditionsCompleted = new List<int>();
+    public static List<int> conditionsCompleted = new List<int>();
     string data = "";
 
 
@@ -79,7 +80,12 @@ public class TaskContext : NetworkBehaviour
     [Server]
     void CmdSetup()
     {
-        Debug.Log("Starting game!");
+        string conditionsCompletedString = "";
+        foreach (int cond in conditionsCompleted)
+        {
+            conditionsCompletedString += cond.ToString() + " ";
+        }
+        Debug.Log("Starting game! Current condition: " + CalibrationContext.singleton.taskCondition + ", Conditions completed: " + conditionsCompletedString);
         if (conditionsCompleted.Count >= 4)
         {
             RpcWin();
@@ -120,10 +126,7 @@ public class TaskContext : NetworkBehaviour
     [ClientRpc]
     void RpcOpenWindow()
     {
-        if ((CalibrationContext.singleton.taskCondition == 1 || CalibrationContext.singleton.taskCondition == 3) && CalibrationContext.singleton.role == 1)
-        {
-            terminatorVision.enabled = true;
-        }
+
         AudioSource.PlayClipAtPoint(windowSound, windowAnimator[0].transform.position);
         windowAnimator[0].SetTrigger("Open");
         windowAnimator[1].SetTrigger("Open");
@@ -132,7 +135,7 @@ public class TaskContext : NetworkBehaviour
     [Command]
     public void CmdNextObject()
     {
-        if (SyncListShuffledObjects.Count == 0)
+        if (objects.Count - SyncListShuffledObjects.Count >= numOfObjects)
         {
             conditionsCompleted.Add(CalibrationContext.singleton.eyeModel);
 
@@ -159,12 +162,13 @@ public class TaskContext : NetworkBehaviour
         previewObjectName = previewObject.name;
         NetworkServer.Spawn(previewObject);
         NetworkServer.Destroy(tempObject);
+        objectToFind = spawnedObjects[SyncListShuffledObjects[0]];
+        Debug.Log("Objects left: " + (objects.Count - SyncListShuffledObjects.Count - numOfObjects) + ", new object: " + previewObject.name);
         SyncListShuffledObjects.Remove(SyncListShuffledObjects[0]);
         previewObject.name = previewObject.name.Replace("(Clone)", string.Empty);
-        lookTargetController.pointsOfInterest[0] = spawnedObjects[0].transform; //Array index out of range!!
-        terminatorVision.target = spawnedObjects[0].transform;
-        RpcNameChange(previewObject.name);
-        spawnedObjects.RemoveAt(0);
+
+        RpcNameChange(previewObject.name, objectToFind.transform);
+
     }
 
 
@@ -194,6 +198,12 @@ public class TaskContext : NetworkBehaviour
 
         //Main experiment only:
         //  CalibrationContext.singleton.eyeModel = value;
+
+        foreach (DisembodiedAvatarControls avatarControls in FindObjectsOfType<DisembodiedAvatarControls>())
+        {
+            avatarControls.SetEyeModel();
+        }
+
         errorGrabs = 0;
         timeGazeAtFace = 0;
         fetcherTutDone = false;
@@ -201,9 +211,11 @@ public class TaskContext : NetworkBehaviour
     }
 
     [ClientRpc]
-    void RpcNameChange(string name)
+    void RpcNameChange(string name, Transform target)
     {
-        Debug.Log("Changing name!");
+        //        Debug.Log("Changing name!");
+        lookTargetController.pointsOfInterest[0] = objectToFind.transform;
+        terminatorVision.target = objectToFind.transform;
         nameField.text = name;
         debugNameField.text = name;
     }
@@ -282,14 +294,14 @@ public class TaskContext : NetworkBehaviour
 
     IEnumerator WaitForAuthority()
     {
-        Debug.Log("Trying to get auth over taskcontext! " + Time.time);
+        //    Debug.Log("Trying to get auth over taskcontext! " + Time.time);
         NetworkIdentity playerId = GameObject.FindGameObjectWithTag("LocalPlayer").GetComponent<NetworkIdentity>();
         playerId.GetComponent<Player>().CmdSetAuth(netId, playerId);
         while (!hasAuthority)
         {
             yield return null;
         }
-        Debug.Log("Got authority! " + Time.time);
+        //    Debug.Log("Got authority! " + Time.time);
         OnHasAuthority.Invoke();
         OnHasAuthority.RemoveAllListeners();
     }

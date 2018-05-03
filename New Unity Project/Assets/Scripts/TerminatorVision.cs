@@ -23,9 +23,16 @@ public class TerminatorVision : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Vector2 viewPortPos = cam.WorldToViewportPoint(target.position);
-        Vector2 proportionalPosition = new Vector2(viewPortPos.x * rTransform.sizeDelta.x, viewPortPos.y * rTransform.sizeDelta.y);
-        targetMarker.rectTransform.localPosition = proportionalPosition - uiOffset;
-        //    targetMarker.transform.localEulerAngles = new Vector3(0, 0, transform.localRotation.z);
+        if (target != null)
+        {
+            Vector2 viewPortPos = cam.WorldToViewportPoint(target.position);
+            Vector2 proportionalPosition = new Vector2(viewPortPos.x * rTransform.sizeDelta.x, viewPortPos.y * rTransform.sizeDelta.y);
+            targetMarker.rectTransform.localPosition = proportionalPosition - uiOffset;
+            //    targetMarker.transform.localEulerAngles = new Vector3(0, 0, transform.localRotation.z);
+        }
+        else
+        {
+            targetMarker.rectTransform.localPosition = new Vector2(-10, -10);
+        }
     }
 }

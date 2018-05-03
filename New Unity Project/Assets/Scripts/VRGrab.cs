@@ -97,7 +97,7 @@ public class VRGrab : MonoBehaviour
 
     IEnumerator CoVibrate(float duration, ushort intensity)
     {
-        Debug.Log("Vibrate on " + gameObject.name + ", with index " + controllerIndex);
+        //        Debug.Log("Vibrate on " + gameObject.name + ", with index " + controllerIndex);
         float timer = 0.0f;
         while (timer < duration)
         {
