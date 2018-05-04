@@ -215,7 +215,7 @@ public class TaskContext : NetworkBehaviour
 
 
 
-        AudioSource.PlayClipAtPoint(winSound, Camera.main.transform.position);
+
 
         //Prelim experiment only:
         CalibrationContext.singleton.taskCondition = value;
@@ -225,7 +225,7 @@ public class TaskContext : NetworkBehaviour
         //  CalibrationContext.singleton.eyeModel = value;
 
         CalibrationContext.singleton.ResetToMirror();
-
+        AudioSource.PlayClipAtPoint(winSound, Camera.main.transform.position);
         foreach (DisembodiedAvatarControls avatarControls in FindObjectsOfType<DisembodiedAvatarControls>())
         {
             avatarControls.SetEyeModel();

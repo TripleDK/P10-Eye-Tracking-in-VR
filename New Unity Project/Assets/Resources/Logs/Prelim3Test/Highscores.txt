@@ -29,3 +29,10 @@ Condition: 3, Time: 61.126
 
 
 Condition: 2, Time: 227.332
+Condition: 3, Time: 366.435
+Condition: 0, Time: 180.070
+Condition: 1, Time: 93.129
+Condition: 2, Time: 190.761
+Condition: 3, Time: 147.325
+
+
