@@ -179,8 +179,11 @@ MonoBehaviour:
   prevConnected: {fileID: 0}
   material: {fileID: 0}
   color: {r: 1, g: 0.93103456, b: 0, a: 1}
+  selectColor: {r: 0, g: 1, b: 0, a: 1}
   controllerGrab:
   - {fileID: 0}
+  unSelectedWidth: 1.1
+  selectedWidth: 1.3
   networkIdentity: {fileID: 0}
   attached: 0
   startPos: {x: 0, y: 0, z: 0}
@@ -207,7 +210,7 @@ MonoBehaviour:
   m_SyncSpin: 0
   m_MovementTheshold: 0.001
   m_VelocityThreshold: 0.0001
-  m_SnapThreshold: 5
+  m_SnapThreshold: 1
   m_InterpolateRotation: 1
   m_InterpolateMovement: 1
 --- !u!114 &114265371691244652

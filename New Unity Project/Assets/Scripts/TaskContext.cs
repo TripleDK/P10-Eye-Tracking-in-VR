@@ -213,7 +213,7 @@ public class TaskContext : NetworkBehaviour
                    ", Time taken: " + timeTaken.ToString("0.00") + ", Average FPS: " + (Time.frameCount / Time.realtimeSinceStartup);
 
 
-        CalibrationContext.singleton.ResetToMirror();
+
 
         AudioSource.PlayClipAtPoint(winSound, Camera.main.transform.position);
 
@@ -223,6 +223,8 @@ public class TaskContext : NetworkBehaviour
 
         //Main experiment only:
         //  CalibrationContext.singleton.eyeModel = value;
+
+        CalibrationContext.singleton.ResetToMirror();
 
         foreach (DisembodiedAvatarControls avatarControls in FindObjectsOfType<DisembodiedAvatarControls>())
         {

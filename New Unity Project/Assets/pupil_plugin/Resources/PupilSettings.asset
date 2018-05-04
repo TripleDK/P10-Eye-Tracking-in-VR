@@ -55,11 +55,11 @@ MonoBehaviour:
       samplesPerDepth: 120
     samplesToIgnoreForEyeMovement: 10
     rightEyeTranslation:
-    - -22.893637
+    - 2.3412256
     - 0
     - 0
     leftEyeTranslation:
-    - 22.893667
+    - -2.3412406
     - 0
     - 0
   customGUIVariables:

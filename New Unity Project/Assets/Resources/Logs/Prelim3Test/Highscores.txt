@@ -28,3 +28,4 @@ Condition: 2, Time: 57.024
 Condition: 3, Time: 61.126
 
 
+Condition: 2, Time: 227.332

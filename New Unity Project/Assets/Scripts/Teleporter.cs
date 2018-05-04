@@ -157,7 +157,8 @@ public class Teleporter : NetworkBehaviour
         mat.SetFloat("_OutlineWidth", outlineSize);
         Destroy(Instantiate(teleportParticles, objectToTeleport.transform.position, Quaternion.identity), 2);
         objectToTeleport = null;
-        teleportRigid.MovePosition(teleportTarget.position);
+        CmdTeleport(go);
+
         go.GetComponent<ObjectInteractions>().startPos = teleportTarget.position;
 
         startTime = Time.time;
@@ -169,6 +170,13 @@ public class Teleporter : NetworkBehaviour
             yield return null;
         }
 
+    }
+
+    [Command]
+    void CmdTeleport(GameObject go)
+    {
+        Rigidbody teleportRigid = go.GetComponent<Rigidbody>();
+        teleportRigid.MovePosition(teleportTarget.position);
     }
 
     [Command]

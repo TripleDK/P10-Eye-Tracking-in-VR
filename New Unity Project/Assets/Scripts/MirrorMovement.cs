@@ -28,7 +28,7 @@ public class MirrorMovement : MonoBehaviour
         mirrorOffset = mirroredSpot.position - transform.parent.position;
 
 
-
+        Debug.Log("Setting mirror, taskCondition: " + TaskContext.singleton.taskCondition + ", role: " + CalibrationContext.singleton.role);
         if (TaskContext.singleton.taskCondition == 0 && CalibrationContext.singleton.role == 1)
         {
             hmd.SetActive(true);
