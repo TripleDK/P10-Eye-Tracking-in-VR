@@ -30,7 +30,8 @@ public class BlackHole : NetworkBehaviour
         {
             OnEatObject.Invoke();
             Destroy(col.gameObject);
-            StartCoroutine(Eat());
+            //  StartCoroutine(Eat());
+            CmdEat();
             if (col.gameObject.name == "Sphere(Clone)")
             {
                 return;
@@ -51,6 +52,18 @@ public class BlackHole : NetworkBehaviour
             yield return null;
         }
         TaskContext.singleton.CmdNextObject();
+    }
+
+    [Command]
+    void CmdEat()
+    {
+        RpcEat();
+    }
+
+    [ClientRpc]
+    void RpcEat()
+    {
+        StartCoroutine(Eat());
     }
 
     IEnumerator Eat()

@@ -173,7 +173,7 @@ public class TaskContext : NetworkBehaviour
             }
             spawnedObjects.Clear();
 
-            RpcConditionDone(newCondition);
+            RpcConditionDone(newCondition, (Time.time - timeStart));
             RpcCloseWindow();
             //  }
             return;
@@ -196,21 +196,21 @@ public class TaskContext : NetworkBehaviour
 
 
     [ClientRpc]
-    void RpcConditionDone(int value)
+    void RpcConditionDone(int value, float timeTaken)
     {
         Debug.Log("One condition is done!! Good job!");
         CalibrationContext.singleton.likertManager.gameObject.SetActive(true);
         CalibrationContext.singleton.likertManager.Initialize(TaskContext.singleton.taskCondition);
         if (File.Exists("Assets/Resources/Logs/Prelim3Test/Highscores.txt"))
         {
-            File.AppendAllText("Assets/Resources/Logs/Prelim3Test/Highscores.txt", "Condition: " + TaskContext.singleton.taskCondition + ", Time: " + ((Time.time - timeStart) + errorGrabs * 10).ToString("0.000") + "\n");
+            File.AppendAllText("Assets/Resources/Logs/Prelim3Test/Highscores.txt", "Condition: " + TaskContext.singleton.taskCondition + ", Time: " + (timeTaken + errorGrabs * 10).ToString("0.000") + "\n");
         }
         else
         {
-            File.WriteAllText("Assets/Resources/Logs/Prelim3Test/Highscores.txt", "High scores: \n" + "Condition: " + TaskContext.singleton.taskCondition + ", Time: " + ((Time.time - timeStart) + errorGrabs * 10).ToString("0.000") + "\n");
+            File.WriteAllText("Assets/Resources/Logs/Prelim3Test/Highscores.txt", "High scores: \n" + "Condition: " + TaskContext.singleton.taskCondition + ", Time: " + (timeTaken + errorGrabs * 10).ToString("0.000") + "\n");
         }
         data += "\n\nCondition: " + TaskContext.singleton.taskCondition + ", Errors: " + errorGrabs.ToString("0") + ", Time stared at a face: " + timeGazeAtFace +
-                   ", Time taken: " + (Time.time - timeStart).ToString("0.00") + ", Average FPS: " + (Time.frameCount / Time.realtimeSinceStartup);
+                   ", Time taken: " + timeTaken.ToString("0.00") + ", Average FPS: " + (Time.frameCount / Time.realtimeSinceStartup);
 
 
         CalibrationContext.singleton.ResetToMirror();
@@ -238,7 +238,7 @@ public class TaskContext : NetworkBehaviour
     [ClientRpc]
     void RpcNameChange(string name, NetworkIdentity target)
     {
-        Debug.Log("Changing name: " + name + ", targetName: " + target.name, target);
+        //        Debug.Log("Changing name: " + name + ", targetName: " + target.name, target);
         objectToFind = target.gameObject;
         lookTargetController.pointsOfInterest[0] = target.transform;
         lookTargetController.pointsOfInterest[1] = target.transform;

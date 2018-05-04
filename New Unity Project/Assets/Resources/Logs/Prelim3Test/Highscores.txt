@@ -22,3 +22,9 @@ Condition: 0, Time: 159.619
 Condition: 1, Time: 74.998
 Condition: 1, Time: 100.063
 
+Condition: 1, Time: 109.849
+Condition: 0, Time: 77.572
+Condition: 2, Time: 57.024
+Condition: 3, Time: 61.126
+
+

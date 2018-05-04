@@ -144,21 +144,22 @@ public class ObjectInteractions : VRButton
         Vector3 ogPos = transform.position;
         transform.position = startPos;
         rigid.velocity = Vector3.zero;
-        CmdResetPosition(ogPos);
+        CmdResetPosition(ogPos, startPos);
     }
 
     [Command]
-    public void CmdResetPosition(Vector3 ogPos)
+    public void CmdResetPosition(Vector3 ogPos, Vector3 startP)
     {
-        RpcResetPosition(ogPos);
+        RpcResetPosition(ogPos, startP);
     }
 
     [ClientRpc]
-    public void RpcResetPosition(Vector3 ogPos)
+    public void RpcResetPosition(Vector3 ogPos, Vector3 startP)
     {
         Destroy(Instantiate(teleportParticles, ogPos, Quaternion.identity), 2);
-        transform.position = startPos;
+        transform.position = startP;
         rigid.velocity = Vector3.zero;
+        rigid.angularVelocity = Vector3.zero;
     }
 
     void OnCollisionStay(Collision collision)
