@@ -102,7 +102,7 @@ public class DisembodiedAvatarControls : MonoBehaviour
         {
             lookAtTarget = null;
         }
-        if (eyeGazeModel == EyeGazeModel.Modelled)
+        if (eyeGazeModel == EyeGazeModel.Modelled && isLocalPlayer)
         {
             eyeModel = GetComponent<EyeAndHeadAnimator>();
             eyeModel.enabled = true;
@@ -126,7 +126,7 @@ public class DisembodiedAvatarControls : MonoBehaviour
 
     void SetOtherPlayerForEyeModel()
     {
-        lookTargetController.thirdPersonPlayerEyeCenter = GameObject.Find("Player(Clone)").GetComponent<DisembodiedAvatarScaling>().headContainer;
+        if (lookTargetController != null) lookTargetController.thirdPersonPlayerEyeCenter = GameObject.Find("Player(Clone)").GetComponent<DisembodiedAvatarScaling>().headContainer;
     }
 
     public void ResetTorsoPosition()
@@ -152,7 +152,7 @@ public class DisembodiedAvatarControls : MonoBehaviour
                     lookAtPos.position = headPos.position + headPos.forward * 10;
                     break;
                 case (EyeGazeModel.Modelled):
-
+                    lookAtPos.position = eyeModel.lookAtPosition;
                     break;
                 case (EyeGazeModel.Eyetracking):
                     lookAtPos.position = lookAtTarget.position;
