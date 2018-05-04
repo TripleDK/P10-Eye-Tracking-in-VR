@@ -13,3 +13,12 @@ Condition: 0, Time: 133.057
 Condition: 2, Time: 248.030
 Condition: 3, Time: 130.052
 Condition: 1, Time: 71.651
+Condition: 2, Time: 336.564
+Condition: 3, Time: 136.370
+Condition: 0, Time: 94.586
+Condition: 3, Time: 143.331
+Condition: 2, Time: 121.308
+Condition: 0, Time: 159.619
+Condition: 1, Time: 74.998
+Condition: 1, Time: 100.063
+

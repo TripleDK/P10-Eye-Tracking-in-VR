@@ -17,5 +17,7 @@ public class LikertButton : VRButton
     {
         OnSelected.Invoke(likertValue);
         AudioSource.PlayClipAtPoint(clickSound, transform.position);
+        FeedbackColor(color, unSelectedWidth);
     }
+
 }

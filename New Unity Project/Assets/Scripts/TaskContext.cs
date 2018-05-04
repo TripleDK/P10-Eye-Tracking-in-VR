@@ -43,7 +43,7 @@ public class TaskContext : NetworkBehaviour
     public GameObject objectToFind = null;
     [SerializeField] SyncListInt SyncListShuffledObjects = new SyncListInt();
     [SyncVar] public string previewObjectName = "Namerino";
-    float timeStart;
+    [SyncVar] public float timeStart;
     public SyncListInt conditionsCompleted = new SyncListInt();
     string data = "";
 
@@ -87,7 +87,7 @@ public class TaskContext : NetworkBehaviour
         {
             conditionsCompletedString += cond.ToString("0") + " ";
         }
-        Debug.Log("Starting game! Current condition: " + CalibrationContext.singleton.taskCondition + ", Conditions completed: " + conditionsCompletedString);
+        Debug.Log("Starting game! Current condition: " + TaskContext.singleton.taskCondition + ", Conditions completed: " + conditionsCompletedString);
         if (conditionsCompleted.Count >= 4)
         {
             RpcWin();
@@ -149,7 +149,7 @@ public class TaskContext : NetworkBehaviour
     {
         if (objects.Count - SyncListShuffledObjects.Count >= numOfObjects)
         {
-            conditionsCompleted.Add(CalibrationContext.singleton.taskCondition);
+            conditionsCompleted.Add(TaskContext.singleton.taskCondition);
 
             /*      if (conditionsCompleted.Count == 4)
                   {
@@ -159,12 +159,14 @@ public class TaskContext : NetworkBehaviour
                   {*/
 
             int newCondition = UnityEngine.Random.Range(0, 4);
-            while (conditionsCompleted.Contains(newCondition))
+            if (conditionsCompleted.Count < 4)
             {
-                newCondition++;
-                if (newCondition > 3) newCondition = 0;
+                while (conditionsCompleted.Contains(newCondition))
+                {
+                    newCondition++;
+                    if (newCondition > 3) newCondition = 0;
+                }
             }
-
             foreach (GameObject ob in spawnedObjects)
             {
                 NetworkServer.Destroy(ob);
@@ -198,16 +200,16 @@ public class TaskContext : NetworkBehaviour
     {
         Debug.Log("One condition is done!! Good job!");
         CalibrationContext.singleton.likertManager.gameObject.SetActive(true);
-        CalibrationContext.singleton.likertManager.Initialize(CalibrationContext.singleton.taskCondition);
+        CalibrationContext.singleton.likertManager.Initialize(TaskContext.singleton.taskCondition);
         if (File.Exists("Assets/Resources/Logs/Prelim3Test/Highscores.txt"))
         {
-            File.AppendAllText("Assets/Resources/Logs/Prelim3Test/Highscores.txt", "Condition: " + CalibrationContext.singleton.taskCondition + ", Time: " + ((Time.time - timeStart) + errorGrabs * 10).ToString("0.000") + "\n");
+            File.AppendAllText("Assets/Resources/Logs/Prelim3Test/Highscores.txt", "Condition: " + TaskContext.singleton.taskCondition + ", Time: " + ((Time.time - timeStart) + errorGrabs * 10).ToString("0.000") + "\n");
         }
         else
         {
-            File.WriteAllText("Assets/Resources/Logs/Prelim3Test/Highscores.txt", "High scores: \n" + "Condition: " + CalibrationContext.singleton.taskCondition + ", Time: " + ((Time.time - timeStart) + errorGrabs * 10).ToString("0.000") + "\n");
+            File.WriteAllText("Assets/Resources/Logs/Prelim3Test/Highscores.txt", "High scores: \n" + "Condition: " + TaskContext.singleton.taskCondition + ", Time: " + ((Time.time - timeStart) + errorGrabs * 10).ToString("0.000") + "\n");
         }
-        data += "\n\nCondition: " + CalibrationContext.singleton.taskCondition + ", Errors: " + errorGrabs.ToString("0") + ", Time stared at a face: " + timeGazeAtFace +
+        data += "\n\nCondition: " + TaskContext.singleton.taskCondition + ", Errors: " + errorGrabs.ToString("0") + ", Time stared at a face: " + timeGazeAtFace +
                    ", Time taken: " + (Time.time - timeStart).ToString("0.00") + ", Average FPS: " + (Time.frameCount / Time.realtimeSinceStartup);
 
 
@@ -257,10 +259,9 @@ public class TaskContext : NetworkBehaviour
         Debug.Log("Chicken dinner!");
         AudioSource.PlayClipAtPoint(winSound, transform.position);
         string role = CalibrationContext.singleton.role == 0 ? "Fetcher" : "Fixer";
-        File.WriteAllText("Assets/Resources/Logs/Prelim3Test" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".txt",
-            "Scene: " + SceneManager.GetActiveScene().name + "\nRole: " + role + data +
-            "Condition: " + CalibrationContext.singleton.taskCondition + ", Time: " + ((Time.time - timeStart) + errorGrabs * 10).ToString("0.000") + "\n\n" + likertAnswers);
-        File.AppendAllText("Assets/Resources/Logs/Prelim3Test/Highscores.txt", "Condition: " + CalibrationContext.singleton.taskCondition + ", Time: " + ((Time.time - timeStart) + errorGrabs * 10).ToString("0.000") + "\n\n");
+        File.WriteAllText("Assets/Resources/Logs/Prelim3Test/" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".txt",
+            "Scene: " + SceneManager.GetActiveScene().name + "\nRole: " + role + data + "\n\n" + likertAnswers);
+        File.AppendAllText("Assets/Resources/Logs/Prelim3Test/Highscores.txt", "\n\n");
 
     }
 

@@ -171,12 +171,10 @@ public class DisembodiedAvatarControls : MonoBehaviour
         leftHand.rotation = leftHandPos.rotation;
         rightHand.position = rightHandPos.position;
         rightHand.rotation = rightHandPos.rotation;
-        if (eyeGazeModel != EyeGazeModel.Modelled)
-        {
-            leftEye.LookAt(lookAtPos);
-            rightEye.LookAt(lookAtPos);
-        }
-        else { }
+
+        leftEye.LookAt(lookAtPos);
+        rightEye.LookAt(lookAtPos);
+
 
         //Torso Movement
         int upSideDown = 1;
