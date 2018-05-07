@@ -3,8 +3,6 @@
 	{
 		_Color ("Color", Color) = (1,1,1,1)
 		_MainTex ("Albedo (RGB)", 2D) = "white" {}
-		_Glossiness ("Smoothness", Range(0,1)) = 0.5
-		_Metallic ("Metallic", Range(0,1)) = 0.0
 		_OutlineColor("Outline color", Color) = (0,0,0,1)
 		_OutlineWidth("Width of shader outline", Range(1.0,2.0)) = 1.02
 		_DissolveColor("Dissolve Edge Color", Color) = (1,1,1,1)
@@ -23,8 +21,7 @@
 	
 		sampler2D _MainTex;
 		sampler2D _DissolveTex;
-
-	
+			
 
 		float _OutlineWidth;
 		fixed4 _OutlineColor;
@@ -37,6 +34,7 @@
 		{
 			float4 vertex : POSITION;
 			float3 normal: NORMAL;
+			float3 texcoord : TEXCOORD0;
 		};
 
 		struct v2f
@@ -44,6 +42,7 @@
 			float4 pos : POSITION;
 			float4 color : COLOR;
 			float3 normal: NORMAL;
+			float3 uv_DissolveTex : TEXCOORD0; 
 		};
 
 		v2f vert(appdata v)
@@ -52,6 +51,8 @@
 			v.vertex.xyz *= _OutlineWidth;
 			o.pos = UnityObjectToClipPos(v.vertex);
 			o.color = _OutlineColor;
+			o.uv_DissolveTex = v.texcoord;
+
 			return o;
 		}
 		ENDCG
@@ -66,35 +67,19 @@
 
 			half4 frag(v2f i) : COLOR
 			{
-				return _OutlineColor;
-			}
+				half test = tex2D(_DissolveTex,i.uv_DissolveTex).rgb -_DissolveSize;
+				clip(test);
+				
+
+				if(test < _DissolveEdge && _DissolveSize > 0 && _DissolveSize < 1 ) 
+				{
+				return  _DissolveColor;
+				}
+					return _OutlineColor;
+				}
 			ENDCG
 		}
 
-		Pass // Normal render
-		{
-			ZWrite On
-
-			Material
-			{
-				Diffuse[_Color]
-				Ambient[_Color]
-			}
-
-			Lighting On 
-
-			SetTexture[_MainTex]
-			{
-				ConstantColor[_Color]
-			}
-
-			SetTexture[_MainTex]
-			{
-				Combine previous * primary DOUBLE
-			}
-		}
-	
-		
 		CGPROGRAM
 		// Physically based Standard lighting model, and enable shadows on all light types
 		#pragma surface surf Standard fullforwardshadows
@@ -117,8 +102,7 @@
 		float _DissolveSize;
 		float4 _DissolveColor;*/
 
-		half _Glossiness;
-		half _Metallic;
+	
 		fixed4 _Color;
 		
 
