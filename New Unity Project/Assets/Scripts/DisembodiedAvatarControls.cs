@@ -21,7 +21,7 @@ public class DisembodiedAvatarControls : MonoBehaviour
     EyeAndHeadAnimator eyeModel;
     LookTargetController lookTargetController;
 
-    enum EyeGazeModel { Static, Modelled, Eyetracking, Hmd };
+    enum EyeGazeModel { Hmd, Static, Modelled, Eyetracking };
 
     public void LocalIKSetup()
     {
@@ -41,7 +41,7 @@ public class DisembodiedAvatarControls : MonoBehaviour
         lookTargetController = GetComponent<LookTargetController>();
         if (lookTargetController != null)
         {
-            lookTargetController.pointsOfInterest = new Transform[1];
+            lookTargetController.pointsOfInterest = new Transform[2];
             TaskContext.singleton.lookTargetController = this.lookTargetController;
         }
         else
@@ -52,37 +52,68 @@ public class DisembodiedAvatarControls : MonoBehaviour
         //For main experiment!!
         //        eyeGazeModel = (EyeGazeModel)CalibrationContext.singleton.eyeModel;
         //Main experiment end
+    }
 
-        //For prelim experiment!!
-        if (CalibrationContext.singleton.taskCondition < 2)
+    public void SetEyeModel()
+    {
+        int role;
+        if (isLocalPlayer)
         {
-            eyeGazeModel = EyeGazeModel.Eyetracking;
+            role = CalibrationContext.singleton.role;
         }
         else
         {
-            eyeGazeModel = EyeGazeModel.Hmd;
+            if (CalibrationContext.singleton.role == 0)
+            {
+                role = 1;
+            }
+            else
+            {
+                role = 0;
+            }
         }
-        //Prelim experiment end
+
+        if (role == 1) //Fixer
+        {
+            Debug.Log("Setting eyeGazeModel...");
+            eyeGazeModel = (EyeGazeModel)TaskContext.singleton.taskCondition;
+            Debug.Log("Eyegazemodel now: " + eyeGazeModel + ", in ints: " + TaskContext.singleton.taskCondition);
+            /*   if (CalibrationContext.singleton.taskCondition < 2)
+               {
+                   eyeGazeModel = EyeGazeModel.Eyetracking;
+               }
+               else
+               {
+                   eyeGazeModel = EyeGazeModel.Hmd;
+               }*/
+        }
+        else if (role == 0)
+        { //Fetcher
+            eyeGazeModel = EyeGazeModel.Static;
+        }
+
 
 
         if (eyeGazeModel == EyeGazeModel.Eyetracking)
         {
-            lookAtTarget = headTarget.gameObject.transform.Find("GazeDirection").GetComponent<GazeDirection>().calculatedLookAt;
+            if (headTarget != null) lookAtTarget = headTarget.gameObject.transform.Find("GazeDirection").GetComponent<GazeDirection>().calculatedLookAt;
         }
         else
         {
             lookAtTarget = null;
         }
-        if (eyeGazeModel == EyeGazeModel.Modelled)
+        if (eyeGazeModel == EyeGazeModel.Modelled && isLocalPlayer)
         {
             eyeModel = GetComponent<EyeAndHeadAnimator>();
             eyeModel.enabled = true;
+            TaskContext.singleton.OnWindowOpen.AddListener(SetOtherPlayerForEyeModel);
         }
         else
         {
             eyeModel = GetComponent<EyeAndHeadAnimator>();
             eyeModel.enabled = false;
         }
+
         if (eyeGazeModel == EyeGazeModel.Hmd)
         {
             hmdObject.SetActive(true);
@@ -91,7 +122,11 @@ public class DisembodiedAvatarControls : MonoBehaviour
         {
             hmdObject.SetActive(false);
         }
+    }
 
+    void SetOtherPlayerForEyeModel()
+    {
+        if (lookTargetController != null) lookTargetController.thirdPersonPlayerEyeCenter = GameObject.Find("Player(Clone)").GetComponent<DisembodiedAvatarScaling>().headContainer;
     }
 
     public void ResetTorsoPosition()
@@ -117,7 +152,7 @@ public class DisembodiedAvatarControls : MonoBehaviour
                     lookAtPos.position = headPos.position + headPos.forward * 10;
                     break;
                 case (EyeGazeModel.Modelled):
-
+                    lookAtPos.position = eyeModel.lookAtPosition;
                     break;
                 case (EyeGazeModel.Eyetracking):
                     lookAtPos.position = lookAtTarget.position;
@@ -136,8 +171,10 @@ public class DisembodiedAvatarControls : MonoBehaviour
         leftHand.rotation = leftHandPos.rotation;
         rightHand.position = rightHandPos.position;
         rightHand.rotation = rightHandPos.rotation;
+
         leftEye.LookAt(lookAtPos);
         rightEye.LookAt(lookAtPos);
+
 
         //Torso Movement
         int upSideDown = 1;

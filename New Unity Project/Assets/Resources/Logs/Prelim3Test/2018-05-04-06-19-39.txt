@@ -1,0 +1,40 @@
+Scene: MainSceneVR
+Role: Fixer
+
+Condition: 0, Errors: 3, Time stared at a face: 6.313464, Time taken: 150.07, Average FPS: 88.47087
+
+Condition: 1, Errors: 0, Time stared at a face: 0.5474389, Time taken: 93.13, Average FPS: 88.69374
+
+Condition: 2, Errors: 4, Time stared at a face: 3.878752, Time taken: 150.76, Average FPS: 88.9064
+
+Condition: 3, Errors: 2, Time stared at a face: 3.988696, Time taken: 127.32, Average FPS: 89.00433
+
+
+
+Condition: 0, question: 0, answer: 1
+Condition: 0, question: 1, answer: 1
+Condition: 0, question: 2, answer: 1
+Condition: 0, question: 3, answer: 1
+Condition: 0, question: 4, answer: 1
+Condition: 0, question: 5, answer: 1
+
+Condition: 1, question: 0, answer: 1
+Condition: 1, question: 1, answer: 1
+Condition: 1, question: 2, answer: 1
+Condition: 1, question: 3, answer: 1
+Condition: 1, question: 4, answer: 1
+Condition: 1, question: 5, answer: 1
+
+Condition: 2, question: 0, answer: 1
+Condition: 2, question: 1, answer: 1
+Condition: 2, question: 2, answer: 1
+Condition: 2, question: 3, answer: 1
+Condition: 2, question: 4, answer: 1
+Condition: 2, question: 5, answer: 1
+
+Condition: 3, question: 0, answer: 1
+Condition: 3, question: 1, answer: 1
+Condition: 3, question: 2, answer: 1
+Condition: 3, question: 3, answer: 1
+Condition: 3, question: 4, answer: 1
+Condition: 3, question: 5, answer: 1

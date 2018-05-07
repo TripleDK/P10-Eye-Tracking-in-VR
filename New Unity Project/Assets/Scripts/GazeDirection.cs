@@ -114,7 +114,7 @@ public class GazeDirection : MonoBehaviour
             if (hit.collider == null) { calculatedLookAt.position = transform.position + averageDir * markerDistance; }
             else if (hit.collider.gameObject.tag == "PlayerHead")
             {
-                Debug.Log("I see you!");
+                //      Debug.Log("I see you!");
                 TaskContext.singleton.timeGazeAtFace += Time.deltaTime;
             }
             else if (hit.collider.gameObject.tag == "TV")

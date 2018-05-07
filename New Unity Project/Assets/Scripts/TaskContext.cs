@@ -18,12 +18,17 @@ public class TaskContext : NetworkBehaviour
     public float timeGazeAtFace = 0;
     [SyncVar]
     public float highScoreTime = 0;
+    [SyncVar]
+    public int taskCondition = -1;
     public GameObject previewObject;
     public List<GameObject> objects = new List<GameObject>();
     public Transform realEyeTarget;
     public LookTargetController lookTargetController;
+    public TerminatorVision terminatorVision;
+    [HideInInspector] public string likertAnswers;
 
     [SerializeField] List<Transform> spawnPos = new List<Transform>();
+    [SerializeField] int numOfObjects = 5;
     [SerializeField] float previewRotationSpeed = 180f;
     [SerializeField] TextMeshPro nameField;
     [SerializeField] TextMeshPro debugNameField;
@@ -35,14 +40,14 @@ public class TaskContext : NetworkBehaviour
     List<GameObject> spawnedObjects = new List<GameObject>();
     float averageFPS;
 
-
+    public GameObject objectToFind = null;
     [SerializeField] SyncListInt SyncListShuffledObjects = new SyncListInt();
     [SyncVar] public string previewObjectName = "Namerino";
-    float timeStart;
-    List<int> conditionsCompleted = new List<int>();
+    [SyncVar] public float timeStart;
+    public SyncListInt conditionsCompleted = new SyncListInt();
     string data = "";
 
-
+    public UnityEvent OnWindowOpen = new UnityEvent();
     UnityEvent OnHasAuthority = new UnityEvent();
 
     void Awake()
@@ -77,7 +82,18 @@ public class TaskContext : NetworkBehaviour
     [Server]
     void CmdSetup()
     {
-        Debug.Log("Starting game!");
+        string conditionsCompletedString = "";
+        foreach (int cond in conditionsCompleted)
+        {
+            conditionsCompletedString += cond.ToString("0") + " ";
+        }
+        Debug.Log("Starting game! Current condition: " + TaskContext.singleton.taskCondition + ", Conditions completed: " + conditionsCompletedString);
+        if (conditionsCompleted.Count >= 4)
+        {
+            RpcWin();
+            return;
+        }
+
         SyncListShuffledObjects.Clear();
         timeStart = Time.time;
         int objectCount = objects.Count;
@@ -106,60 +122,60 @@ public class TaskContext : NetworkBehaviour
             NetworkServer.SpawnWithClientAuthority(go, playerId.connectionToClient);
             spawnedObjects.Add(go);
         }
+        RpcOpenWindow();
         CmdNextObject();
     }
 
     [ClientRpc]
     void RpcOpenWindow()
     {
+
         AudioSource.PlayClipAtPoint(windowSound, windowAnimator[0].transform.position);
         windowAnimator[0].SetTrigger("Open");
         windowAnimator[1].SetTrigger("Open");
+        OnWindowOpen.Invoke();
+
+    }
+
+    [ClientRpc]
+    void RpcCloseWindow()
+    {
+        windowAnimator[0].SetTrigger("Close");
+        windowAnimator[1].SetTrigger("Close");
     }
 
     [Command]
     public void CmdNextObject()
     {
-        if (SyncListShuffledObjects.Count == 0)
+        if (objects.Count - SyncListShuffledObjects.Count >= numOfObjects)
         {
-            conditionsCompleted.Add(CalibrationContext.singleton.eyeModel);
-            if (conditionsCompleted.Count == 4)
+            conditionsCompleted.Add(TaskContext.singleton.taskCondition);
+
+            /*      if (conditionsCompleted.Count == 4)
+                  {
+                      RpcWin();
+                  }
+                  else
+                  {*/
+
+            int newCondition = UnityEngine.Random.Range(0, 4);
+            if (conditionsCompleted.Count < 4)
             {
-                RpcWin();
-            }
-            else
-            {
-                if (File.Exists("Assets/Resources/Logs/Prelim3Test/Highscores.txt"))
-                {
-                    File.AppendAllText("Assets/Resources/Logs/Prelim3Test/Averages.txt", "Condition: " + CalibrationContext.singleton.taskCondition + ", Time: " + ((Time.time - timeStart) + errorGrabs * 10).ToString("0.000") + "\n");
-                }
-                else
-                {
-                    File.WriteAllText("Assets/Resources/Logs/AccuracyTest/Averages.txt", "High scores: \n" + "Condition: " + CalibrationContext.singleton.taskCondition + ", Time: " + ((Time.time - timeStart) + errorGrabs * 10).ToString("0.000") + "\n");
-                }
-                data += "\nCondition: " + CalibrationContext.singleton.taskCondition + "\nErrors: " + errorGrabs.ToString("0") + "\nTime stared at a face: " + timeGazeAtFace +
-                           "\nTime taken: " + (Time.time - timeStart).ToString("0.00") + "\nAverage FPS: " + (Time.frameCount / Time.time);
-
-
-
-                int newCondition = UnityEngine.Random.Range(0, 4);
                 while (conditionsCompleted.Contains(newCondition))
                 {
                     newCondition++;
                     if (newCondition > 3) newCondition = 0;
                 }
-
-
-                //Prelim experiment only:
-                CalibrationContext.singleton.taskCondition = newCondition;
-
-                //Main experiment only:
-                //  CalibrationContext.singleton.eyeModel = newCondition;
-
-                fetcherTutDone = false;
-                fixerTutDone = false;
-                CalibrationContext.singleton.ResetToMirror();
             }
+            foreach (GameObject ob in spawnedObjects)
+            {
+                NetworkServer.Destroy(ob);
+            }
+            spawnedObjects.Clear();
+
+            RpcConditionDone(newCondition, (Time.time - timeStart));
+            RpcCloseWindow();
+            //  }
             return;
         }
         GameObject tempObject = previewObject;
@@ -168,18 +184,67 @@ public class TaskContext : NetworkBehaviour
         previewObjectName = previewObject.name;
         NetworkServer.Spawn(previewObject);
         NetworkServer.Destroy(tempObject);
+        objectToFind = spawnedObjects[0];
+        //        Debug.Log("Objects left: " + (SyncListShuffledObjects.Count - objects.Count + numOfObjects) + ", new object: " + previewObject.name);
         SyncListShuffledObjects.Remove(SyncListShuffledObjects[0]);
+        spawnedObjects.Remove(spawnedObjects[0]);
         previewObject.name = previewObject.name.Replace("(Clone)", string.Empty);
-        lookTargetController.pointsOfInterest[0] = spawnedObjects[0].transform; //Array index out of range!!
-        RpcNameChange(previewObject.name);
-        spawnedObjects.RemoveAt(0);
+
+        RpcNameChange(previewObject.name, objectToFind.GetComponent<NetworkIdentity>());
+
     }
 
 
     [ClientRpc]
-    void RpcNameChange(string name)
+    void RpcConditionDone(int value, float timeTaken)
     {
-        Debug.Log("Changing name!");
+        Debug.Log("One condition is done!! Good job!");
+        CalibrationContext.singleton.likertManager.gameObject.SetActive(true);
+        CalibrationContext.singleton.likertManager.Initialize(TaskContext.singleton.taskCondition);
+        if (File.Exists("Assets/Resources/Logs/Prelim3Test/Highscores.txt"))
+        {
+            File.AppendAllText("Assets/Resources/Logs/Prelim3Test/Highscores.txt", "Condition: " + TaskContext.singleton.taskCondition + ", Time: " + (timeTaken + errorGrabs * 10).ToString("0.000") + "\n");
+        }
+        else
+        {
+            File.WriteAllText("Assets/Resources/Logs/Prelim3Test/Highscores.txt", "High scores: \n" + "Condition: " + TaskContext.singleton.taskCondition + ", Time: " + (timeTaken + errorGrabs * 10).ToString("0.000") + "\n");
+        }
+        data += "\n\nCondition: " + TaskContext.singleton.taskCondition + ", Errors: " + errorGrabs.ToString("0") + ", Time stared at a face: " + timeGazeAtFace +
+                   ", Time taken: " + timeTaken.ToString("0.00") + ", Average FPS: " + (Time.frameCount / Time.realtimeSinceStartup);
+
+
+
+
+
+
+        //Prelim experiment only:
+        CalibrationContext.singleton.taskCondition = value;
+        TaskContext.singleton.taskCondition = value;
+
+        //Main experiment only:
+        //  CalibrationContext.singleton.eyeModel = value;
+
+        CalibrationContext.singleton.ResetToMirror();
+        AudioSource.PlayClipAtPoint(winSound, Camera.main.transform.position);
+        foreach (DisembodiedAvatarControls avatarControls in FindObjectsOfType<DisembodiedAvatarControls>())
+        {
+            avatarControls.SetEyeModel();
+        }
+
+        errorGrabs = 0;
+        timeGazeAtFace = 0;
+        fetcherTutDone = false;
+        fixerTutDone = false;
+    }
+
+    [ClientRpc]
+    void RpcNameChange(string name, NetworkIdentity target)
+    {
+        //        Debug.Log("Changing name: " + name + ", targetName: " + target.name, target);
+        objectToFind = target.gameObject;
+        lookTargetController.pointsOfInterest[0] = target.transform;
+        lookTargetController.pointsOfInterest[1] = target.transform;
+        terminatorVision.target = target.transform;
         nameField.text = name;
         debugNameField.text = name;
     }
@@ -192,16 +257,17 @@ public class TaskContext : NetworkBehaviour
     [ClientRpc]
     void RpcWin()
     {
-        nameField.text = "You did it! gz mang";
+        nameField.text = "Thank you for participating!";
         Debug.Log("Chicken dinner!");
         AudioSource.PlayClipAtPoint(winSound, transform.position);
         string role = CalibrationContext.singleton.role == 0 ? "Fetcher" : "Fixer";
-        File.WriteAllText("Assets/Resources/Logs/" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".txt",
-            "Scene: " + SceneManager.GetActiveScene().name + "\nRole: " + role + data);
-        File.AppendAllText("Assets/Resources/Logs/Prelim3Test/Averages.txt", "Condition: " + CalibrationContext.singleton.taskCondition + ", Time: " + ((Time.time - timeStart) + errorGrabs * 10).ToString("0.000") + "\n\n");
+        File.WriteAllText("Assets/Resources/Logs/Prelim3Test/" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".txt",
+            "Scene: " + SceneManager.GetActiveScene().name + "\nRole: " + role + data + "\n\n" + likertAnswers);
+        File.AppendAllText("Assets/Resources/Logs/Prelim3Test/Highscores.txt", "\n\n");
 
     }
 
+    #region FetcherTutDone
     public void FetcherTutDone()
     {
         OnHasAuthority.AddListener(FetcherTutDoneCall);
@@ -216,12 +282,8 @@ public class TaskContext : NetworkBehaviour
     [Command]
     void CmdFetcherTutDone()
     {
-        Debug.Log("Fetcher tut is done!");
         fetcherTutDone = true;
-        if (fixerTutDone)
-        {
-            CmdSetup();
-        }
+
         RpcFetcherTutDone();
     }
 
@@ -235,12 +297,19 @@ public class TaskContext : NetworkBehaviour
             CmdSetup();
         }
     }
+    #endregion
 
 
+    #region FixerTutDoneRegion
     public void FixerTutDone()
     {
-        OnHasAuthority.AddListener(CmdFixerTutDone);
+        OnHasAuthority.AddListener(FixerTutDoneCall);
         StartCoroutine(WaitForAuthority());
+    }
+
+    void FixerTutDoneCall()
+    {
+        CmdFixerTutDone();
     }
 
     [Command]
@@ -259,17 +328,39 @@ public class TaskContext : NetworkBehaviour
             CmdSetup();
         }
     }
+    #endregion
+
+
+
+    public void SetTaskCondition()
+    {
+        if (isServer)
+        {
+            Debug.Log("You decide taskcondition!");
+            CmdSetTaskCondition();
+        }
+        else
+        {
+            Debug.Log("You are not worthy!");
+        }
+    }
+
+    [Command]
+    void CmdSetTaskCondition()
+    {
+        taskCondition = CalibrationContext.singleton.taskCondition;
+    }
 
     IEnumerator WaitForAuthority()
     {
-        Debug.Log("Trying to get auth over taskcontext! " + Time.time);
+        //    Debug.Log("Trying to get auth over taskcontext! " + Time.time);
         NetworkIdentity playerId = GameObject.FindGameObjectWithTag("LocalPlayer").GetComponent<NetworkIdentity>();
         playerId.GetComponent<Player>().CmdSetAuth(netId, playerId);
         while (!hasAuthority)
         {
             yield return null;
         }
-        Debug.Log("Got authority! " + Time.time);
+        //    Debug.Log("Got authority! " + Time.time);
         OnHasAuthority.Invoke();
         OnHasAuthority.RemoveAllListeners();
     }

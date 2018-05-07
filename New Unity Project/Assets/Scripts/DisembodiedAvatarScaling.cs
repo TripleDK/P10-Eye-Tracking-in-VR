@@ -10,6 +10,8 @@ public class DisembodiedAvatarScaling : NetworkBehaviour
     public Transform lHandContainer;
     public Transform torsoContainer;
     public Transform headContainer;
+    public Transform lEyeContainer;
+    public Transform rEyeContainer;
     [SerializeField] bool requireCalibration = true;
 
     private Transform leftController, rightController;
@@ -70,12 +72,14 @@ public class DisembodiedAvatarScaling : NetworkBehaviour
                 disembodiedControls.LocalIKSetup();
                 Resize();
                 gameObject.tag = "LocalPlayer";
+                gameObject.name = "Local Player";
             }
         }
         else
         {
             PupilTools.OnCalibrationEnded += disembodiedControls.LocalIKSetup;
         }
+        disembodiedControls.SetEyeModel();
     }
 
 

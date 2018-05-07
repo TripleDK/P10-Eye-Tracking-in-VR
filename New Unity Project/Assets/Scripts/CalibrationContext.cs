@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using RealisticEyeMovements;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -13,8 +14,9 @@ public class CalibrationContext : MonoBehaviour
     public int style = 1; //0 = Realistic, 1 = Disembodied cartoon
     public int role = 0; //0 = Fetcher, 1 = Fixer
     public int eyeModel = 0; //0 = static, 1 = Hmd, 2 = modelled, 3 = eye tracking
-    public int taskCondition = 0; //0 = Use monitor, 1 = Use terminator vision, 2 = monitor +hmd, 3 = terminator + hmd
+    public int taskCondition = 0; //0 = static, 1 = Hmd, 2 = modelled, 3 = eye tracking
     public int calibrationProgress = 0;
+    public LikertManager likertManager;
 
     [SerializeField] PupilManager pupilManager;
     [SerializeField] NetworkManager networkManager;
@@ -52,7 +54,7 @@ public class CalibrationContext : MonoBehaviour
         }
         startPos[0] = GameObject.Find("Player1StartPos").transform;
         startPos[1] = GameObject.Find("Player2StartPos").transform;
-
+        taskCondition = Random.Range(0, 4);
     }
 
     void OnDrawGizmos()
@@ -146,26 +148,26 @@ public class CalibrationContext : MonoBehaviour
             }
 
             //Only for prelim!!!
-            if (GUI.Button(new Rect(10, 160, 100, 30), "Use monitor (0)"))
+            if (GUI.Button(new Rect(10, 160, 100, 30), "Hmd"))
             {
                 taskCondition = 0;
             }
-            if (GUI.Button(new Rect(120, 160, 100, 30), "Terminator vision (1)"))
+            if (GUI.Button(new Rect(120, 160, 100, 30), "Static"))
             {
                 taskCondition = 1;
             }
-            if (GUI.Button(new Rect(240, 160, 100, 30), "Use monitor + hmd (2)"))
+            if (GUI.Button(new Rect(240, 160, 100, 30), "Modelled"))
             {
                 taskCondition = 2;
             }
-            if (GUI.Button(new Rect(360, 160, 100, 30), "Terminator vision + hmd (3)"))
+            if (GUI.Button(new Rect(360, 160, 100, 30), "Tracked"))
             {
                 taskCondition = 3;
             }
             //Prelim end
 
             if (steamVRActive == false) GUI.color = Color.black; else GUI.color = Color.green;
-            GUI.Label(new Rect(10, 240, 350, 60), "Status:\nGender: " + gender + ", Style: " + style + " Role: " + role + " Eye Models: " + eyeModel + " Hosting: " + networkFunction);
+            GUI.Label(new Rect(10, 240, 350, 60), "Status:\nGender: " + gender + ", Style: " + style + " Role: " + role + " Eye Models: " + eyeModel + " Hosting: " + networkFunction + ", TaskCondition: " + taskCondition);
             if (GUI.Button(new Rect(10, 290, 100, 30), "Ready"))
             {
                 readyUp = true;
@@ -258,11 +260,14 @@ public class CalibrationContext : MonoBehaviour
             default:
                 break;
         }
+        TaskContext.singleton.SetTaskCondition();
+
         leftHand.GetChild(0).gameObject.SetActive(false);
         rightHand.GetChild(0).gameObject.SetActive(false);
         positionalOffset = head.localPosition;
         offsetCenterPosition.localPosition = positionalOffset;
         positionalOffset.y = 0;
+        likertManager.transform.localPosition += positionalOffset;
         StartCoroutine(ChooseRole(role));
         //        roleSelect.SetActive(true);
     }
@@ -272,7 +277,7 @@ public class CalibrationContext : MonoBehaviour
         yield return new WaitForSeconds(1);
         this.role = role;
         cameraRig = GameObject.Find("[CameraRig]").transform;
-
+        Debug.Log("Starting mirrors or Pupil with condition: " + TaskContext.singleton.taskCondition);
         if (role == 1)
         {
             yield return null;
@@ -288,12 +293,14 @@ public class CalibrationContext : MonoBehaviour
         {
             cameraRig.rotation = mirrorPos[role].rotation;
             cameraRig.position = mirrorPos[role].position - mirrorPos[role].rotation * positionalOffset;
+            likertManager.EnableContinueButton();
             StartCoroutine(WaitForMirroring());
         }
         playerTransform.position = cameraRig.position;
     }
     void PupilCalibrateDone()
     {
+        PupilTools.OnCalibrationEnded -= PupilCalibrateDone;
         positionalOffset = head.localPosition;
         offsetCenterPosition.localPosition = positionalOffset;
         positionalOffset.y = 0;
@@ -303,6 +310,7 @@ public class CalibrationContext : MonoBehaviour
         playerTransform.position = cameraRig.position;
 
         blackHole.TakeAuthority();
+        likertManager.EnableContinueButton();
         StartCoroutine(WaitForMirroring());
     }
 
@@ -313,39 +321,47 @@ public class CalibrationContext : MonoBehaviour
         mirrorMovement[role].enabled = true;
         mirrorMovement[role].transformsToMirror.Clear();
         avatarScaling = playerTransform.GetComponent<DisembodiedAvatarScaling>();
-
+        mirrorMovement[role].lookTargetController = playerTransform.GetComponent<DisembodiedAvatarScaling>().disembodiedControls.gameObject.GetComponent<LookTargetController>();
         mirrorMovement[role].transformsToMirror.Add(avatarScaling.lHandContainer);
         mirrorMovement[role].transformsToMirror.Add(avatarScaling.rHandContainer);
         mirrorMovement[role].transformsToMirror.Add(avatarScaling.headContainer);
         mirrorMovement[role].transformsToMirror.Add(avatarScaling.torsoContainer);
+        mirrorMovement[role].transformsToMirror.Add(avatarScaling.lEyeContainer);
+        mirrorMovement[role].transformsToMirror.Add(avatarScaling.rEyeContainer);
         mirrorMovement[role].Intialize();
-        mirrorMovement[role].transform.localPosition = Vector3.zero - mirrorPos[role].rotation * positionalOffset;
-        yield return null;
-        bool waiting = true;
-        while (waiting)
-        {
-            if (Input.GetKeyDown("joystick button 14"))
-            {
-                waiting = false;
-            }
-            if (Input.GetKeyDown("joystick button 15")) //Trigger right
-            {
-                waiting = false;
-            }
-            yield return null;
-        }
+        // mirrorMovement[role].transform.eulerAngles = new Vector3(0, -90, 0);
+        mirrorMovement[role].transform.localPosition = Vector3.zero - mirrorMovement[role].transform.parent.rotation * (new Vector3(positionalOffset.x, 0, -positionalOffset.z));
+    }
+
+    public void EndMirroring()
+    {
         positionalOffset = head.localPosition;
         offsetCenterPosition.localPosition = positionalOffset;
         positionalOffset.y = 0;
         mirrorMovement[role].enabled = false;
-        StartTutorials();
+        cameraRig.rotation = startPos[this.role].rotation;
+        cameraRig.position = startPos[this.role].position - startPos[this.role].rotation * positionalOffset;
+        playerTransform.position = cameraRig.position;
+        if (TaskContext.singleton.conditionsCompleted.Count == 0)
+        {
+            StartTutorials();
+        }
+        else
+        {
+            if (role == 0)
+            {
+                TaskContext.singleton.FetcherTutDone();
+            }
+            else if (role == 1)
+            {
+                TaskContext.singleton.FixerTutDone();
+            }
+        }
     }
 
     void StartTutorials()
     {
-        cameraRig.rotation = startPos[this.role].rotation;
-        cameraRig.position = startPos[this.role].position - startPos[this.role].rotation * positionalOffset;
-        playerTransform.position = cameraRig.position;
+
         if (role == 0)
         {
             fetcherTutorial.StartTutorial();
@@ -358,39 +374,18 @@ public class CalibrationContext : MonoBehaviour
 
     public void ResetToMirror()
     {
+
         StartCoroutine(ResetToMirrorCo());
     }
 
     IEnumerator ResetToMirrorCo()
     {
+        mirrorMovement[role].enabled = true;
         cameraRig.rotation = mirrorPos[role].rotation;
         cameraRig.position = mirrorPos[role].position - mirrorPos[role].rotation * positionalOffset;
         playerTransform.position = cameraRig.position;
         mirrorMovement[role].Intialize();
         avatarScaling.disembodiedControls.LocalIKSetup();
-        bool waiting = true;
-        while (waiting)
-        {
-            if (Input.GetKeyDown("joystick button 14"))
-            {
-                waiting = false;
-            }
-            if (Input.GetKeyDown("joystick button 15")) //Trigger right
-            {
-                waiting = false;
-            }
-            yield return null;
-        }
-        cameraRig.rotation = startPos[this.role].rotation;
-        cameraRig.position = startPos[this.role].position - startPos[this.role].rotation * positionalOffset;
-        playerTransform.position = cameraRig.position;
-        if (role == 0)
-        {
-            TaskContext.singleton.FetcherTutDone();
-        }
-        else if (role == 1)
-        {
-            TaskContext.singleton.FixerTutDone();
-        }
+        yield return null;
     }
 }

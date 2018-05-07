@@ -12,8 +12,8 @@ public class VRButton : NetworkBehaviour
     public Color color;
     public Color selectColor = Color.green;
     public VRGrab[] controllerGrab;
-    [SerializeField] float unSelectedWidth = 1.1f;
-    [SerializeField] float selectedWidth = 1.3f;
+    public float unSelectedWidth = 1.1f;
+    public float selectedWidth = 1.3f;
 
     public enum Controller
     {
