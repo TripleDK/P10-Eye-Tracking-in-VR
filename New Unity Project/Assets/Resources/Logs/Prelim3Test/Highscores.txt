@@ -36,3 +36,9 @@ Condition: 2, Time: 190.761
 Condition: 3, Time: 147.325
 
 
+Condition: 3, Time: 124.890
+Condition: 2, Time: 137.357
+Condition: 1, Time: 194.124
+Condition: 0, Time: 91.086
+
+

@@ -57,7 +57,7 @@ public class DisembodiedAvatarControls : MonoBehaviour
     public void SetEyeModel()
     {
         int role;
-        if (isLocalPlayer)
+        if (isLocalPlayer || GetComponent<MirrorMovement>() != null)
         {
             role = CalibrationContext.singleton.role;
         }
