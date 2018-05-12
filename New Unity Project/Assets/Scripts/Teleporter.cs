@@ -27,6 +27,7 @@ public class Teleporter : NetworkBehaviour
     private ObjectInteractions objectToTeleport = null;
     private Rigidbody objectRigidbody = null;
     Vector3 particleStartScale, receiverStartScale;
+    bool teleporting = false;
 
     public UnityEvent OnAcceptItem = new UnityEvent();
     public UnityEvent OnTeleportItem = new UnityEvent();
@@ -84,8 +85,9 @@ public class Teleporter : NetworkBehaviour
     public void Activate() //Button grants authority before calling this
     {
         Debug.Log("Trying to activate teleporter!");
-        if (objectToTeleport != null)
+        if (objectToTeleport != null && teleporting == false)
         {
+            teleporting = true;
             if (objectToTeleport.gameObject == TaskContext.singleton.objectToFind)
             {
                 CmdActivate(objectToTeleport.gameObject);
@@ -121,6 +123,7 @@ public class Teleporter : NetworkBehaviour
     {
         //     Debug.Log("RPC ACTIVAtea!");
         AudioSource.PlayClipAtPoint(beep, transform.position);
+        teleporting = true;
         Rigidbody teleportRigid = go.GetComponent<Rigidbody>();
         teleportRigid.velocity = Vector3.zero;
         StartCoroutine(TeleportEffect(go));
@@ -171,6 +174,7 @@ public class Teleporter : NetworkBehaviour
             receiverParticles.localScale = receiverStartScale * scaleValue;
             yield return null;
         }
+        teleporting = false;
 
     }
 

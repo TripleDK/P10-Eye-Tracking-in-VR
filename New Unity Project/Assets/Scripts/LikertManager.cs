@@ -13,6 +13,7 @@ public class LikertManager : MonoBehaviour
     [SerializeField] List<string> questions = new List<string>();
 
     int questionIndex = 0;
+    List<int> questionsUsed = new List<int>();
 
     void Awake()
     {
@@ -37,8 +38,9 @@ public class LikertManager : MonoBehaviour
         {
             butt.gameObject.SetActive(true);
         }
-        questionIndex = -1;
-        TaskContext.singleton.likertAnswers += "\n";
+        questionsUsed.Clear();
+        TaskContext.singleton.likertAnswers = new string[6];
+        TaskContext.singleton.likertAnswers[0] = "\n";
         currentCondition = condition;
         NextQuestion();
     }
@@ -51,14 +53,23 @@ public class LikertManager : MonoBehaviour
             Continue(-1);
             return;
         }
-        TaskContext.singleton.likertAnswers += "\nCondition: " + currentCondition + ", question: " + questionIndex + ", answer: " + value;
+        TaskContext.singleton.likertAnswers[questionIndex] = "\nCondition: " + currentCondition + ", question: " + questionIndex + ", answer: " + value;
         NextQuestion();
     }
 
     void NextQuestion()
     {
-        questionIndex++;
-        if (questionIndex >= questions.Count)
+        questionIndex = Random.Range(0, questions.Count);
+        while (questionsUsed.Contains(questionIndex))
+        {
+            questionIndex++;
+            if (questionIndex >= questions.Count)
+            {
+                questionIndex = 0;
+            }
+        }
+        questionsUsed.Add(questionIndex);
+        if (questionsUsed.Count >= questions.Count)
         {
             FinishQuestions();
             return;
@@ -70,6 +81,8 @@ public class LikertManager : MonoBehaviour
     {
         continueButton.gameObject.SetActive(true);
         questionTextField.text = "";
+
+
         foreach (LikertButton butt in buttons)
         {
             butt.gameObject.SetActive(false);

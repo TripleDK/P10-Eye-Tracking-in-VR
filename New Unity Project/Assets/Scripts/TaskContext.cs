@@ -7,6 +7,7 @@ using UnityEngine.Events;
 using TMPro;
 using System.IO;
 using System;
+using System.Linq;
 using RealisticEyeMovements;
 
 public class TaskContext : NetworkBehaviour
@@ -25,7 +26,8 @@ public class TaskContext : NetworkBehaviour
     public Transform realEyeTarget;
     public LookTargetController lookTargetController;
     public TerminatorVision terminatorVision;
-    [HideInInspector] public string likertAnswers;
+    [HideInInspector] public string[] likertAnswers;
+
 
     [SerializeField] List<Transform> spawnPos = new List<Transform>();
     [SerializeField] int numOfObjects = 5;
@@ -46,7 +48,7 @@ public class TaskContext : NetworkBehaviour
     [SyncVar] public float timeStart;
     public SyncListInt conditionsCompleted = new SyncListInt();
     string data = "";
-
+    List<float> highScores = new List<float>();
     public UnityEvent OnWindowOpen = new UnityEvent();
     UnityEvent OnHasAuthority = new UnityEvent();
 
@@ -60,6 +62,8 @@ public class TaskContext : NetworkBehaviour
         {
             Debug.LogWarning("Two TaskContexts in scene!");
         }
+
+
     }
 
     public override void OnStartClient()
@@ -209,6 +213,7 @@ public class TaskContext : NetworkBehaviour
         {
             File.WriteAllText("Assets/Resources/Logs/Prelim3Test/Highscores.txt", "High scores: \n" + "Condition: " + TaskContext.singleton.taskCondition + ", Time: " + (timeTaken + errorGrabs * 10).ToString("0.000") + "\n");
         }
+        highScores.Add((timeTaken + errorGrabs * 10));
         data += "\n\nCondition: " + TaskContext.singleton.taskCondition + ", Errors: " + errorGrabs.ToString("0") + ", Time stared at a face: " + timeGazeAtFace +
                    ", Time taken: " + timeTaken.ToString("0.00") + ", Average FPS: " + (Time.frameCount / Time.realtimeSinceStartup);
 
@@ -260,10 +265,16 @@ public class TaskContext : NetworkBehaviour
         nameField.text = "Thank you for participating!";
         Debug.Log("Chicken dinner!");
         AudioSource.PlayClipAtPoint(winSound, transform.position);
+        string tempLikert = "";
+        foreach (string s in TaskContext.singleton.likertAnswers)
+        {
+            tempLikert += s;
+        }
+
         string role = CalibrationContext.singleton.role == 0 ? "Fetcher" : "Fixer";
         File.WriteAllText("Assets/Resources/Logs/Prelim3Test/" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".txt",
-            "Scene: " + SceneManager.GetActiveScene().name + "\nRole: " + role + data + "\n\n" + likertAnswers);
-        File.AppendAllText("Assets/Resources/Logs/Prelim3Test/Highscores.txt", "\n\n");
+            "Scene: " + SceneManager.GetActiveScene().name + "\nRole: " + role + data + "\n\n" + tempLikert);
+        File.AppendAllText("Assets/Resources/Logs/Prelim3Test/Highscores.txt", "\nAverage: " + highScores.Average().ToString("0.00") + "\n\n");
 
     }
 

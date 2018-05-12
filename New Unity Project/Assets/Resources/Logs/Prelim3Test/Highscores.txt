@@ -42,3 +42,24 @@ Condition: 1, Time: 194.124
 Condition: 0, Time: 91.086
 
 
+Condition: 2, Time: 151.390
+Condition: 0, Time: 66.634
+Condition: 1, Time: 66.335
+Condition: 3, Time: 83.025
+
+Average: 91.85
+
+Condition: 3, Time: 124.012
+Condition: 0, Time: 66.595
+Condition: 2, Time: 76.970
+Condition: 1, Time: 60.993
+
+Average: 82.14
+
+Condition: 1, Time: 211.847
+Condition: 0, Time: 127.524
+Condition: 2, Time: 72.133
+Condition: 3, Time: 102.816
+
+Average: 128.58
+
