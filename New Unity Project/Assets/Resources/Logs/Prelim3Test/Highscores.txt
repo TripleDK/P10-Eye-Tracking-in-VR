@@ -107,3 +107,4 @@ Condition: 0, Time: 63.380
 
 Average: 93.27
 
+Condition: 3, Time: 252.174

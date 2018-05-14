@@ -208,13 +208,13 @@ public class TaskContext : NetworkBehaviour
         Debug.Log("One condition is done!! Good job!");
         CalibrationContext.singleton.likertManager.gameObject.SetActive(true);
         CalibrationContext.singleton.likertManager.Initialize(TaskContext.singleton.taskCondition);
-        if (File.Exists("Assets/Resources/Logs/Prelim3Test/Highscores.txt"))
+        if (File.Exists("Assets/Resources/Logs/MainExperiment/Highscores.txt"))
         {
-            File.AppendAllText("Assets/Resources/Logs/Prelim3Test/Highscores.txt", "Condition: " + TaskContext.singleton.taskCondition + ", Time: " + (timeTaken + errorGrabs * 10).ToString("0.000") + "\n");
+            File.AppendAllText("Assets/Resources/Logs/MainExperiment/Highscores.txt", "Condition: " + TaskContext.singleton.taskCondition + ", Time: " + (timeTaken + errorGrabs * 10).ToString("0.000") + "\n");
         }
         else
         {
-            File.WriteAllText("Assets/Resources/Logs/Prelim3Test/Highscores.txt", "High scores: \n" + "Condition: " + TaskContext.singleton.taskCondition + ", Time: " + (timeTaken + errorGrabs * 10).ToString("0.000") + "\n");
+            File.WriteAllText("Assets/Resources/Logs/MainExperiment/Highscores.txt", "High scores: \n" + "Condition: " + TaskContext.singleton.taskCondition + ", Time: " + (timeTaken + errorGrabs * 10).ToString("0.000") + "\n");
         }
         highScores.Add((timeTaken + errorGrabs * 10));
         data += "\n\nCondition: " + TaskContext.singleton.taskCondition + ", Errors: " + errorGrabs.ToString("0") + ", Time stared at a face: " + timeGazeAtFace +
@@ -269,9 +269,9 @@ public class TaskContext : NetworkBehaviour
 
 
         string role = CalibrationContext.singleton.role == 0 ? "Fetcher" : "Fixer";
-        File.WriteAllText("Assets/Resources/Logs/Prelim3Test/" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + " " + role + ".txt",
+        File.WriteAllText("Assets/Resources/Logs/MainExperiment/" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + " " + role + ".txt",
             "Scene: " + SceneManager.GetActiveScene().name + "\nRole: " + role + data + "\n\n" + allLikertStuff);
-        File.AppendAllText("Assets/Resources/Logs/Prelim3Test/Highscores.txt", "\nAverage: " + highScores.Average().ToString("0.00") + "\n\n");
+        File.AppendAllText("Assets/Resources/Logs/MainExperiment/Highscores.txt", "\nAverage: " + highScores.Average().ToString("0.00") + "\n\n");
 
     }
 
