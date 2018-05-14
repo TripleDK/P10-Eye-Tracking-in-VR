@@ -48,9 +48,12 @@ public class TaskContext : NetworkBehaviour
     [SyncVar] public float timeStart;
     public SyncListInt conditionsCompleted = new SyncListInt();
     string data = "";
+    public string allLikertStuff = "";
     List<float> highScores = new List<float>();
     public UnityEvent OnWindowOpen = new UnityEvent();
     UnityEvent OnHasAuthority = new UnityEvent();
+
+
 
     void Awake()
     {
@@ -220,8 +223,6 @@ public class TaskContext : NetworkBehaviour
 
 
 
-
-
         //Prelim experiment only:
         CalibrationContext.singleton.taskCondition = value;
         TaskContext.singleton.taskCondition = value;
@@ -265,15 +266,11 @@ public class TaskContext : NetworkBehaviour
         nameField.text = "Thank you for participating!";
         Debug.Log("Chicken dinner!");
         AudioSource.PlayClipAtPoint(winSound, transform.position);
-        string tempLikert = "";
-        foreach (string s in TaskContext.singleton.likertAnswers)
-        {
-            tempLikert += s;
-        }
+
 
         string role = CalibrationContext.singleton.role == 0 ? "Fetcher" : "Fixer";
-        File.WriteAllText("Assets/Resources/Logs/Prelim3Test/" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".txt",
-            "Scene: " + SceneManager.GetActiveScene().name + "\nRole: " + role + data + "\n\n" + tempLikert);
+        File.WriteAllText("Assets/Resources/Logs/Prelim3Test/" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + " " + role + ".txt",
+            "Scene: " + SceneManager.GetActiveScene().name + "\nRole: " + role + data + "\n\n" + allLikertStuff);
         File.AppendAllText("Assets/Resources/Logs/Prelim3Test/Highscores.txt", "\nAverage: " + highScores.Average().ToString("0.00") + "\n\n");
 
     }

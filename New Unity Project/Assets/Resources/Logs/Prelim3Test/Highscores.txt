@@ -63,3 +63,47 @@ Condition: 3, Time: 102.816
 
 Average: 128.58
 
+Condition: 0, Time: 46.435
+Condition: 1, Time: 62.784
+Condition: 2, Time: 59.776
+Condition: 3, Time: 119.794
+
+Average: 72.20
+
+Condition: 3, Time: 71.028
+Condition: 0, Time: 58.328
+Condition: 1, Time: 243.520
+Condition: 2, Time: 137.560
+
+Average: 127.61
+
+Condition: 0, Time: 88.678
+Condition: 2, Time: 222.726
+Condition: 1, Time: 138.153
+Condition: 3, Time: 146.737
+
+Average: 149.07
+
+Prelim 4:
+
+Condition: 0, Time: 131.876
+Condition: 3, Time: 62.218
+Condition: 1, Time: 63.813
+Condition: 2, Time: 64.828
+
+Average: 80.68
+
+Condition: 3, Time: 268.273
+Condition: 1, Time: 76.973
+Condition: 0, Time: 52.475
+Condition: 2, Time: 80.762
+
+Average: 119.62
+
+Condition: 2, Time: 169.583
+Condition: 1, Time: 79.272
+Condition: 3, Time: 60.844
+Condition: 0, Time: 63.380
+
+Average: 93.27
+
