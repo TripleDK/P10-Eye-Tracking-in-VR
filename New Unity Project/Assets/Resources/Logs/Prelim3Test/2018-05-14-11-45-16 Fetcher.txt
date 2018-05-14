@@ -1,0 +1,40 @@
+Scene: MainSceneVR
+Role: Fetcher
+
+Condition: 2, Errors: 0, Time stared at a face: 2.115181, Time taken: 169.58, Average FPS: 88.34697
+
+Condition: 1, Errors: 0, Time stared at a face: 0.2020162, Time taken: 79.27, Average FPS: 88.62477
+
+Condition: 3, Errors: 0, Time stared at a face: 0.2207901, Time taken: 60.84, Average FPS: 88.73343
+
+Condition: 0, Errors: 0, Time stared at a face: 0.1338971, Time taken: 63.38, Average FPS: 88.818
+
+
+
+Condition: 2, question: 0, answer: 3
+Condition: 2, question: 1, answer: 5
+Condition: 2, question: 2, answer: 5
+Condition: 2, question: 3, answer: 4
+Condition: 2, question: 4, answer: 4
+Condition: 2, question: 5, answer: 5
+
+Condition: 1, question: 0, answer: 3
+Condition: 1, question: 1, answer: 5
+Condition: 1, question: 2, answer: 5
+Condition: 1, question: 3, answer: 4
+Condition: 1, question: 4, answer: 2
+Condition: 1, question: 5, answer: 5
+
+Condition: 3, question: 0, answer: 3
+Condition: 3, question: 1, answer: 4
+Condition: 3, question: 2, answer: 5
+Condition: 3, question: 3, answer: 4
+Condition: 3, question: 4, answer: 4
+Condition: 3, question: 5, answer: 5
+
+Condition: 0, question: 0, answer: 3
+Condition: 0, question: 1, answer: 5
+Condition: 0, question: 2, answer: 5
+Condition: 0, question: 3, answer: 4
+Condition: 0, question: 4, answer: 2
+Condition: 0, question: 5, answer: 5

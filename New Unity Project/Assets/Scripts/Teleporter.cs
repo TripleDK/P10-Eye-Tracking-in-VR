@@ -87,9 +87,9 @@ public class Teleporter : NetworkBehaviour
         Debug.Log("Trying to activate teleporter!");
         if (objectToTeleport != null && teleporting == false)
         {
-            teleporting = true;
             if (objectToTeleport.gameObject == TaskContext.singleton.objectToFind)
             {
+                teleporting = true;
                 CmdActivate(objectToTeleport.gameObject);
                 //  objectToTeleport.startPos = teleportTarget.position;
             }
