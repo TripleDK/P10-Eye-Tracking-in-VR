@@ -1,0 +1,19 @@
+Scene: MainSceneVR
+Role: Fixer
+
+Condition: 3, Errors: 0, Time stared at a face: 1.643126, Time taken: 71.03, Average FPS: 88.51517
+
+Condition: 0, Errors: 0, Time stared at a face: 2.090504, Time taken: 58.33, Average FPS: 88.74401
+
+Condition: 1, Errors: 1, Time stared at a face: 7.503112, Time taken: 233.52, Average FPS: 88.313
+
+Condition: 2, Errors: 5, Time stared at a face: 2.269943, Time taken: 87.56, Average FPS: 88.47533
+
+
+
+
+
+
+
+
+

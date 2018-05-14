@@ -53,6 +53,8 @@ public class TaskContext : NetworkBehaviour
     public UnityEvent OnWindowOpen = new UnityEvent();
     UnityEvent OnHasAuthority = new UnityEvent();
 
+
+
     void Awake()
     {
         if (singleton == null)
@@ -217,8 +219,6 @@ public class TaskContext : NetworkBehaviour
         highScores.Add((timeTaken + errorGrabs * 10));
         data += "\n\nCondition: " + TaskContext.singleton.taskCondition + ", Errors: " + errorGrabs.ToString("0") + ", Time stared at a face: " + timeGazeAtFace +
                    ", Time taken: " + timeTaken.ToString("0.00") + ", Average FPS: " + (Time.frameCount / Time.realtimeSinceStartup);
-
-
 
 
 

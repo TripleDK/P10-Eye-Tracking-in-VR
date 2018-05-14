@@ -81,7 +81,6 @@ public class LikertManager : MonoBehaviour
     {
         continueButton.gameObject.SetActive(true);
         questionTextField.text = "";
-
         foreach (string s in TaskContext.singleton.likertAnswers)
         {
             TaskContext.singleton.allLikertStuff += s;
