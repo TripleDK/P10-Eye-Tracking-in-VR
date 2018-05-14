@@ -39,7 +39,7 @@ public class LikertManager : MonoBehaviour
             butt.gameObject.SetActive(true);
         }
         questionsUsed.Clear();
-        TaskContext.singleton.likertAnswers = new string[6];
+        TaskContext.singleton.likertAnswers = new string[questions.Count + 1];
         TaskContext.singleton.likertAnswers[0] = "\n";
         currentCondition = condition;
         NextQuestion();
@@ -53,12 +53,17 @@ public class LikertManager : MonoBehaviour
             Continue(-1);
             return;
         }
-        TaskContext.singleton.likertAnswers[questionIndex] = "\nCondition: " + currentCondition + ", question: " + questionIndex + ", answer: " + value;
+        TaskContext.singleton.likertAnswers[questionIndex + 1] = "\nCondition: " + currentCondition + ", question: " + questionIndex + ", answer: " + value;
         NextQuestion();
     }
 
     void NextQuestion()
     {
+        if (questionsUsed.Count >= questions.Count)
+        {
+            FinishQuestions();
+            return;
+        }
         questionIndex = Random.Range(0, questions.Count);
         while (questionsUsed.Contains(questionIndex))
         {
@@ -69,11 +74,6 @@ public class LikertManager : MonoBehaviour
             }
         }
         questionsUsed.Add(questionIndex);
-        if (questionsUsed.Count >= questions.Count)
-        {
-            FinishQuestions();
-            return;
-        }
         questionTextField.text = questions[questionIndex];
     }
 
@@ -82,6 +82,10 @@ public class LikertManager : MonoBehaviour
         continueButton.gameObject.SetActive(true);
         questionTextField.text = "";
 
+        foreach (string s in TaskContext.singleton.likertAnswers)
+        {
+            TaskContext.singleton.allLikertStuff += s;
+        }
 
         foreach (LikertButton butt in buttons)
         {
