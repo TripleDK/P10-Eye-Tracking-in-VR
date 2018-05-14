@@ -1,0 +1,8 @@
+High scores: 
+Condition: 1, Time: 180.638
+Condition: 2, Time: 136.445
+Condition: 3, Time: 71.826
+Condition: 0, Time: 64.012
+
+Average: 113.23
+
