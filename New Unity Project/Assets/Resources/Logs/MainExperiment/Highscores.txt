@@ -1,0 +1,78 @@
+High scores: 
+Condition: 1, Time: 180.638
+Condition: 2, Time: 136.445
+Condition: 3, Time: 71.826
+Condition: 0, Time: 64.012
+
+Average: 113.23
+
+Condition: 1, Time: 221.970
+Condition: 3, Time: 129.414
+Condition: 0, Time: 155.106
+Condition: 2, Time: 91.353
+
+Average: 149.46
+
+Condition: 2, Time: 111.864
+Condition: 3, Time: 84.761
+Condition: 0, Time: 70.056
+Condition: 1, Time: 77.473
+
+Average: 86.04
+
+Condition: 0, Time: 159.261
+Condition: 2, Time: 100.046
+Condition: 3, Time: 72.525
+Condition: 1, Time: 74.036
+
+Average: 101.47
+
+Condition: 3, Time: 112.608
+Condition: 1, Time: 62.226
+Condition: 2, Time: 61.506
+Condition: 0, Time: 63.903
+
+Average: 75.06
+
+Condition: 1, Time: 158.853
+Condition: 2, Time: 83.496
+Condition: 3, Time: 56.877
+Condition: 0, Time: 57.807
+
+Average: 89.26
+
+Condition: 3, Time: 170.965
+Condition: 2, Time: 75.382
+Condition: 0, Time: 92.321
+Condition: 1, Time: 60.418
+
+Average: 99.77
+
+Condition: 0, Time: 128.430
+Condition: 1, Time: 125.734
+Condition: 2, Time: 109.255
+Condition: 3, Time: 79.279
+
+Average: 110.67
+
+Condition: 1, Time: 289.098
+Condition: 2, Time: 125.954
+Condition: 0, Time: 120.789
+Condition: 3, Time: 103.546
+
+Average: 159.85
+
+Condition: 1, Time: 103.737
+Condition: 2, Time: 65.926
+Condition: 3, Time: 57.981
+Condition: 0, Time: 49.757
+
+Average: 69.35
+
+Condition: 2, Time: 140.793
+Condition: 0, Time: 77.945
+Condition: 1, Time: 57.553
+Condition: 3, Time: 52.100
+
+Average: 82.10
+

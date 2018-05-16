@@ -45,8 +45,15 @@ public class LikertManager : MonoBehaviour
         NextQuestion();
     }
 
+    float gracePeriod = 1f;
+    float lastReplyTime = 0.0f;
+
     public void Reply(int value)
     {
+        if (Time.time - lastReplyTime < gracePeriod)
+        {
+            return;
+        }
         //        Debug.Log("Likert reply with value: " + value);
         if (value == -1)
         {
@@ -55,6 +62,7 @@ public class LikertManager : MonoBehaviour
         }
         TaskContext.singleton.likertAnswers[questionIndex + 1] = "\nCondition: " + currentCondition + ", question: " + questionIndex + ", answer: " + value;
         NextQuestion();
+        lastReplyTime = Time.time;
     }
 
     void NextQuestion()
@@ -77,9 +85,10 @@ public class LikertManager : MonoBehaviour
         questionTextField.text = questions[questionIndex];
     }
 
+
     void FinishQuestions()
     {
-        continueButton.gameObject.SetActive(true);
+
         questionTextField.text = "";
         foreach (string s in TaskContext.singleton.likertAnswers)
         {
@@ -90,6 +99,13 @@ public class LikertManager : MonoBehaviour
         {
             butt.gameObject.SetActive(false);
         }
+        StartCoroutine(ContinueDelay());
+    }
+
+    IEnumerator ContinueDelay()
+    {
+        yield return new WaitForSeconds(10);
+        continueButton.gameObject.SetActive(true);
     }
 
     void Continue(int value)
