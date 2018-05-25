@@ -48,6 +48,8 @@ public class DisembodiedAvatarControls : MonoBehaviour
         {
             Debug.Log("No looktarget controller on player!");
         }
+        Debug.Log("Head target now: " + headTarget.name);
+        SetEyeModel();
 
         //For main experiment!!
         //        eyeGazeModel = (EyeGazeModel)CalibrationContext.singleton.eyeModel;
@@ -56,26 +58,35 @@ public class DisembodiedAvatarControls : MonoBehaviour
 
     public void SetEyeModel()
     {
+        Debug.Log("Setting eye model!");
         int role;
         if (isLocalPlayer || GetComponent<MirrorMovement>() != null)
         {
-            role = CalibrationContext.singleton.role;
+            if (CalibrationContext.singleton != null) role = CalibrationContext.singleton.role;
+            else role = 3;
         }
         else
         {
-            if (CalibrationContext.singleton.role == 0)
+            if (CalibrationContext.singleton != null)
             {
-                role = 1;
+                if (CalibrationContext.singleton.role == 0)
+                {
+                    role = 1;
+                }
+                else
+                {
+                    role = 0;
+                }
             }
             else
             {
-                role = 0;
+                role = 1;
             }
         }
 
         if (role == 1) //Fixer
         {
-            Debug.Log("Setting eyeGazeModel...");
+            Debug.Log("Setting eyeGazeModel...", this.gameObject);
             eyeGazeModel = (EyeGazeModel)TaskContext.singleton.taskCondition;
             Debug.Log("Eyegazemodel now: " + eyeGazeModel + ", in ints: " + TaskContext.singleton.taskCondition);
             /*   if (CalibrationContext.singleton.taskCondition < 2)
@@ -96,13 +107,22 @@ public class DisembodiedAvatarControls : MonoBehaviour
 
         if (eyeGazeModel == EyeGazeModel.Eyetracking)
         {
-            if (headTarget != null) lookAtTarget = headTarget.gameObject.transform.Find("GazeDirection").GetComponent<GazeDirection>().calculatedLookAt;
+            if (headTarget != null)
+            {
+                lookAtTarget = headTarget.gameObject.transform.Find("GazeDirection").GetComponent<GazeDirection>().calculatedLookAt;
+                Debug.Log("LookatTarget now : " + lookAtTarget.name);
+            }
+            else
+            {
+
+                Debug.Log("No headtarget?", this.gameObject);
+            }
         }
         else
         {
             lookAtTarget = null;
         }
-        if (eyeGazeModel == EyeGazeModel.Modelled && isLocalPlayer)
+        if (eyeGazeModel == EyeGazeModel.Modelled)// && isLocalPlayer)
         {
             eyeModel = GetComponent<EyeAndHeadAnimator>();
             eyeModel.enabled = true;
