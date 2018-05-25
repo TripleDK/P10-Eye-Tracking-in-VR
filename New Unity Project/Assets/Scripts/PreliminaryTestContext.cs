@@ -30,6 +30,7 @@ public class PreliminaryTestContext : MonoBehaviour
     [SerializeField] AudioClip failSound;
     [SerializeField] AudioClip moveSound;
     [SerializeField] AudioClip winSound;
+    [SerializeField] Camera avCamera;
 
     public List<GameObject> instantiatedObjects = new List<GameObject>();
     List<GameObject> currentRoundObjects = new List<GameObject>();
@@ -55,6 +56,7 @@ public class PreliminaryTestContext : MonoBehaviour
     int correctWithoutHmd = 0;
     int correctWithHmdOneRound = 0;
     int correctWithoutHmdOneRound = 0;
+    bool taskStarted = false;
 
 
     // Use this for initialization
@@ -73,8 +75,10 @@ public class PreliminaryTestContext : MonoBehaviour
 
     void StartTask()
     {
+        taskStarted = true;
         motionCapturePlayback.gameObject.SetActive(true);
         motionCapturePlayback.StartPlayback();
+        avCamera.gameObject.SetActive(true);
         cameraRig.position = cameraRigStartPos;
         window.GetComponent<AudioSource>().Play();
         window.GetComponent<Animator>().SetTrigger("Open");
@@ -302,40 +306,43 @@ public class PreliminaryTestContext : MonoBehaviour
     void OnGUI()
     {
         GUI.color = Color.blue;
-        if (GUI.Button(new Rect(120, 80, 100, 30), "Start task!"))
+        if (taskStarted == false)
         {
-            StartTask();
+            if (GUI.Button(new Rect(120, 80, 100, 30), "Start task!"))
+            {
+                StartTask();
+            }
+            GUI.Label(new Rect(120, 40, 100, 30), "Scale Level: " + scaleLevel);
+            if (GUI.Button(new Rect(10, 40, 100, 30), "Shrink"))
+            {
+                Shrink();
+            }
+            if (GUI.Button(new Rect(10, 80, 100, 30), "Expand"))
+            {
+                //Expand();
+            }
+            GUI.Label(new Rect(120, 120, 100, 30), "Depth Level: " + depthLevel);
+            if (GUI.Button(new Rect(10, 120, 100, 30), "Move Forward"))
+            {
+                MoveForward();
+            }
+            if (GUI.Button(new Rect(10, 160, 100, 30), "Move Back"))
+            {
+                MoveBack();
+            }
+            if (GUI.Button(new Rect(10, 200, 100, 30), "Reset Scale"))
+            {
+                ResetScale();
+            }
+            if (GUI.Button(new Rect(10, 240, 100, 30), "Reset All"))
+            {
+                ResetAll();
+            }
+            CalculateData();
+            if (maxAngle <= MINIMUM_ANGLE) GUI.color = Color.red;
+            GUI.Label(new Rect(10, 290, 300, 90), "Depth: " + depth + "\nObject separation: " + objectDistance + "\nDistance fixer-corner:" + maxDistanceObjectAndFixer +
+                      "\nAngle at outermost object: " + maxAngle + "\nAngle between two corner objects: " + cornerObjectAngle);
         }
-        GUI.Label(new Rect(120, 40, 100, 30), "Scale Level: " + scaleLevel);
-        if (GUI.Button(new Rect(10, 40, 100, 30), "Shrink"))
-        {
-            Shrink();
-        }
-        if (GUI.Button(new Rect(10, 80, 100, 30), "Expand"))
-        {
-            //Expand();
-        }
-        GUI.Label(new Rect(120, 120, 100, 30), "Depth Level: " + depthLevel);
-        if (GUI.Button(new Rect(10, 120, 100, 30), "Move Forward"))
-        {
-            MoveForward();
-        }
-        if (GUI.Button(new Rect(10, 160, 100, 30), "Move Back"))
-        {
-            MoveBack();
-        }
-        if (GUI.Button(new Rect(10, 200, 100, 30), "Reset Scale"))
-        {
-            ResetScale();
-        }
-        if (GUI.Button(new Rect(10, 240, 100, 30), "Reset All"))
-        {
-            ResetAll();
-        }
-        CalculateData();
-        if (maxAngle <= MINIMUM_ANGLE) GUI.color = Color.red;
-        GUI.Label(new Rect(10, 290, 300, 90), "Depth: " + depth + "\nObject separation: " + objectDistance + "\nDistance fixer-corner:" + maxDistanceObjectAndFixer +
-                  "\nAngle at outermost object: " + maxAngle + "\nAngle between two corner objects: " + cornerObjectAngle);
     }
 
     void CalculateData()

@@ -24,33 +24,33 @@ public class MotionCapturePlayback : MonoBehaviour
 
     void OnGUI()
     {
-        if (GUI.Button(new Rect(130, 150, 250, 50), buttonText))
-        {
-            if (!isPlaying)
+        /*    if (GUI.Button(new Rect(130, 150, 250, 50), buttonText))
             {
-                StartPlayback();
-            }
-            else if (isPlaying)
-            {
-                EndPlayback();
-
-            }
-        }
-        if (isPlaying)
-        {
-            if (GUI.Button(new Rect(130, 210, 250, 50), pauseText))
-            {
-                if (!isPaused) PausePlayback();
-                else if (isPaused) ResumePlayback();
-            }
-            if (loopPlayBack)
-            {
-                if (GUI.Button(new Rect(130, 270, 250, 50), "Next animation"))
+                if (!isPlaying)
                 {
-                    StartRecording(currentRecording + 1);
+                    StartPlayback();
+                }
+                else if (isPlaying)
+                {
+                    EndPlayback();
+
                 }
             }
-        }
+            if (isPlaying)
+            {
+                if (GUI.Button(new Rect(130, 210, 250, 50), pauseText))
+                {
+                    if (!isPaused) PausePlayback();
+                    else if (isPaused) ResumePlayback();
+                }
+                if (loopPlayBack)
+                {
+                    if (GUI.Button(new Rect(130, 270, 250, 50), "Next animation"))
+                    {
+                        StartRecording(currentRecording + 1);
+                    }
+                }
+            }*/
     }
     public void StartRecording(int number)
     {
@@ -219,6 +219,4 @@ public class MotionCapturePlayback : MonoBehaviour
         currentRecording = 0;
         isPlaying = false;
     }
-
-
 }
