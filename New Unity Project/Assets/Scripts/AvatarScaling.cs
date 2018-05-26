@@ -36,7 +36,7 @@ public class AvatarScaling : NetworkBehaviour
         }
 
         Debug.Log("Change material!");
-        playerMesh.materials = new Material[3] { seeThroughMaterial, playerMesh.materials[1], seeThroughMaterial };
+        //  playerMesh.materials = new Material[3] { seeThroughMaterial, playerMesh.materials[1], seeThroughMaterial };
         leftController = GameObject.Find("Controller (left)").transform;
         rightController = GameObject.Find("Controller (right)").transform;
         float headHeight = mainCamera.transform.localPosition.y;
@@ -55,13 +55,14 @@ public class AvatarScaling : NetworkBehaviour
 
     void Start()
     {
+        Debug.Log("Starting Morph3d! Local player: " + isLocalPlayer + ", style: " + CalibrationContext.singleton.style);
         if (CalibrationContext.singleton != null && CalibrationContext.singleton.calibrationProgress == 0)
         {
             if (isLocalPlayer) gameObject.tag = "LocalPlayer";
             //  gameObject.SetActive(false);
             return;
         }
-        if (isLocalPlayer && CalibrationContext.singleton.style == 0)
+        if (isLocalPlayer && CalibrationContext.singleton.style == 1)
         {
             gameObject.tag = "LocalPlayer";
             Resize();
