@@ -78,6 +78,7 @@ public class DisembodiedAvatarScaling : NetworkBehaviour
         else
         {
             PupilTools.OnCalibrationEnded += disembodiedControls.LocalIKSetup;
+            //   PupilTools.OnCalibrationEnded += disembodiedControls.SetEyeModel;
         }
         disembodiedControls.SetEyeModel();
     }

@@ -29,17 +29,17 @@ public class MotionCaptureRecorder : MonoBehaviour
 #if UNITY_EDITOR
     void OnGUI()
     {
-        if (GUI.Button(new Rect(80, 10, 250, 50), buttonText))
-        {
-            if (!isRecording)
+        /*    if (GUI.Button(new Rect(80, 10, 250, 50), buttonText))
             {
-                StartRecording();
-            }
-            else if (isRecording)
-            {
-                EndRecording();
-            }
-        }
+                if (!isRecording)
+                {
+                    StartRecording();
+                }
+                else if (isRecording)
+                {
+                    EndRecording();
+                }
+            }*/
 
     }
 
